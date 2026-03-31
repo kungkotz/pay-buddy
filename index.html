@@ -93,6 +93,8 @@
   .st{font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);}
   .add-btn{display:flex;align-items:center;gap:5px;padding:6px 13px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-main);font-size:12px;font-weight:600;cursor:pointer;}
   .add-btn:hover{background:var(--accent2);}
+  .dl-btn{display:flex;align-items:center;gap:5px;padding:6px 13px;background:var(--bg2);color:var(--text2);border:1px solid var(--border2);border-radius:var(--r);font-family:var(--font-main);font-size:12px;font-weight:600;cursor:pointer;}
+  .dl-btn:hover{background:var(--bg4);color:var(--text);}
 
   /* Table */
   .shifts-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:8px;}
@@ -262,7 +264,10 @@
   <div class="vrow"><span class="vlbl">Schedule change (&lt;3×24h notice, §9)</span><input class="vcnt" id="v-c" type="number" min="0" value="0" onchange="recalc()"><div class="vamt" id="va-c">0.00 kr</div></div>
 
   <!-- Breakdown -->
-  <div class="sh" style="margin-top:22px"><div class="st">Pay breakdown</div></div>
+  <div class="sh" style="margin-top:22px">
+    <div class="st">Pay breakdown</div>
+    <button class="dl-btn" onclick="downloadSummary()">&#8595; Download summary</button>
+  </div>
   <div class="bdc" id="breakdown"></div>
   <p class="fn">* Pension on base salary only. OT2 rate available in sidebar. Varsko rates §9 &amp; §13 lokalaftale.</p>
 </main>
@@ -285,29 +290,10 @@ function isHol(y,m,d){return HOLS.has(`${y}-${String(m+1).padStart(2,'0')}-${Str
 let CY=2026, CM=3, editId=null;
 const store={};
 
-const APR=[
-  {d:1,s:'08:00',e:'17:00',note:'Course'},
-  {d:8,s:'07:00',e:'15:00',note:'IT/MNYG'},
-  {d:11,s:'05:00',e:'13:00',note:'FØL TIA'},
-  {d:12,s:'06:00',e:'12:45',note:'FØL TIA'},
-  {d:13,s:'05:45',e:'12:45',note:'KET'},
-  {d:14,s:'05:45',e:'12:45',note:'FØL ABZ'},
-  {d:15,s:'05:45',e:'13:00',note:'FØL LMU'},
-  {d:16,s:'05:45',e:'13:00',note:'FØL TIA'},
-  {d:20,s:'13:45',e:'20:00',note:'FØL ACI'},
-  {d:21,s:'15:30',e:'24:00',note:'FØL ACI'},
-  {d:24,s:'05:45',e:'13:00',note:'FØL LIL'},
-  {d:25,s:'05:45',e:'13:45',note:''},
-  {d:26,s:'05:30',e:'13:15',note:''},
-  {d:27,s:'05:00',e:'13:45',note:''},
-  {d:29,s:'05:45',e:'14:00',note:''},
-  {d:30,s:'14:30',e:'22:00',note:''},
-];
-
 function key(){return `${CY}-${String(CM+1).padStart(2,'0')}`;}
 function initM(){
   const k=key();
-  if(!store[k]) store[k]=(CY===2026&&CM===3)?APR.map((s,i)=>({...s,id:Date.now()+i})):[];
+  if(!store[k]) store[k]=[];
 }
 
 function tm(s){if(!s)return 0;if(s==='24:00')return 1440;const[h,m]=s.split(':').map(Number);return h*60+(m||0);}
@@ -416,6 +402,89 @@ function onDrop(e){e.preventDefault();document.getElementById('drop-zone').class
 /* ── Toast ── */
 let tT;
 function toast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),3500);}
+
+function downloadSummary(){
+  initM();
+  const shifts=store[key()];
+  const R=rates();
+  const mn=MONTHS[CM];
+  const lastD=new Date(CY,CM+1,0).getDate();
+  const calcs=shifts.map(calcS);
+  let tH=0,tS=0;calcs.forEach(c=>{tH+=c.hrs;tS+=c.supp;});
+  const ot=Math.max(0,tH-R.norm),otAmt=ot*R.ot1;
+  const vl=parseInt(document.getElementById('v-l').value)||0;
+  const vs=parseInt(document.getElementById('v-s').value)||0;
+  const vc=parseInt(document.getElementById('v-c').value)||0;
+  const vlA=vl*R.vl,vsA=vs*R.vs,vcA=vc*334.86,vtot=vlA+vsA+vcA;
+  const gross=R.base+tS+otAmt+vtot;
+  const p2=R.base*.02,p11=R.base*.11;
+  const nT=calcs.reduce((a,c)=>a+c.na,0),sT=calcs.reduce((a,c)=>a+c.sa,0),uT=calcs.reduce((a,c)=>a+c.ua,0),hT=calcs.reduce((a,c)=>a+c.ha,0);
+  const nH=calcs.reduce((a,c)=>a+c.nH,0),sH=calcs.reduce((a,c)=>a+c.sH,0),uH=calcs.reduce((a,c)=>a+c.uH,0),hH=calcs.reduce((a,c)=>a+(c.hol?c.hrs:0),0);
+
+  const now=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  const line=(label,val,pad=38)=>label.padEnd(pad)+val;
+  const sep=(c='-',n=52)=>c.repeat(n);
+
+  // Build shift rows
+  const shiftRows=shifts.map((sh,i)=>{
+    const c=calcs[i];
+    const dow=DSHORT[c.dow];
+    const flags=[];
+    if(c.nH>0)flags.push('night');if(c.sat)flags.push('sat');if(c.sun)flags.push('sun');if(c.hol)flags.push('holiday');
+    const note=flags.length?` [${flags.join(',')}]`:'';
+    return `  ${String(sh.d).padStart(2)} ${mn.slice(0,3)} (${dow})  ${sh.s}–${sh.e}  ${fn2(c.hrs,2).padStart(5)} h  +${fn2(c.supp,2).padStart(8)} kr${sh.note?'  '+sh.note:''}${note}`;
+  }).join('\n');
+
+  const txt=[
+    'PAYCALC · AVIATOR OPS',
+    sep('='),
+    `Pay period : 1 ${mn} ${CY} – ${lastD} ${mn} ${CY}`,
+    `Generated  : ${now}`,
+    `Contract   : 130 hrs/month · Pay class 4 · >36 months seniority`,
+    '',
+    sep(),
+    'SHIFTS',
+    sep(),
+    shiftRows||'  (no shifts)',
+    '',
+    sep(),
+    'PAY BREAKDOWN',
+    sep(),
+    line('Base salary',`${fn2(R.base,2)} kr`),
+    line('Night supplement',`+${fn2(nT,2)} kr  (${fn2(nH,2)} h × ${fn2(R.night,2)} kr/h)`),
+    line('Saturday supplement',`+${fn2(sT,2)} kr  (${fn2(sH,2)} h × ${fn2(R.sat,2)} kr/h)`),
+    line('Sunday supplement',`+${fn2(uT,2)} kr  (${fn2(uH,2)} h × ${fn2(R.sun,2)} kr/h)`),
+    line('Holiday supplement',`+${fn2(hT,2)} kr  (${fn2(hH,2)} h × ${fn2(R.hol,2)} kr/h)`),
+    line('Overtime OT1',`+${fn2(otAmt,2)} kr  (${fn2(ot,2)} h × ${fn2(R.ot1,2)} kr/h)`),
+    line('Varsko / schedule changes',`+${fn2(vtot,2)} kr  (${vl+vs+vc} total)`),
+    sep(),
+    line('ESTIMATED GROSS PAY',`${fn2(gross,2)} kr`),
+    sep(),
+    '',
+    line('Employer pension (11%)',`+${fn2(p11,2)} kr`),
+    line('Employee pension (2%)',`-${fn2(p2,2)} kr`),
+    '',
+    sep(),
+    'HOURS SUMMARY',
+    sep(),
+    line('Total hours worked',`${fn2(tH,2)} h`),
+    line('Monthly norm',`${R.norm} h`),
+    line('Overtime',`${fn2(ot,2)} h`),
+    '',
+    sep('='),
+    'Generated by PayCalc · Aviator OPS · paycalc.html',
+    sep('='),
+  ].join('\n');
+
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`paycalc-${mn.toLowerCase()}-${CY}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Summary downloaded','ok');
+}
 
 /* ── Render ── */
 function render(){
