@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PayCalc · Aviator OPS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14; --bg2: #13161e; --bg3: #1a1e28; --bg4: #222737;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.13);
+    --text: #e8eaf0; --text2: #8b91a8; --text3: #555c78;
+    --accent: #4f8ef7; --accent2: #3568d4;
+    --green: #3ecf8e; --green-bg: rgba(62,207,142,0.10); --green-border: rgba(62,207,142,0.25);
+    --amber: #f59e0b; --amber-bg: rgba(245,158,11,0.10);
+    --red: #f87171; --red-bg: rgba(248,113,113,0.10);
+    --blue: #60a5fa; --blue-bg: rgba(96,165,250,0.10);
+    --purple: #a78bfa; --purple-bg: rgba(167,139,250,0.10);
+    --font-main: 'Syne', sans-serif; --font-mono: 'DM Mono', monospace;
+    --r: 8px; --r-lg: 12px;
+  }
+  [data-theme="light"] {
+    --bg:#f4f5f8; --bg2:#fff; --bg3:#eef0f5; --bg4:#e4e7f0;
+    --border:rgba(0,0,0,0.07); --border2:rgba(0,0,0,0.13);
+    --text:#111827; --text2:#4b5563; --text3:#9ca3af;
+    --accent:#2563eb; --accent2:#1d4ed8;
+    --green:#059669; --green-bg:rgba(5,150,105,0.08); --green-border:rgba(5,150,105,0.2);
+    --amber:#d97706; --amber-bg:rgba(217,119,6,0.08);
+    --red:#dc2626; --red-bg:rgba(220,38,38,0.08);
+    --blue:#2563eb; --blue-bg:rgba(37,99,235,0.08);
+    --purple:#7c3aed; --purple-bg:rgba(124,58,237,0.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{font-size:14px;}
+  body{background:var(--bg);color:var(--text);font-family:var(--font-main);min-height:100vh;line-height:1.6;}
+  .app{display:grid;grid-template-columns:272px 1fr;min-height:100vh;}
+  .sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:24px 18px;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;gap:20px;}
+  .main{padding:32px 40px;max-width:980px;}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo-icon{width:34px;height:34px;background:var(--accent);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+  .logo-text{font-size:15px;font-weight:700;letter-spacing:-0.02em;}
+  .logo-sub{font-size:11px;color:var(--text3);font-family:var(--font-mono);}
+  .sb-section{display:flex;flex-direction:column;gap:4px;}
+  .sb-label{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;}
+  .info-row{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;padding:2px 0;}
+  .info-key{color:var(--text2);}
+  .info-val{font-family:var(--font-mono);font-size:11px;color:var(--text);}
+  .rate-row{display:flex;align-items:center;gap:5px;padding:5px 8px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border);margin-bottom:3px;}
+  .rate-label{font-size:11px;color:var(--text2);flex:1;}
+  .rate-unit{font-size:10px;color:var(--text3);font-family:var(--font-mono);min-width:18px;text-align:right;}
+  .rate-input{width:76px;background:var(--bg4);border:1px solid var(--border2);border-radius:5px;padding:3px 6px;font-family:var(--font-mono);font-size:11px;color:var(--text);text-align:right;}
+  .rate-input:focus{outline:none;border-color:var(--accent);}
+  .theme-btn{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--text2);font-family:var(--font-main);font-size:12px;cursor:pointer;width:100%;}
+  .theme-btn:hover{background:var(--bg4);}
+  .page-header{margin-bottom:22px;}
+  .page-title{font-size:26px;font-weight:700;letter-spacing:-0.03em;}
+  .page-sub{font-size:13px;color:var(--text2);margin-top:3px;font-family:var(--font-mono);}
+  .month-nav{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+  .month-nav button{width:32px;height:32px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);color:var(--text2);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .month-nav button:hover{background:var(--bg4);color:var(--text);}
+  .month-label{font-size:16px;font-weight:600;letter-spacing:-0.02em;min-width:150px;text-align:center;}
+
+  /* Upload */
+  .upload-zone{border:1.5px dashed var(--border2);border-radius:var(--r-lg);padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all 0.2s;margin-bottom:18px;text-align:center;background:var(--bg2);}
+  .upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:var(--blue-bg);}
+  .upload-zone input{display:none;}
+  .upload-icon{font-size:24px;}
+  .upload-title{font-size:13px;font-weight:600;}
+  .upload-hint{font-size:11px;color:var(--text3);font-family:var(--font-mono);}
+  .upload-btn{padding:7px 18px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-main);font-size:12px;font-weight:600;cursor:pointer;}
+  .upload-btn:hover{background:var(--accent2);}
+  .parse-log{font-family:var(--font-mono);font-size:11px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 13px;margin-bottom:14px;display:none;max-height:110px;overflow-y:auto;line-height:1.7;}
+
+  /* Toast */
+  .toast{position:fixed;bottom:24px;right:24px;padding:10px 18px;border-radius:var(--r);font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(8px);transition:all 0.25s;pointer-events:none;}
+  .toast.show{opacity:1;transform:translateY(0);}
+  .toast.ok{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);}
+  .toast.err{background:var(--red-bg);border:1px solid rgba(248,113,113,0.25);color:var(--red);}
+
+  /* Summary */
+  .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px;}
+  .summary-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;}
+  .summary-card.hi{border-color:var(--green-border);background:var(--green-bg);}
+  .s-label{font-size:10px;color:var(--text2);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;}
+  .s-val{font-size:20px;font-weight:700;letter-spacing:-0.03em;font-family:var(--font-mono);}
+  .s-val.g{color:var(--green);}
+  .s-sub{font-size:11px;color:var(--text3);margin-top:2px;font-family:var(--font-mono);}
+
+  /* Section header */
+  .sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .st{font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);}
+  .add-btn{display:flex;align-items:center;gap:5px;padding:6px 13px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-main);font-size:12px;font-weight:600;cursor:pointer;}
+  .add-btn:hover{background:var(--accent2);}
+
+  /* Table */
+  .shifts-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:8px;}
+  table{width:100%;border-collapse:collapse;}
+  th{text-align:left;padding:9px 13px;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);background:var(--bg3);border-bottom:1px solid var(--border);}
+  td{padding:10px 13px;border-bottom:1px solid var(--border);font-size:13px;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr{transition:background 0.1s;cursor:pointer;}
+  tbody tr:hover{background:var(--bg3);}
+  tbody tr.editing{background:var(--bg3);cursor:default;}
+  .tm{font-family:var(--font-mono);font-size:12px;}
+  .dim{color:var(--text3);font-size:11px;}
+
+  /* Badges */
+  .badges{display:flex;gap:3px;flex-wrap:wrap;}
+  .badge{display:inline-block;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:600;font-family:var(--font-mono);}
+  .bn{background:var(--blue-bg);color:var(--blue);}
+  .bs{background:var(--amber-bg);color:var(--amber);}
+  .bu{background:var(--red-bg);color:var(--red);}
+  .bh{background:var(--purple-bg);color:var(--purple);}
+
+  /* Edit */
+  .erow{display:flex;gap:7px;align-items:center;flex-wrap:wrap;}
+  .ei{background:var(--bg4);border:1px solid var(--border2);border-radius:5px;padding:4px 8px;font-family:var(--font-mono);font-size:12px;color:var(--text);}
+  .ei:focus{outline:none;border-color:var(--accent);}
+  .ei-t{width:92px;}
+  .ei-d{width:54px;}
+  .ei-n{width:106px;font-size:11px;}
+  .sv{padding:4px 11px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;border:none;font-family:var(--font-main);background:var(--accent);color:#fff;}
+  .sv:hover{background:var(--accent2);}
+  .dv{padding:4px 11px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;background:var(--red-bg);color:var(--red);border:1px solid rgba(248,113,113,0.2);font-family:var(--font-main);}
+  .dv:hover{background:rgba(248,113,113,0.2);}
+  .ei-ico{font-size:13px;padding:2px 7px;border-radius:4px;background:none;border:none;color:var(--text3);cursor:pointer;}
+  .ei-ico:hover{color:var(--text);background:var(--bg4);}
+
+  /* Varsko */
+  .vrow{display:flex;align-items:center;gap:10px;padding:9px 13px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:6px;}
+  .vlbl{font-size:12px;color:var(--text2);flex:1;}
+  .vcnt{width:52px;background:var(--bg4);border:1px solid var(--border2);border-radius:5px;padding:4px 8px;font-family:var(--font-mono);font-size:12px;color:var(--text);text-align:center;}
+  .vcnt:focus{outline:none;border-color:var(--accent);}
+  .vamt{font-family:var(--font-mono);font-size:12px;color:var(--green);min-width:84px;text-align:right;}
+
+  /* Breakdown */
+  .bdc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:18px;}
+  .bdr{display:flex;justify-content:space-between;align-items:center;padding:10px 17px;border-bottom:1px solid var(--border);font-size:13px;}
+  .bdr:last-child{border-bottom:none;}
+  .bdr.tot{font-weight:700;font-size:15px;background:var(--bg3);}
+  .bdl{color:var(--text2);}
+  .bdd{color:var(--text3);font-family:var(--font-mono);font-size:11px;margin-left:7px;}
+  .bdv{font-family:var(--font-mono);font-size:13px;color:var(--text);}
+  .bdv.p{color:var(--green);}
+  .bdv.n{color:var(--red);}
+  .bdv.big{font-size:18px;color:var(--green);}
+
+  .empty{text-align:center;padding:36px;color:var(--text3);font-size:13px;}
+  .fn{font-size:11px;color:var(--text3);margin-top:6px;font-family:var(--font-mono);}
+
+  @media(max-width:900px){
+    .app{grid-template-columns:1fr;}
+    .sidebar{position:static;height:auto;}
+    .main{padding:20px;}
+    .summary-grid{grid-template-columns:repeat(2,1fr);}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div>
+    <div class="logo">
+      <div class="logo-icon">✈</div>
+      <div><div class="logo-text">PayCalc</div><div class="logo-sub">Aviator · OPS</div></div>
+    </div>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-label">Employment</div>
+    <div class="info-row"><span class="info-key">Name</span><span class="info-val">A. Kocman</span></div>
+    <div class="info-row"><span class="info-key">Role</span><span class="info-val">Gate Coord.</span></div>
+    <div class="info-row"><span class="info-key">Pay grade</span><span class="info-val">Class 4</span></div>
+    <div class="info-row"><span class="info-key">Seniority</span><span class="info-val">&gt;36 months</span></div>
+    <div class="info-row"><span class="info-key">Contract</span><span class="info-val">130 hrs/mo</span></div>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-label">Rates (1 Mar 2026)</div>
+    <div class="rate-row"><span class="rate-label">Base salary/mo</span><input class="rate-input" id="r-base" type="number" value="32017.25" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
+    <div class="rate-row"><span class="rate-label">Monthly norm</span><input class="rate-input" id="r-norm" type="number" value="130" step="1" onchange="recalc()"><span class="rate-unit">hrs</span></div>
+    <div class="rate-row"><span class="rate-label">Night suppl./hr</span><input class="rate-input" id="r-night" type="number" value="71.78" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
+    <div class="rate-row"><span class="rate-label">Saturday day/hr</span><input class="rate-input" id="r-sat" type="number" value="15.00" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
+    <div class="rate-row"><span class="rate-label">Sunday day/hr</span><input class="rate-input" id="r-sun" type="number" value="30.00" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
+    <div class="rate-row"><span class="rate-label">Holiday/hr</span><input class="rate-input" id="r-hol" type="number" value="209.74" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
+    <div class="rate-row"><span class="rate-label">Overtime OT1/hr</span><input class="rate-input" id="r-ot1" type="number" value="346.85" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
+    <div class="rate-row"><span class="rate-label">Overtime OT2/hr</span><input class="rate-input" id="r-ot2" type="number" value="481.73" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
+    <div class="rate-row"><span class="rate-label">Little varsko</span><input class="rate-input" id="r-varsko-l" type="number" value="166.57" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
+    <div class="rate-row"><span class="rate-label">Big varsko</span><input class="rate-input" id="r-varsko-s" type="number" value="347.62" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
+  </div>
+
+  <div style="margin-top:auto;">
+    <button class="theme-btn" onclick="toggleTheme()">
+      <span id="theme-icon">☀</span>&nbsp;<span id="theme-lbl">Light mode</span>
+    </button>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <div class="month-nav">
+    <button onclick="changeMonth(-1)">&#8249;</button>
+    <div class="month-label" id="month-lbl">April 2026</div>
+    <button onclick="changeMonth(1)">&#8250;</button>
+  </div>
+
+  <div class="page-header">
+    <div class="page-title">Pay Overview</div>
+    <div class="page-sub" id="pay-period"></div>
+  </div>
+
+  <!-- Upload zone -->
+  <div class="upload-zone" id="drop-zone"
+       onclick="document.getElementById('file-in').click()"
+       ondragover="ev.preventDefault();this.classList.add('drag')"
+       ondragleave="this.classList.remove('drag')"
+       ondrop="onDrop(event)">
+    <input type="file" id="file-in" accept=".doc,.rtf,.txt" onchange="handleFile(this.files[0])">
+    <div class="upload-icon">📋</div>
+    <div class="upload-title">Upload your shift schedule</div>
+    <div class="upload-hint">.doc&nbsp;/&nbsp;.rtf&nbsp;/&nbsp;.txt — the roster file from the scheduling system</div>
+    <button class="upload-btn" onclick="event.stopPropagation();document.getElementById('file-in').click()">Choose file</button>
+  </div>
+  <div class="parse-log" id="parse-log"></div>
+
+  <!-- Summary cards -->
+  <div class="summary-grid">
+    <div class="summary-card"><div class="s-label">Total hours</div><div class="s-val" id="s-hrs">—</div><div class="s-sub" id="s-hrs-sub">of 130 hr norm</div></div>
+    <div class="summary-card"><div class="s-label">Supplements</div><div class="s-val" id="s-sup">—</div><div class="s-sub">kr</div></div>
+    <div class="summary-card"><div class="s-label">Overtime</div><div class="s-val" id="s-ot">—</div><div class="s-sub">hrs OT1</div></div>
+    <div class="summary-card hi"><div class="s-label">Est. gross pay</div><div class="s-val g" id="s-gross">—</div><div class="s-sub">before tax</div></div>
+  </div>
+
+  <!-- Shifts -->
+  <div class="sh">
+    <div class="st">Shifts</div>
+    <button class="add-btn" onclick="addShift()">+ Add shift</button>
+  </div>
+  <div class="shifts-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th><th>Day</th><th>Start</th><th>End</th>
+          <th>Hours</th><th>Supplements</th>
+          <th style="text-align:right">Suppl. kr</th><th style="width:30px"></th>
+        </tr>
+      </thead>
+      <tbody id="shifts-body"></tbody>
+    </table>
+    <div class="empty" id="empty-msg">No shifts yet — upload a schedule or click "+ Add shift".</div>
+  </div>
+  <p class="fn">Click any row to edit. Night supplement (21:00–07:00) and weekend/holiday rates calculate automatically.</p>
+
+  <!-- Varsko -->
+  <div class="sh" style="margin-top:20px"><div class="st">Varsko / Schedule changes</div></div>
+  <div class="vrow"><span class="vlbl">Little varsko (extension 06:00–22:00)</span><input class="vcnt" id="v-l" type="number" min="0" value="0" onchange="recalc()"><div class="vamt" id="va-l">0.00 kr</div></div>
+  <div class="vrow"><span class="vlbl">Big varsko (extension 22:00–06:00)</span><input class="vcnt" id="v-s" type="number" min="0" value="0" onchange="recalc()"><div class="vamt" id="va-s">0.00 kr</div></div>
+  <div class="vrow"><span class="vlbl">Schedule change (&lt;3×24h notice, §9)</span><input class="vcnt" id="v-c" type="number" min="0" value="0" onchange="recalc()"><div class="vamt" id="va-c">0.00 kr</div></div>
+
+  <!-- Breakdown -->
+  <div class="sh" style="margin-top:22px"><div class="st">Pay breakdown</div></div>
+  <div class="bdc" id="breakdown"></div>
+  <p class="fn">* Pension on base salary only. OT2 rate available in sidebar. Varsko rates §9 &amp; §13 lokalaftale.</p>
+</main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DSHORT=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+// Danish public holidays
+const HOLS=new Set([
+  '2025-01-01','2025-04-17','2025-04-18','2025-04-20','2025-04-21','2025-05-29','2025-06-05','2025-06-08','2025-06-09','2025-12-24','2025-12-25','2025-12-26','2025-12-31',
+  '2026-01-01','2026-04-02','2026-04-03','2026-04-05','2026-04-06','2026-05-14','2026-05-24','2026-05-25','2026-06-05','2026-12-24','2026-12-25','2026-12-26','2026-12-31',
+  '2027-01-01','2027-03-25','2027-03-26','2027-03-28','2027-03-29','2027-05-06','2027-05-16','2027-05-17','2027-06-05','2027-12-24','2027-12-25','2027-12-26','2027-12-31',
+]);
+function isHol(y,m,d){return HOLS.has(`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`);}
+
+let CY=2026, CM=3, editId=null;
+const store={};
+
+const APR=[
+  {d:1,s:'08:00',e:'17:00',note:'Course'},
+  {d:8,s:'07:00',e:'15:00',note:'IT/MNYG'},
+  {d:11,s:'05:00',e:'13:00',note:'FØL TIA'},
+  {d:12,s:'06:00',e:'12:45',note:'FØL TIA'},
+  {d:13,s:'05:45',e:'12:45',note:'KET'},
+  {d:14,s:'05:45',e:'12:45',note:'FØL ABZ'},
+  {d:15,s:'05:45',e:'13:00',note:'FØL LMU'},
+  {d:16,s:'05:45',e:'13:00',note:'FØL TIA'},
+  {d:20,s:'13:45',e:'20:00',note:'FØL ACI'},
+  {d:21,s:'15:30',e:'24:00',note:'FØL ACI'},
+  {d:24,s:'05:45',e:'13:00',note:'FØL LIL'},
+  {d:25,s:'05:45',e:'13:45',note:''},
+  {d:26,s:'05:30',e:'13:15',note:''},
+  {d:27,s:'05:00',e:'13:45',note:''},
+  {d:29,s:'05:45',e:'14:00',note:''},
+  {d:30,s:'14:30',e:'22:00',note:''},
+];
+
+function key(){return `${CY}-${String(CM+1).padStart(2,'0')}`;}
+function initM(){
+  const k=key();
+  if(!store[k]) store[k]=(CY===2026&&CM===3)?APR.map((s,i)=>({...s,id:Date.now()+i})):[];
+}
+
+function tm(s){if(!s)return 0;if(s==='24:00')return 1440;const[h,m]=s.split(':').map(Number);return h*60+(m||0);}
+function toH(m){return m/60;}
+function fn2(n,d=2){return n.toLocaleString('en-GB',{minimumFractionDigits:d,maximumFractionDigits:d});}
+function fkr(n){return fn2(n,2)+' kr';}
+
+function nightM(s,e){const sm=tm(s),em=tm(e);if(em<=sm)return 0;let n=0;[[0,420],[1260,1440]].forEach(([a,b])=>n+=Math.max(0,Math.min(em,b)-Math.max(sm,a)));return n;}
+function wkndM(s,e,sat,sun){if(!sat&&!sun)return{sat:0,sun:0};const sm=tm(s),em=tm(e),ds=420,de=1260,ov=Math.max(0,Math.min(em,de)-Math.max(sm,ds));return{sat:sat?ov:0,sun:sun?ov:0};}
+
+function calcS(sh){
+  const sm=tm(sh.s),em=tm(sh.e),hrs=toH(Math.max(0,em-sm));
+  const dow=new Date(CY,CM,sh.d).getDay();
+  const sat=dow===6,sun=dow===0,hol=isHol(CY,CM,sh.d);
+  const R=rates();
+  const nH=toH(nightM(sh.s,sh.e));
+  const{sat:sM,sun:uM}=wkndM(sh.s,sh.e,sat,sun);
+  const sH=toH(sM),uH=toH(uM);
+  const na=nH*R.night,sa=sH*R.sat,ua=uH*R.sun,ha=hol?hrs*R.hol:0;
+  return{hrs,nH,sH,uH,na,sa,ua,ha,supp:na+sa+ua+ha,sat,sun,hol,dow};
+}
+
+function rates(){
+  const g=id=>parseFloat(document.getElementById(id).value)||0;
+  return{base:g('r-base')||32017.25,norm:g('r-norm')||130,night:g('r-night')||71.78,sat:g('r-sat')||15,sun:g('r-sun')||30,hol:g('r-hol')||209.74,ot1:g('r-ot1')||346.85,ot2:g('r-ot2')||481.73,vl:g('r-varsko-l')||166.57,vs:g('r-varsko-s')||347.62};
+}
+
+/* ── RTF / DOC parser ── */
+function stripRtf(raw){
+  const hexMap={0xe6:'æ',0xf8:'ø',0xe5:'å',0xc6:'Æ',0xd8:'Ø',0xc5:'Å'};
+  return raw
+    .replace(/\\'([0-9a-fA-F]{2})/g,(_,h)=>hexMap[parseInt(h,16)]||'')
+    .replace(/\{\\[^{}]*\}/g,'')
+    .replace(/\\[a-z*]+[-]?\d*\s?/gi,'')
+    .replace(/[{}]/g,'');
+}
+
+function parseText(text){
+  const lines=text.split(/\r?\n/);
+  const log=[],shifts=[];
+  let py=CY,pm=CM;
+
+  // Detect month/year header
+  for(const l of lines.slice(0,8)){
+    const m=l.match(/\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d\d)\b/i);
+    if(m){py=parseInt(m[2]);pm=MONTHS.findIndex(mo=>mo.toLowerCase()===m[1].toLowerCase());log.push(`Detected: ${m[1]} ${py}`);break;}
+  }
+
+  for(const raw of lines){
+    const l=raw.replace(/\s+/g,' ').trim();
+    if(!l) continue;
+
+    // Main pattern: "  1 Wednesday  0800-1700F  note" — handles 3 or 4 digit times
+    const mS=l.match(/^(\d{1,2})\s+\w+\s+(\d{3,4})[:\-](\d{3,4})[A-Z]?\s*(.*)?$/i);
+    if(mS){
+      const d=parseInt(mS[1]);
+      const pad=t=>t.padStart(4,'0');
+      const fmt=t=>`${t.slice(0,2)}:${t.slice(2)}`;
+      const s=fmt(pad(mS[2]));
+      let e=fmt(pad(mS[3]));
+      if(mS[3]==='2400'||e==='24:00') e='24:00';
+      const note=(mS[4]||'').replace(/[FGf]$/,'').trim();
+      shifts.push({d,s,e,note,id:Date.now()+shifts.length*7+Math.random()*100|0});
+      log.push(`Day ${d}: ${s}–${e}${note?' '+note:''}`);
+      continue;
+    }
+
+    // KET standby: "13 Monday  KET(5.45)" or "KET(05:45)"
+    const mK=l.match(/^(\d{1,2})\s+\w+\s+KET\s*[\(]?(\d+)[.:](\d+)[\)]?/i);
+    if(mK){
+      const d=parseInt(mK[1]),h=mK[2].padStart(2,'0'),mi=mK[3].padStart(2,'0');
+      shifts.push({d,s:`${h}:${mi}`,e:'12:45',note:'KET',id:Date.now()+shifts.length*7+Math.random()*100|0});
+      log.push(`Day ${d}: KET ${h}:${mi}–12:45 (end estimated)`);
+      continue;
+    }
+
+    // Skip days off
+    if(/fridag|fri dag|day\s*off/i.test(l)) continue;
+  }
+
+  return{shifts,year:py,month:pm,log};
+}
+
+function handleFile(file){
+  if(!file) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    let txt=e.target.result;
+    if(txt.trim().startsWith('{\\rtf')||file.name.toLowerCase().endsWith('.rtf')||file.name.toLowerCase().endsWith('.doc')) txt=stripRtf(txt);
+    const{shifts,year,month,log}=parseText(txt);
+    if(!shifts.length){toast('No shifts found — check file format','err');showLog(['No shifts parsed. Expected: "  1 Wednesday  0800-1700F  note"',...log]);return;}
+    CY=year;CM=month;
+    store[key()]=shifts;
+    editId=null;
+    showLog([`Loaded ${shifts.length} shifts for ${MONTHS[month]} ${year}`,...log]);
+    toast(`Loaded ${shifts.length} shifts from "${file.name}"`,'ok');
+    render();
+  };
+  r.readAsText(file,'windows-1252');
+}
+
+function showLog(lines){const el=document.getElementById('parse-log');el.style.display='block';el.innerHTML=lines.map(l=>`<div>${l}</div>`).join('');}
+
+function onDrop(e){e.preventDefault();document.getElementById('drop-zone').classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleFile(f);}
+
+/* ── Toast ── */
+let tT;
+function toast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),3500);}
+
+/* ── Render ── */
+function render(){
+  initM();
+  const shifts=store[key()];
+  const R=rates();
+  const mn=MONTHS[CM];
+  document.getElementById('month-lbl').textContent=`${mn} ${CY}`;
+  const lastD=new Date(CY,CM+1,0).getDate();
+  document.getElementById('pay-period').textContent=`1 ${mn} ${CY} – ${lastD} ${mn} ${CY}`;
+
+  const calcs=shifts.map(calcS);
+  let tH=0,tS=0;calcs.forEach(c=>{tH+=c.hrs;tS+=c.supp;});
+  const ot=Math.max(0,tH-R.norm),otAmt=ot*R.ot1;
+
+  const vl=parseInt(document.getElementById('v-l').value)||0;
+  const vs=parseInt(document.getElementById('v-s').value)||0;
+  const vc=parseInt(document.getElementById('v-c').value)||0;
+  const vlA=vl*R.vl,vsA=vs*R.vs,vcA=vc*334.86;
+  document.getElementById('va-l').textContent=fkr(vlA);
+  document.getElementById('va-s').textContent=fkr(vsA);
+  document.getElementById('va-c').textContent=fkr(vcA);
+  const vtot=vlA+vsA+vcA;
+  const gross=R.base+tS+otAmt+vtot;
+
+  document.getElementById('s-hrs').textContent=fn2(tH,2)+' h';
+  document.getElementById('s-hrs-sub').textContent=`of ${R.norm} hr norm`;
+  document.getElementById('s-sup').textContent=fn2(tS,0);
+  document.getElementById('s-ot').textContent=fn2(ot,2)+' h';
+  document.getElementById('s-gross').textContent=fn2(gross,0)+' kr';
+
+  // Table
+  const tbody=document.getElementById('shifts-body');
+  tbody.innerHTML='';
+  document.getElementById('empty-msg').style.display=shifts.length?'none':'';
+
+  shifts.forEach((sh,i)=>{
+    const c=calcs[i];
+    const tr=document.createElement('tr');
+    const dl=`${sh.d} ${mn.slice(0,3)}`;
+    const dn=DSHORT[c.dow];
+
+    if(editId===sh.id){
+      tr.className='editing';
+      tr.innerHTML=`
+        <td class="tm"><input class="ei ei-d" id="eid" type="number" min="1" max="31" value="${sh.d}"></td>
+        <td class="dim">${dn}</td>
+        <td colspan="5"><div class="erow">
+          <input class="ei ei-t" id="eis" type="time" value="${sh.s==='24:00'?'23:59':sh.s}">
+          <span style="color:var(--text3)">→</span>
+          <input class="ei ei-t" id="eie" type="time" value="${sh.e==='24:00'?'23:59':sh.e}">
+          <input class="ei ei-n" id="ein" type="text" value="${sh.note||''}" placeholder="note">
+          <button class="sv" onclick="saveEdit(${sh.id})">Save</button>
+          <button class="dv" onclick="delShift(${sh.id})">Delete</button>
+        </div></td>
+        <td></td>`;
+    } else {
+      const bg=[];
+      if(c.nH>0) bg.push('<span class="badge bn">night</span>');
+      if(c.sat)  bg.push('<span class="badge bs">sat</span>');
+      if(c.sun)  bg.push('<span class="badge bu">sun</span>');
+      if(c.hol)  bg.push('<span class="badge bh">holiday</span>');
+      tr.innerHTML=`
+        <td class="tm">${dl}${sh.note?` <span class="dim">${sh.note}</span>`:''}
+        </td>
+        <td class="dim">${dn}</td>
+        <td class="tm">${sh.s}</td>
+        <td class="tm">${sh.e}</td>
+        <td class="tm">${fn2(c.hrs,2)} h</td>
+        <td><div class="badges">${bg.join('')||'—'}</div></td>
+        <td style="text-align:right" class="tm">${c.supp>0?'+'+fn2(c.supp,2):'0.00'}</td>
+        <td><button class="ei-ico" onclick="event.stopPropagation();startEdit(${sh.id})">✎</button></td>`;
+      tr.onclick=()=>startEdit(sh.id);
+    }
+    tbody.appendChild(tr);
+  });
+
+  // Breakdown
+  const nT=calcs.reduce((a,c)=>a+c.na,0),sT=calcs.reduce((a,c)=>a+c.sa,0),uT=calcs.reduce((a,c)=>a+c.ua,0),hT=calcs.reduce((a,c)=>a+c.ha,0);
+  const nH=calcs.reduce((a,c)=>a+c.nH,0),sH=calcs.reduce((a,c)=>a+c.sH,0),uH=calcs.reduce((a,c)=>a+c.uH,0),hH=calcs.reduce((a,c)=>a+(c.hol?c.hrs:0),0);
+  const p2=R.base*.02,p11=R.base*.11;
+
+  const rows=[
+    ['Base salary',`${R.norm} hrs norm`,fn2(R.base,2),'p'],
+    ['Night suppl.',`${fn2(nH,2)} h × ${fn2(R.night,2)} kr/h`,nT>0?'+'+fn2(nT,2):'0.00',nT>0?'p':''],
+    ['Saturday suppl.',`${fn2(sH,2)} h × ${fn2(R.sat,2)} kr/h`,sT>0?'+'+fn2(sT,2):'0.00',sT>0?'p':''],
+    ['Sunday suppl.',`${fn2(uH,2)} h × ${fn2(R.sun,2)} kr/h`,uT>0?'+'+fn2(uT,2):'0.00',uT>0?'p':''],
+    ['Holiday suppl.',`${fn2(hH,2)} h × ${fn2(R.hol,2)} kr/h`,hT>0?'+'+fn2(hT,2):'0.00',hT>0?'p':''],
+    ['Overtime OT1',`${fn2(ot,2)} h × ${fn2(R.ot1,2)} kr/h`,ot>0?'+'+fn2(otAmt,2):'0.00',ot>0?'p':''],
+    ['Varsko / changes',`${vl+vs+vc} total`,vtot>0?'+'+fn2(vtot,2):'0.00',vtot>0?'p':''],
+  ];
+
+  let html=rows.map(([l,d,v,c])=>`<div class="bdr"><span class="bdl">${l}<span class="bdd">${d}</span></span><span class="bdv ${c}">${v} kr</span></div>`).join('');
+  html+=`<div class="bdr tot"><span class="bdl">Estimated gross pay</span><span class="bdv big">${fn2(gross,2)} kr</span></div>`;
+  html+=`<div class="bdr"><span class="bdl">Employer pension (11%)</span><span class="bdv p">+${fn2(p11,2)} kr</span></div>`;
+  html+=`<div class="bdr"><span class="bdl">Employee pension (2%)</span><span class="bdv n">−${fn2(p2,2)} kr</span></div>`;
+  document.getElementById('breakdown').innerHTML=html;
+}
+
+function recalc(){render();}
+
+function startEdit(id){editId=id;render();}
+function saveEdit(id){
+  const k=key(),sh=store[k].find(s=>s.id===id);if(!sh)return;
+  const nd=parseInt(document.getElementById('eid').value);
+  if(nd>=1&&nd<=31)sh.d=nd;
+  sh.s=document.getElementById('eis').value;
+  const ev=document.getElementById('eie').value;sh.e=ev==='23:59'?'24:00':ev;
+  sh.note=document.getElementById('ein').value;
+  store[k].sort((a,b)=>a.d-b.d);editId=null;render();
+}
+function delShift(id){const k=key();store[k]=store[k].filter(s=>s.id!==id);editId=null;render();}
+function addShift(){
+  const k=key(),last=new Date(CY,CM+1,0).getDate();
+  const used=store[k].map(s=>s.d);
+  let d=1;while(used.includes(d)&&d<=last)d++;if(d>last)d=last;
+  const sh={d,s:'08:00',e:'16:00',note:'',id:Date.now()};
+  store[k].push(sh);store[k].sort((a,b)=>a.d-b.d);editId=sh.id;render();
+}
+
+function changeMonth(dir){
+  CM+=dir;if(CM>11){CM=0;CY++;}if(CM<0){CM=11;CY--;}editId=null;render();
+}
+
+let dark=true;
+function toggleTheme(){
+  dark=!dark;
+  document.documentElement.setAttribute('data-theme',dark?'':'light');
+  document.getElementById('theme-icon').textContent=dark?'☀':'☾';
+  document.getElementById('theme-lbl').textContent=dark?'Light mode':'Dark mode';
+}
+
+render();
+</script>
+</body>
+</html>
