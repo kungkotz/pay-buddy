@@ -3,621 +3,928 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PayCalc · Aviator OPS</title>
+<title>PayCalc · Aviator PAX</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0d0f14; --bg2: #13161e; --bg3: #1a1e28; --bg4: #222737;
-    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.13);
-    --text: #e8eaf0; --text2: #8b91a8; --text3: #555c78;
-    --accent: #4f8ef7; --accent2: #3568d4;
-    --green: #3ecf8e; --green-bg: rgba(62,207,142,0.10); --green-border: rgba(62,207,142,0.25);
-    --amber: #f59e0b; --amber-bg: rgba(245,158,11,0.10);
-    --red: #f87171; --red-bg: rgba(248,113,113,0.10);
-    --blue: #60a5fa; --blue-bg: rgba(96,165,250,0.10);
-    --purple: #a78bfa; --purple-bg: rgba(167,139,250,0.10);
-    --font-main: 'Syne', sans-serif; --font-mono: 'DM Mono', monospace;
-    --r: 8px; --r-lg: 12px;
-  }
-  [data-theme="light"] {
-    --bg:#f4f5f8; --bg2:#fff; --bg3:#eef0f5; --bg4:#e4e7f0;
-    --border:rgba(0,0,0,0.07); --border2:rgba(0,0,0,0.13);
-    --text:#111827; --text2:#4b5563; --text3:#9ca3af;
-    --accent:#2563eb; --accent2:#1d4ed8;
-    --green:#059669; --green-bg:rgba(5,150,105,0.08); --green-border:rgba(5,150,105,0.2);
-    --amber:#d97706; --amber-bg:rgba(217,119,6,0.08);
-    --red:#dc2626; --red-bg:rgba(220,38,38,0.08);
-    --blue:#2563eb; --blue-bg:rgba(37,99,235,0.08);
-    --purple:#7c3aed; --purple-bg:rgba(124,58,237,0.08);
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html{font-size:14px;}
-  body{background:var(--bg);color:var(--text);font-family:var(--font-main);min-height:100vh;line-height:1.6;}
-  .app{display:grid;grid-template-columns:272px 1fr;min-height:100vh;}
-  .sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:24px 18px;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;gap:20px;}
-  .main{padding:32px 40px;max-width:980px;}
-  .logo{display:flex;align-items:center;gap:10px;}
-  .logo-icon{width:34px;height:34px;background:var(--accent);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
-  .logo-text{font-size:15px;font-weight:700;letter-spacing:-0.02em;}
-  .logo-sub{font-size:11px;color:var(--text3);font-family:var(--font-mono);}
-  .sb-section{display:flex;flex-direction:column;gap:4px;}
-  .sb-label{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;}
-  .info-row{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;padding:2px 0;}
-  .info-key{color:var(--text2);}
-  .info-val{font-family:var(--font-mono);font-size:11px;color:var(--text);}
-  .rate-row{display:flex;align-items:center;gap:5px;padding:5px 8px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border);margin-bottom:3px;}
-  .rate-label{font-size:11px;color:var(--text2);flex:1;}
-  .rate-unit{font-size:10px;color:var(--text3);font-family:var(--font-mono);min-width:18px;text-align:right;}
-  .rate-input{width:76px;background:var(--bg4);border:1px solid var(--border2);border-radius:5px;padding:3px 6px;font-family:var(--font-mono);font-size:11px;color:var(--text);text-align:right;}
-  .rate-input:focus{outline:none;border-color:var(--accent);}
-  .theme-btn{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--text2);font-family:var(--font-main);font-size:12px;cursor:pointer;width:100%;}
-  .theme-btn:hover{background:var(--bg4);}
-  .page-header{margin-bottom:22px;}
-  .page-title{font-size:26px;font-weight:700;letter-spacing:-0.03em;}
-  .page-sub{font-size:13px;color:var(--text2);margin-top:3px;font-family:var(--font-mono);}
-  .month-nav{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
-  .month-nav button{width:32px;height:32px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);color:var(--text2);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-  .month-nav button:hover{background:var(--bg4);color:var(--text);}
-  .month-label{font-size:16px;font-weight:600;letter-spacing:-0.02em;min-width:150px;text-align:center;}
+:root{
+  --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e28;--bg4:#222737;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
+  --text:#e8eaf0;--text2:#8b91a8;--text3:#555c78;
+  --accent:#4f8ef7;--accent2:#3568d4;
+  --green:#3ecf8e;--gbg:rgba(62,207,142,0.10);--gborder:rgba(62,207,142,0.28);
+  --amber:#f59e0b;--abg:rgba(245,158,11,0.12);--aborder:rgba(245,158,11,0.28);
+  --red:#f87171;--rbg:rgba(248,113,113,0.10);--rborder:rgba(248,113,113,0.25);
+  --blue:#60a5fa;--bbg:rgba(96,165,250,0.10);
+  --purple:#a78bfa;--pbg:rgba(167,139,250,0.10);
+  --teal:#2dd4bf;--tbg:rgba(45,212,191,0.08);--tborder:rgba(45,212,191,0.25);
+  --fn:'Syne',sans-serif;--fm:'DM Mono',monospace;
+  --r:8px;--rl:12px;--rxl:18px;
+}
+[data-theme=light]{
+  --bg:#f0f2f7;--bg2:#ffffff;--bg3:#e8ecf4;--bg4:#dde2ef;
+  --border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.13);
+  --text:#111827;--text2:#4b5563;--text3:#9ca3af;
+  --accent:#2563eb;--accent2:#1d4ed8;
+  --green:#059669;--gbg:rgba(5,150,105,0.08);--gborder:rgba(5,150,105,0.22);
+  --amber:#d97706;--abg:rgba(217,119,6,0.09);--aborder:rgba(217,119,6,0.25);
+  --red:#dc2626;--rbg:rgba(220,38,38,0.08);--rborder:rgba(220,38,38,0.22);
+  --blue:#2563eb;--bbg:rgba(37,99,235,0.08);
+  --purple:#7c3aed;--pbg:rgba(124,58,237,0.08);
+  --teal:#0d9488;--tbg:rgba(13,148,136,0.07);--tborder:rgba(13,148,136,0.22);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{background:var(--bg);color:var(--text);font-family:var(--fn);line-height:1.6;overflow-x:hidden;}
 
-  /* Upload */
-  .upload-zone{border:1.5px dashed var(--border2);border-radius:var(--r-lg);padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all 0.2s;margin-bottom:18px;text-align:center;background:var(--bg2);}
-  .upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:var(--blue-bg);}
-  .upload-zone input{display:none;}
-  .upload-icon{font-size:24px;}
-  .upload-title{font-size:13px;font-weight:600;}
-  .upload-hint{font-size:11px;color:var(--text3);font-family:var(--font-mono);}
-  .upload-btn{padding:7px 18px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-main);font-size:12px;font-weight:600;cursor:pointer;}
-  .upload-btn:hover{background:var(--accent2);}
-  .parse-log{font-family:var(--font-mono);font-size:11px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 13px;margin-bottom:14px;display:none;max-height:110px;overflow-y:auto;line-height:1.7;}
+/* WIZARD */
+#wizard{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
+#wizard.hidden{display:none;}
+.wiz-progress{display:flex;gap:8px;margin-bottom:32px;}
+.wiz-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);transition:all 0.3s;}
+.wiz-dot.active{background:var(--accent);transform:scale(1.3);}
+.wiz-dot.done{background:var(--green);}
+.wiz-viewport{width:100%;max-width:520px;overflow:hidden;position:relative;min-height:300px;}
+.wiz-step{width:100%;animation-duration:0.36s;animation-fill-mode:both;animation-timing-function:cubic-bezier(0.4,0,0.2,1);}
+.wiz-step.enter-r{animation-name:wSlideIR;}
+.wiz-step.enter-l{animation-name:wSlideIL;}
+.wiz-step.exit-l{animation-name:wSlideOL;position:absolute;top:0;left:0;width:100%;}
+.wiz-step.exit-r{animation-name:wSlideOR;position:absolute;top:0;left:0;width:100%;}
+@keyframes wSlideIR{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes wSlideIL{from{transform:translateX(-60px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes wSlideOL{from{transform:translateX(0);opacity:1}to{transform:translateX(-60px);opacity:0}}
+@keyframes wSlideOR{from{transform:translateX(0);opacity:1}to{transform:translateX(60px);opacity:0}}
+.wiz-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rxl);padding:36px;width:100%;}
+.wiz-title{font-size:22px;font-weight:700;letter-spacing:-0.02em;margin-bottom:6px;}
+.wiz-sub{font-size:13px;color:var(--text2);margin-bottom:26px;font-family:var(--fm);}
+.wiz-label{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+.wiz-input{width:100%;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--r);padding:13px 16px;font-family:var(--fm);font-size:16px;color:var(--text);outline:none;transition:border-color 0.2s;}
+.wiz-input:focus{border-color:var(--accent);}
+.input-row{display:flex;gap:12px;}
+.input-row .wiz-input{flex:1;}
+.wiz-hint{font-size:11px;color:var(--text3);font-family:var(--fm);margin-top:8px;line-height:1.7;}
+.wiz-hint a{color:var(--accent);text-decoration:none;}
+.hint-box{padding:12px 14px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border);margin-top:12px;}
+/* contract type */
+.type-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.type-card{background:var(--bg3);border:2px solid var(--border2);border-radius:var(--rl);padding:22px 16px;cursor:pointer;transition:all 0.2s;text-align:center;}
+.type-card:hover{border-color:var(--accent);}
+.type-card.sel{border-color:var(--accent);background:var(--bbg);}
+.tc-icon{font-size:28px;margin-bottom:8px;}
+.tc-title{font-size:14px;font-weight:600;margin-bottom:4px;}
+.tc-desc{font-size:11px;color:var(--text3);font-family:var(--fm);}
+/* quals */
+.qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.qcard{background:var(--bg3);border:2px solid var(--border2);border-radius:var(--rl);padding:14px 12px;cursor:pointer;transition:all 0.2s;display:flex;align-items:flex-start;gap:10px;}
+.qcard:hover{border-color:var(--accent);}
+.qcard.sel{border-color:var(--accent);background:var(--bbg);}
+.qi{font-size:20px;flex-shrink:0;}
+.qt{font-size:13px;font-weight:600;}
+.qr{font-size:11px;color:var(--text3);font-family:var(--fm);}
+.qcheck{margin-left:auto;width:18px;height:18px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;transition:all 0.2s;}
+.qcard.sel .qcheck{background:var(--accent);border-color:var(--accent);}
+/* TCO follow-up */
+.tco-fu{margin-top:14px;padding:16px;background:var(--bg4);border-radius:var(--r);border:1px solid var(--border);}
+.radio-grp{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+.ropt{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg2);border-radius:var(--r);border:2px solid var(--border2);cursor:pointer;font-size:13px;transition:all 0.2s;}
+.ropt:hover{border-color:var(--accent);}
+.ropt.sel{border-color:var(--accent);background:var(--bbg);}
+.rdot{width:16px;height:16px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;transition:all 0.2s;}
+.ropt.sel .rdot{background:var(--accent);border-color:var(--accent);}
+.rs{font-size:11px;color:var(--text3);font-family:var(--fm);}
+/* wiz nav */
+.wiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;width:100%;max-width:520px;}
+.wbk{background:transparent;border:1px solid var(--border2);color:var(--text2);padding:10px 20px;border-radius:var(--r);font-family:var(--fn);font-size:13px;cursor:pointer;transition:all 0.15s;}
+.wbk:hover{background:var(--bg3);color:var(--text);}
+.wnx{background:var(--accent);border:none;color:#fff;padding:11px 28px;border-radius:var(--r);font-family:var(--fn);font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s;}
+.wnx:hover{background:var(--accent2);}
+.wnx:disabled{background:var(--bg4);color:var(--text3);cursor:not-allowed;}
+.sctr{font-size:11px;color:var(--text3);font-family:var(--fm);}
+/* lontrin pill */
+.ltpill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;background:var(--bbg);border:1px solid rgba(96,165,250,0.25);border-radius:99px;font-family:var(--fm);font-size:12px;color:var(--blue);margin-top:12px;}
 
-  /* Toast */
-  .toast{position:fixed;bottom:24px;right:24px;padding:10px 18px;border-radius:var(--r);font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(8px);transition:all 0.25s;pointer-events:none;}
-  .toast.show{opacity:1;transform:translateY(0);}
-  .toast.ok{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);}
-  .toast.err{background:var(--red-bg);border:1px solid rgba(248,113,113,0.25);color:var(--red);}
+/* APP */
+#app{display:none;min-height:100vh;flex-direction:column;}
+#app.show{display:flex;}
+.app-hdr{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-ico{width:30px;height:30px;background:var(--accent);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.logo-tx{font-size:14px;font-weight:700;letter-spacing:-0.02em;}
+.logo-sx{font-size:10px;color:var(--text3);font-family:var(--fm);}
+.ibtn{width:36px;height:36px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text2);transition:all 0.15s;}
+.ibtn:hover{background:var(--bg4);color:var(--text);}
+.app-body{flex:1;padding:28px 24px;max-width:920px;margin:0 auto;width:100%;}
 
-  /* Summary */
-  .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px;}
-  .summary-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;}
-  .summary-card.hi{border-color:var(--green-border);background:var(--green-bg);}
-  .s-label{font-size:10px;color:var(--text2);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;}
-  .s-val{font-size:20px;font-weight:700;letter-spacing:-0.03em;font-family:var(--font-mono);}
-  .s-val.g{color:var(--green);}
-  .s-sub{font-size:11px;color:var(--text3);margin-top:2px;font-family:var(--font-mono);}
+/* Upload zone */
+.upzone{border:1.5px dashed var(--border2);border-radius:var(--rl);padding:22px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all 0.2s;margin-bottom:20px;text-align:center;background:var(--bg2);}
+.upzone:hover,.upzone.drag{border-color:var(--accent);background:var(--bbg);}
+.upzone input{display:none;}
+.up-t{font-size:14px;font-weight:600;}
+.up-h{font-size:11px;color:var(--text3);font-family:var(--fm);}
+.up-b{padding:6px 18px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-family:var(--fn);font-size:12px;font-weight:600;cursor:pointer;}
+.up-b:hover{background:var(--accent2);}
+.plog{font-family:var(--fm);font-size:11px;color:var(--text3);background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px 13px;margin-bottom:14px;display:none;max-height:80px;overflow-y:auto;line-height:1.8;}
 
-  /* Section header */
-  .sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-  .st{font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);}
-  .add-btn{display:flex;align-items:center;gap:5px;padding:6px 13px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-main);font-size:12px;font-weight:600;cursor:pointer;}
-  .add-btn:hover{background:var(--accent2);}
-  .dl-btn{display:flex;align-items:center;gap:5px;padding:6px 13px;background:var(--bg2);color:var(--text2);border:1px solid var(--border2);border-radius:var(--r);font-family:var(--font-main);font-size:12px;font-weight:600;cursor:pointer;}
-  .dl-btn:hover{background:var(--bg4);color:var(--text);}
+/* Month pill */
+.month-pill{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+.mpill{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:99px;font-family:var(--fm);font-size:12px;color:var(--text2);}
 
-  /* Table */
-  .shifts-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:8px;}
-  table{width:100%;border-collapse:collapse;}
-  th{text-align:left;padding:9px 13px;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);background:var(--bg3);border-bottom:1px solid var(--border);}
-  td{padding:10px 13px;border-bottom:1px solid var(--border);font-size:13px;}
-  tbody tr:last-child td{border-bottom:none;}
-  tbody tr{transition:background 0.1s;cursor:pointer;}
-  tbody tr:hover{background:var(--bg3);}
-  tbody tr.editing{background:var(--bg3);cursor:default;}
-  .tm{font-family:var(--font-mono);font-size:12px;}
-  .dim{color:var(--text3);font-size:11px;}
+/* Panels */
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:20px;}
+.panel-g{border-color:var(--gborder);background:var(--gbg);}
+.panel-a{border-color:var(--aborder);background:var(--abg);}
+.plabel{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;}
+.plabel-g{color:var(--green);}
+.plabel-a{color:var(--amber);}
+.pgross{font-size:26px;font-weight:700;letter-spacing:-0.03em;font-family:var(--fm);}
+.pgross-g{color:var(--green);}
+.pgross-a{color:var(--amber);}
+.pnet{font-size:13px;font-family:var(--fm);margin-top:4px;color:var(--teal);}
+.pitems{margin-top:14px;display:flex;flex-direction:column;gap:3px;}
+.pitem{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--border);}
+.pitem:last-child{border-bottom:none;}
+.pil{color:var(--text2);}
+.piv{font-family:var(--fm);}
+.piv.pos{color:var(--green);}
+.piv.neg{color:var(--red);}
+.pdiv{height:1px;background:var(--border);margin:6px 0;}
 
-  /* Badges */
-  .badges{display:flex;gap:3px;flex-wrap:wrap;}
-  .badge{display:inline-block;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:600;font-family:var(--font-mono);}
-  .bn{background:var(--blue-bg);color:var(--blue);}
-  .bs{background:var(--amber-bg);color:var(--amber);}
-  .bu{background:var(--red-bg);color:var(--red);}
-  .bh{background:var(--purple-bg);color:var(--purple);}
+/* Section */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.st{font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);}
+.bsm{padding:5px 12px;border-radius:var(--r);font-family:var(--fn);font-size:11px;font-weight:600;cursor:pointer;border:none;}
+.bacc{background:var(--accent);color:#fff;}.bacc:hover{background:var(--accent2);}
+.bgh{background:transparent;color:var(--text2);border:1px solid var(--border2);}.bgh:hover{background:var(--bg3);}
 
-  /* Edit */
-  .erow{display:flex;gap:7px;align-items:center;flex-wrap:wrap;}
-  .ei{background:var(--bg4);border:1px solid var(--border2);border-radius:5px;padding:4px 8px;font-family:var(--font-mono);font-size:12px;color:var(--text);}
-  .ei:focus{outline:none;border-color:var(--accent);}
-  .ei-t{width:92px;}
-  .ei-d{width:54px;}
-  .ei-n{width:106px;font-size:11px;}
-  .sv{padding:4px 11px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;border:none;font-family:var(--font-main);background:var(--accent);color:#fff;}
-  .sv:hover{background:var(--accent2);}
-  .dv{padding:4px 11px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;background:var(--red-bg);color:var(--red);border:1px solid rgba(248,113,113,0.2);font-family:var(--font-main);}
-  .dv:hover{background:rgba(248,113,113,0.2);}
-  .ei-ico{font-size:13px;padding:2px 7px;border-radius:4px;background:none;border:none;color:var(--text3);cursor:pointer;}
-  .ei-ico:hover{color:var(--text);background:var(--bg4);}
+/* Shift table */
+.stw{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:8px;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:8px 12px;font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);background:var(--bg3);border-bottom:1px solid var(--border);}
+td{padding:9px 12px;border-bottom:1px solid var(--border);font-size:12px;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr{cursor:pointer;transition:background 0.1s;}
+tbody tr:hover{background:var(--bg3);}
+tbody tr.ed{background:var(--bg3);cursor:default;}
+.mono{font-family:var(--fm);font-size:11px;}
+.dim{color:var(--text3);font-size:11px;}
+.bgs{display:flex;gap:3px;flex-wrap:wrap;}
+.b{display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:600;font-family:var(--fm);}
+.ba{background:var(--abg);color:var(--amber);}
+.bn{background:var(--bbg);color:var(--blue);}
+.bs{background:rgba(251,191,36,0.12);color:#fbbf24;}
+.bu{background:var(--rbg);color:var(--red);}
+.bh{background:var(--pbg);color:var(--purple);}
+/* edit row */
+.erow{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.ei{background:var(--bg4);border:1px solid var(--border2);border-radius:5px;padding:5px 8px;font-family:var(--fm);font-size:11px;color:var(--text);}
+.ei:focus{outline:none;border-color:var(--accent);}
+.eit{width:86px;}.eid{width:48px;}
+.esv{padding:5px 11px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;border:none;font-family:var(--fn);background:var(--accent);color:#fff;}
+.edl{padding:5px 11px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;background:var(--rbg);color:var(--red);border:1px solid var(--rborder);font-family:var(--fn);}
+.eico{font-size:13px;padding:3px 7px;border-radius:4px;background:none;border:none;color:var(--text3);cursor:pointer;}
+.eico:hover{color:var(--text);background:var(--bg4);}
+.empty{text-align:center;padding:32px;color:var(--text3);font-size:13px;}
+.fn2{font-size:11px;color:var(--text3);margin-bottom:14px;font-family:var(--fm);}
 
-  /* Varsko */
-  .vrow{display:flex;align-items:center;gap:10px;padding:9px 13px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:6px;}
-  .vlbl{font-size:12px;color:var(--text2);flex:1;}
-  .vcnt{width:52px;background:var(--bg4);border:1px solid var(--border2);border-radius:5px;padding:4px 8px;font-family:var(--font-mono);font-size:12px;color:var(--text);text-align:center;}
-  .vcnt:focus{outline:none;border-color:var(--accent);}
-  .vamt{font-family:var(--font-mono);font-size:12px;color:var(--green);min-width:84px;text-align:right;}
+/* Manual inputs */
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.mrow{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px 13px;display:flex;align-items:center;gap:8px;}
+.ml{font-size:12px;color:var(--text2);flex:1;line-height:1.35;}
+.mi{width:60px;background:var(--bg4);border:1px solid var(--border2);border-radius:5px;padding:4px 7px;font-family:var(--fm);font-size:12px;color:var(--text);text-align:center;}
+.mi:focus{outline:none;border-color:var(--accent);}
+.mu{font-size:10px;color:var(--text3);font-family:var(--fm);min-width:24px;}
+.ma{font-family:var(--fm);font-size:12px;min-width:88px;text-align:right;}
+.ma.pos{color:var(--green);}.ma.neg{color:var(--red);}
 
-  /* Breakdown */
-  .bdc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:18px;}
-  .bdr{display:flex;justify-content:space-between;align-items:center;padding:10px 17px;border-bottom:1px solid var(--border);font-size:13px;}
-  .bdr:last-child{border-bottom:none;}
-  .bdr.tot{font-weight:700;font-size:15px;background:var(--bg3);}
-  .bdl{color:var(--text2);}
-  .bdd{color:var(--text3);font-family:var(--font-mono);font-size:11px;margin-left:7px;}
-  .bdv{font-family:var(--font-mono);font-size:13px;color:var(--text);}
-  .bdv.p{color:var(--green);}
-  .bdv.n{color:var(--red);}
-  .bdv.big{font-size:18px;color:var(--green);}
+/* Tax card */
+.txc{background:var(--tbg);border:1px solid var(--tborder);border-radius:var(--rl);overflow:hidden;margin-bottom:14px;}
+.txh{padding:10px 16px;background:rgba(45,212,191,0.12);border-bottom:1px solid var(--tborder);}
+.txht{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal);}
+.trow{display:flex;justify-content:space-between;align-items:center;padding:9px 16px;border-bottom:1px solid rgba(45,212,191,0.08);font-size:12px;}
+.trow:last-child{border-bottom:none;}
+.trow.nrow{background:rgba(45,212,191,0.10);border-top:2px solid var(--tborder);}
+.tl{color:var(--text2);}
+.tv{font-family:var(--fm);}
+.tv.neg{color:var(--red);}
+.tv.teal{color:var(--teal);font-size:18px;font-weight:700;}
+.bpdf{padding:6px 14px;background:var(--tbg);color:var(--teal);border:1px solid var(--tborder);border-radius:var(--r);font-family:var(--fn);font-size:12px;font-weight:600;cursor:pointer;}
+.bpdf:hover{background:var(--teal);color:#fff;}
 
-  .empty{text-align:center;padding:36px;color:var(--text3);font-size:13px;}
-  .fn{font-size:11px;color:var(--text3);margin-top:6px;font-family:var(--font-mono);}
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;padding:10px 18px;border-radius:var(--r);font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(8px);transition:all 0.25s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.ok{background:var(--gbg);border:1px solid var(--gborder);color:var(--green);}
+.toast.err{background:var(--rbg);border:1px solid var(--rborder);color:var(--red);}
 
-  @media(max-width:900px){
-    .app{grid-template-columns:1fr;}
-    .sidebar{position:static;height:auto;}
-    .main{padding:20px;}
-    .summary-grid{grid-template-columns:repeat(2,1fr);}
-  }
+/* Settings modal */
+.movl{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.movl.open{opacity:1;pointer-events:all;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rxl);padding:28px;width:100%;max-width:400px;transform:translateY(12px);transition:transform 0.22s;}
+.movl.open .modal{transform:translateY(0);}
+.mtitle{font-size:18px;font-weight:700;letter-spacing:-0.02em;margin-bottom:4px;}
+.msub{font-size:12px;color:var(--text2);margin-bottom:22px;}
+.msec{margin-bottom:20px;}
+.msect{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
+.thopts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.thopt{background:var(--bg3);border:2px solid var(--border2);border-radius:var(--r);padding:10px 8px;cursor:pointer;text-align:center;transition:all 0.2s;}
+.thopt:hover,.thopt.sel{border-color:var(--accent);background:var(--bbg);}
+.thico{font-size:18px;margin-bottom:4px;}
+.thlbl{font-size:11px;font-weight:600;}
+.mbtn{width:100%;padding:11px;border-radius:var(--r);font-family:var(--fn);font-size:14px;font-weight:600;cursor:pointer;border:none;margin-bottom:8px;transition:all 0.15s;}
+.mbtn.pri{background:var(--accent);color:#fff;}.mbtn.pri:hover{background:var(--accent2);}
+.mbtn.sec{background:var(--bg3);color:var(--text2);border:1px solid var(--border2);}.mbtn.sec:hover{background:var(--bg4);}
+
+/* Profile summary in settings */
+.prof-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:16px;font-size:12px;}
+.prof-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);}
+.prof-row:last-child{border-bottom:none;}
+.prlbl{color:var(--text2);}
+.prval{font-family:var(--fm);}
+
+@media(max-width:680px){
+  .panels,.mgrid,.qual-grid,.thopts{grid-template-columns:1fr;}
+  .app-body{padding:20px 16px;}
+  .wiz-card{padding:24px 20px;}
+  th:nth-child(6),td:nth-child(6){display:none;}
+}
 </style>
 </head>
 <body>
-<div class="app">
 
-<!-- Sidebar -->
-<aside class="sidebar">
-  <div>
-    <div class="logo">
-      <div class="logo-icon">✈</div>
-      <div><div class="logo-text">PayCalc</div><div class="logo-sub">Aviator · OPS</div></div>
-    </div>
-  </div>
-
-  <div class="sb-section">
-    <div class="sb-label">Employment</div>
-    <div class="info-row"><span class="info-key">Name</span><span class="info-val">A. Kocman</span></div>
-    <div class="info-row"><span class="info-key">Role</span><span class="info-val">Gate Coord.</span></div>
-    <div class="info-row"><span class="info-key">Pay grade</span><span class="info-val">Class 4</span></div>
-    <div class="info-row"><span class="info-key">Seniority</span><span class="info-val">&gt;36 months</span></div>
-    <div class="info-row"><span class="info-key">Contract</span><span class="info-val">130 hrs/mo</span></div>
-  </div>
-
-  <div class="sb-section">
-    <div class="sb-label">Rates (1 Mar 2026)</div>
-    <div class="rate-row"><span class="rate-label">Base salary/mo</span><input class="rate-input" id="r-base" type="number" value="32017.25" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
-    <div class="rate-row"><span class="rate-label">Monthly norm</span><input class="rate-input" id="r-norm" type="number" value="130" step="1" onchange="recalc()"><span class="rate-unit">hrs</span></div>
-    <div class="rate-row"><span class="rate-label">Night suppl./hr</span><input class="rate-input" id="r-night" type="number" value="71.78" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
-    <div class="rate-row"><span class="rate-label">Saturday day/hr</span><input class="rate-input" id="r-sat" type="number" value="15.00" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
-    <div class="rate-row"><span class="rate-label">Sunday day/hr</span><input class="rate-input" id="r-sun" type="number" value="30.00" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
-    <div class="rate-row"><span class="rate-label">Holiday/hr</span><input class="rate-input" id="r-hol" type="number" value="209.74" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
-    <div class="rate-row"><span class="rate-label">Overtime OT1/hr</span><input class="rate-input" id="r-ot1" type="number" value="346.85" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
-    <div class="rate-row"><span class="rate-label">Overtime OT2/hr</span><input class="rate-input" id="r-ot2" type="number" value="481.73" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
-    <div class="rate-row"><span class="rate-label">Little varsko</span><input class="rate-input" id="r-varsko-l" type="number" value="166.57" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
-    <div class="rate-row"><span class="rate-label">Big varsko</span><input class="rate-input" id="r-varsko-s" type="number" value="347.62" step="0.01" onchange="recalc()"><span class="rate-unit">kr</span></div>
-  </div>
-
-  <div style="margin-top:auto;">
-    <button class="theme-btn" onclick="toggleTheme()">
-      <span id="theme-icon">☀</span>&nbsp;<span id="theme-lbl">Light mode</span>
-    </button>
-  </div>
-</aside>
-
-<!-- Main -->
-<main class="main">
-  <div class="month-nav">
-    <button onclick="changeMonth(-1)">&#8249;</button>
-    <div class="month-label" id="month-lbl">April 2026</div>
-    <button onclick="changeMonth(1)">&#8250;</button>
-  </div>
-
-  <div class="page-header">
-    <div class="page-title">Pay Overview</div>
-    <div class="page-sub" id="pay-period"></div>
-  </div>
-
-  <!-- Upload zone -->
-  <div class="upload-zone" id="drop-zone"
-       onclick="document.getElementById('file-in').click()"
-       ondragover="ev.preventDefault();this.classList.add('drag')"
-       ondragleave="this.classList.remove('drag')"
-       ondrop="onDrop(event)">
-    <input type="file" id="file-in" accept=".doc,.rtf,.txt" onchange="handleFile(this.files[0])">
-    <div class="upload-icon">📋</div>
-    <div class="upload-title">Upload your shift schedule</div>
-    <div class="upload-hint">.doc&nbsp;/&nbsp;.rtf&nbsp;/&nbsp;.txt — the roster file from the scheduling system</div>
-    <button class="upload-btn" onclick="event.stopPropagation();document.getElementById('file-in').click()">Choose file</button>
-  </div>
-  <div class="parse-log" id="parse-log"></div>
-
-  <!-- Summary cards -->
-  <div class="summary-grid">
-    <div class="summary-card"><div class="s-label">Total hours</div><div class="s-val" id="s-hrs">—</div><div class="s-sub" id="s-hrs-sub">of 130 hr norm</div></div>
-    <div class="summary-card"><div class="s-label">Supplements</div><div class="s-val" id="s-sup">—</div><div class="s-sub">kr</div></div>
-    <div class="summary-card"><div class="s-label">Overtime</div><div class="s-val" id="s-ot">—</div><div class="s-sub">hrs OT1</div></div>
-    <div class="summary-card hi"><div class="s-label">Est. gross pay</div><div class="s-val g" id="s-gross">—</div><div class="s-sub">before tax</div></div>
-  </div>
-
-  <!-- Shifts -->
-  <div class="sh">
-    <div class="st">Shifts</div>
-    <button class="add-btn" onclick="addShift()">+ Add shift</button>
-  </div>
-  <div class="shifts-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th><th>Day</th><th>Start</th><th>End</th>
-          <th>Hours</th><th>Supplements</th>
-          <th style="text-align:right">Suppl. kr</th><th style="width:30px"></th>
-        </tr>
-      </thead>
-      <tbody id="shifts-body"></tbody>
-    </table>
-    <div class="empty" id="empty-msg">No shifts yet — upload a schedule or click "+ Add shift".</div>
-  </div>
-  <p class="fn">Click any row to edit. Night supplement (21:00–07:00) and weekend/holiday rates calculate automatically.</p>
-
-  <!-- Varsko -->
-  <div class="sh" style="margin-top:20px"><div class="st">Varsko / Schedule changes</div></div>
-  <div class="vrow"><span class="vlbl">Little varsko (extension 06:00–22:00)</span><input class="vcnt" id="v-l" type="number" min="0" value="0" onchange="recalc()"><div class="vamt" id="va-l">0.00 kr</div></div>
-  <div class="vrow"><span class="vlbl">Big varsko (extension 22:00–06:00)</span><input class="vcnt" id="v-s" type="number" min="0" value="0" onchange="recalc()"><div class="vamt" id="va-s">0.00 kr</div></div>
-  <div class="vrow"><span class="vlbl">Schedule change (&lt;3×24h notice, §9)</span><input class="vcnt" id="v-c" type="number" min="0" value="0" onchange="recalc()"><div class="vamt" id="va-c">0.00 kr</div></div>
-
-  <!-- Breakdown -->
-  <div class="sh" style="margin-top:22px">
-    <div class="st">Pay breakdown</div>
-    <button class="dl-btn" onclick="downloadSummary()">&#8595; Download summary</button>
-  </div>
-  <div class="bdc" id="breakdown"></div>
-  <p class="fn">* Pension on base salary only. OT2 rate available in sidebar. Varsko rates §9 &amp; §13 lokalaftale.</p>
-</main>
+<!-- WIZARD -->
+<div id="wizard">
+  <div class="wiz-progress" id="wdots"></div>
+  <div class="wiz-viewport" id="wvp"></div>
+  <div class="wiz-nav" id="wnav" style="display:none"></div>
 </div>
 
+<!-- APP -->
+<div id="app">
+  <header class="app-hdr">
+    <div class="logo">
+      <div class="logo-ico">✈</div>
+      <div><div class="logo-tx">PayCalc</div><div class="logo-sx">Aviator · PAX</div></div>
+    </div>
+    <button class="ibtn" onclick="openSettings()" title="Settings">⚙</button>
+  </header>
+  <main class="app-body">
+    <div class="upzone" id="dropz" onclick="document.getElementById('fin').click()"
+         ondragover="event.preventDefault();this.classList.add('drag')"
+         ondragleave="this.classList.remove('drag')"
+         ondrop="onDrop(event)">
+      <input type="file" id="fin" accept=".doc,.rtf,.txt" onchange="handleFile(this.files[0])">
+      <div style="font-size:26px">📋</div>
+      <div class="up-t">Upload your shift schedule</div>
+      <div class="up-h">.doc / .rtf / .txt — the roster from the scheduling system</div>
+      <button class="up-b" onclick="event.stopPropagation();document.getElementById('fin').click()">Choose file</button>
+    </div>
+    <div class="plog" id="plog"></div>
+    <div class="month-pill"><div class="mpill" id="monthpill">📅 No schedule loaded</div></div>
+    <div class="panels" id="panels"></div>
+    <div class="sh">
+      <div class="st">Shifts this month</div>
+      <button class="bsm bacc" onclick="addShift()">+ Add shift</button>
+    </div>
+    <div class="stw"><table>
+      <thead><tr>
+        <th>Date</th><th>Day</th><th>Start</th><th>End</th>
+        <th>Hours</th><th>Supplements</th>
+        <th style="text-align:right">kr</th><th style="width:30px"></th>
+      </tr></thead>
+      <tbody id="sb"></tbody>
+    </table>
+    <div class="empty" id="empty">No shifts yet — upload a schedule or add manually.</div></div>
+    <p class="fn2" style="margin-bottom:14px">Click any row to edit · Evening 18:00–23:59 · Night 00:00–05:59 (per started ½hr) · Weekend &amp; holidays auto-detected</p>
+
+    <div class="sh" style="margin-top:4px">
+      <div class="st">Manual adjustments <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(these are paid next month)</span></div>
+    </div>
+    <div class="mgrid" id="mgrid"></div>
+
+    <div class="sh" style="margin-top:6px">
+      <div class="st">Tax breakdown</div>
+      <button class="bpdf" onclick="dlPDF()">↓ PDF summary</button>
+    </div>
+    <div class="txc" id="taxcard"></div>
+    <p class="fn2">AM-bidrag 8% · A-skat = (gross×92% − fradrag) × trækpct · ATP 99 kr fixed · Formula verified against SKAT 2026</p>
+  </main>
+</div>
+
+<!-- Settings -->
+<div class="movl" id="sovl" onclick="closeSett(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="mtitle">Settings</div>
+    <div class="msub">Manage your profile and app preferences</div>
+    <div class="msec">
+      <div class="msect">Your profile</div>
+      <div class="prof-card" id="profcard"></div>
+    </div>
+    <div class="msec">
+      <div class="msect">Theme</div>
+      <div class="thopts">
+        <div class="thopt" data-th="auto" onclick="setTheme('auto')"><div class="thico">💻</div><div class="thlbl">Auto</div></div>
+        <div class="thopt" data-th="light" onclick="setTheme('light')"><div class="thico">☀</div><div class="thlbl">Light</div></div>
+        <div class="thopt" data-th="dark" onclick="setTheme('dark')"><div class="thico">🌙</div><div class="thlbl">Dark</div></div>
+      </div>
+    </div>
+    <button class="mbtn pri" onclick="closeSett();restartWiz()">⚙ Run setup wizard again</button>
+    <button class="mbtn sec" onclick="closeSett()">Close</button>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DSHORT=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-
-// Danish public holidays
+// ═══ CONSTANTS ═══
+const MONTHS_LONG=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS_SHORT=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const RATES={
+  aftenHr:23.05, natHalf:103.70, helligHr:101.38,
+  lordagHr:12.09, sondagHr:30.21,
+  forlangelse:230.44, driftHr:10.00,
+  tcoFixed1:1517.40, tcoFixed2:1900.00,
+  tcoStudy1:125.00, tcoStudy2:156.52,
+  trainerHr:48.26, instruktorHr:63.50, helpdeskHr:24.12, ankomstHr:3.10,
+  atp:99.00, // fixed monthly ATP A-sats
+};
+const OTR={
+  1:{o1:219.81,o2:295.44},2:{o1:237.13,o2:318.73},3:{o1:263.28,o2:353.87},
+  4:{o1:276.23,o2:371.28},5:{o1:284.39,o2:382.25},6:{o1:291.06,o2:391.21},
+  7:{o1:297.27,o2:399.56},8:{o1:302.38,o2:406.42},9:{o1:307.32,o2:413.06},
+};
 const HOLS=new Set([
-  '2025-01-01','2025-04-17','2025-04-18','2025-04-20','2025-04-21','2025-05-29','2025-06-05','2025-06-08','2025-06-09','2025-12-24','2025-12-25','2025-12-26','2025-12-31',
-  '2026-01-01','2026-04-02','2026-04-03','2026-04-05','2026-04-06','2026-05-14','2026-05-24','2026-05-25','2026-06-05','2026-12-24','2026-12-25','2026-12-26','2026-12-31',
-  '2027-01-01','2027-03-25','2027-03-26','2027-03-28','2027-03-29','2027-05-06','2027-05-16','2027-05-17','2027-06-05','2027-12-24','2027-12-25','2027-12-26','2027-12-31',
+  '2025-01-01','2025-04-17','2025-04-18','2025-04-20','2025-04-21',
+  '2025-05-29','2025-06-05','2025-06-08','2025-06-09',
+  '2025-12-24','2025-12-25','2025-12-26','2025-12-31',
+  '2026-01-01','2026-04-02','2026-04-03','2026-04-05','2026-04-06',
+  '2026-05-14','2026-05-24','2026-05-25','2026-06-05',
+  '2026-12-24','2026-12-25','2026-12-26','2026-12-31',
+  '2027-01-01','2027-03-25','2027-03-26','2027-03-28','2027-03-29',
+  '2027-05-06','2027-05-16','2027-05-17','2027-06-05',
+  '2027-12-24','2027-12-25','2027-12-26','2027-12-31',
 ]);
+const OT_NORM=147.33;
+const PK='paycalc_v3';
+const TK='paycalc_theme';
+
+// ═══ STATE ═══
+let profile=null, shifts=[], CY=new Date().getFullYear(), CM=new Date().getMonth(), editId=null;
+let manuals={forlangelse:0,bytteRec:0,bytteGiv:0,driftHrs:0,tcoStudy:0,trainerHrs:0,instruktorHrs:0,helpdeskHrs:0,ankomstHrs:0};
+let curTheme='auto';
+
+// ═══ WIZARD STATE ═══
+let wStep=0, wDir=1;
+let wd={sal:'',yrs:'0',mos:'0',ct:'',quals:[],tcoSen:'',traek:'38',fradrag:'8965'};
+const WSTEPS=5;
+
+function getLT(mo){
+  if(mo<=6)return 1;if(mo<=18)return 2;if(mo<=30)return 3;if(mo<=42)return 4;
+  if(mo<=66)return 5;if(mo<=90)return 6;if(mo<=104)return 7;if(mo<=150)return 8;return 9;
+}
+
+// ═══ WIZARD BUILD ═══
+function buildW(s){
+  switch(s){
+    case 0:return`<div class="wiz-card">
+      <div class="wiz-title">What is your base salary?</div>
+      <div class="wiz-sub">Your contracted monthly amount in kr</div>
+      <div class="wiz-label">Monthly base salary</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <input class="wiz-input" id="w0" type="number" min="0" placeholder="e.g. 30609" value="${wd.sal}" oninput="wd.sal=this.value;wChkNext()">
+        <span style="font-family:var(--fm);color:var(--text2);white-space:nowrap;font-size:13px">kr / month</span>
+      </div>
+      <div class="hint-box wiz-hint">Find this on your employment contract (ansaettelseskontrakt).<br>Include any fixed personal allowances if they appear on every payslip.</div>
+    </div>`;
+    case 1:return`<div class="wiz-card">
+      <div class="wiz-title">How long have you worked here?</div>
+      <div class="wiz-sub">Used to calculate your overtime rates (løntrin)</div>
+      <div class="input-row">
+        <div><div class="wiz-label">Years</div>
+        <input class="wiz-input" id="w1y" type="number" min="0" max="30" value="${wd.yrs}" oninput="wd.yrs=this.value;updLT()"></div>
+        <div><div class="wiz-label">Months</div>
+        <input class="wiz-input" id="w1m" type="number" min="0" max="11" value="${wd.mos}" oninput="wd.mos=this.value;updLT()"></div>
+      </div>
+      <div id="ltpill" style="margin-top:12px"></div>
+    </div>`;
+    case 2:return`<div class="wiz-card">
+      <div class="wiz-title">Contract type?</div>
+      <div class="wiz-sub">Affects how certain allowances are calculated</div>
+      <div class="type-cards">
+        <div class="type-card ${wd.ct==='permanent'?'sel':''}" onclick="wd.ct='permanent';this.closest('.type-cards').querySelectorAll('.type-card').forEach(c=>c.classList.remove('sel'));this.classList.add('sel');wChkNext()">
+          <div class="tc-icon">📋</div><div class="tc-title">Permanent</div>
+          <div class="tc-desc">130 / 121 / 89.7 hrs contract</div>
+        </div>
+        <div class="type-card ${wd.ct==='study'?'sel':''}" onclick="wd.ct='study';this.closest('.type-cards').querySelectorAll('.type-card').forEach(c=>c.classList.remove('sel'));this.classList.add('sel');wChkNext()">
+          <div class="tc-icon">🎓</div><div class="tc-title">Study contract</div>
+          <div class="tc-desc">15–65 hrs flexible schedule</div>
+        </div>
+      </div>
+    </div>`;
+    case 3:{
+      const QS=[
+        {id:'tco',i:'🔄',t:'TCO',r:'Turnaround Coordinator'},
+        {id:'drift',i:'🛠',t:'Drift Support',r:'+10.00 kr/hr'},
+        {id:'trainer',i:'📚',t:'Trainer',r:'+48.26 kr/hr (max 8h/day)'},
+        {id:'instruktor',i:'🎓',t:'Instruktør',r:'+63.50 kr/hr'},
+        {id:'helpdesk',i:'💻',t:'Helpdesk',r:'+24.12 kr/hr'},
+        {id:'ankomst',i:'🛬',t:'Ankomst',r:'+3.10 kr/hr'},
+      ];
+      const tcoSel=wd.quals.includes('tco');
+      return`<div class="wiz-card">
+        <div class="wiz-title">Any qualifications?</div>
+        <div class="wiz-sub">Select all that apply — you can change this in settings</div>
+        <div class="qual-grid">${QS.map(q=>`
+          <div class="qcard ${wd.quals.includes(q.id)?'sel':''}" onclick="tglQ('${q.id}')">
+            <div class="qi">${q.i}</div>
+            <div><div class="qt">${q.t}</div><div class="qr">${q.r}</div></div>
+            <div class="qcheck"></div>
+          </div>`).join('')}</div>
+        ${tcoSel?`<div class="tco-fu"><div class="wiz-label">How long have you been TCO?</div>
+          <div class="radio-grp">
+            <div class="ropt ${wd.tcoSen==='under'?'sel':''}" onclick="wd.tcoSen='under';this.parentNode.querySelectorAll('.ropt').forEach(r=>r.classList.remove('sel'));this.classList.add('sel')">
+              <div class="rdot"></div><div><div>Under 12 months</div><div class="rs">1,517.40 kr/month fixed</div></div>
+            </div>
+            <div class="ropt ${wd.tcoSen==='over'?'sel':''}" onclick="wd.tcoSen='over';this.parentNode.querySelectorAll('.ropt').forEach(r=>r.classList.remove('sel'));this.classList.add('sel')">
+              <div class="rdot"></div><div><div>12 months or more</div><div class="rs">1,900.00 kr/month fixed</div></div>
+            </div>
+          </div>
+        </div>`:''}
+        <div class="wiz-hint" style="margin-top:10px">No qualifications? Just click Next ↓</div>
+      </div>`;
+    }
+    case 4:return`<div class="wiz-card">
+      <div class="wiz-title">Your Danish tax settings</div>
+      <div class="wiz-sub">Find these on your skattekort at <a href="https://skat.dk" target="_blank">skat.dk → TastSelv</a></div>
+      <div style="margin-bottom:16px">
+        <div class="wiz-label">Trækprocent (withholding %)</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <input class="wiz-input" type="number" min="0" max="65" step="0.1" value="${wd.traek}" oninput="wd.traek=this.value">
+          <span style="font-family:var(--fm);color:var(--text2)">%</span>
+        </div>
+      </div>
+      <div>
+        <div class="wiz-label">Månedligt fradrag (monthly allowance, kr)</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <input class="wiz-input" type="number" min="0" step="100" value="${wd.fradrag}" oninput="wd.fradrag=this.value">
+          <span style="font-family:var(--fm);color:var(--text2)">kr</span>
+        </div>
+      </div>
+      <div class="hint-box wiz-hint" style="margin-top:14px">
+        Your fradrag already bundles personfradrag (54,100 kr/yr), beskæftigelsesfradrag (max 63,300 kr/yr), and any personal deductions.<br><br>
+        Tax formula:<br>
+        AM-bidrag = gross × 8%<br>
+        A-skat = max(0, gross × 92% − fradrag) × trækpct<br>
+        ATP = 99 kr fixed<br>
+        Net = gross − AM − A-skat − ATP
+      </div>
+    </div>`;
+  }
+}
+
+function wChkNext(){
+  const btn=document.getElementById('wnx');if(!btn)return;
+  const ok=wStep===0?parseFloat(wd.sal)>0:wStep===2?wd.ct!=='':(wStep===3&&wd.quals.includes('tco')&&!wd.tcoSen)?false:true;
+  btn.disabled=!ok;
+}
+
+function updLT(){
+  const el=document.getElementById('ltpill');if(!el)return;
+  const tm=(parseInt(wd.yrs)||0)*12+(parseInt(wd.mos)||0);
+  const t=getLT(tm);const r=OTR[t];
+  el.innerHTML=`<span class="ltpill">Løntrin ${t} &nbsp;·&nbsp; OT1: ${r.o1.toFixed(2)} kr/hr &nbsp;·&nbsp; OT2: ${r.o2.toFixed(2)} kr/hr</span>`;
+}
+
+function tglQ(id){
+  const i=wd.quals.indexOf(id);
+  if(i>=0){wd.quals.splice(i,1);if(id==='tco')wd.tcoSen='';}
+  else wd.quals.push(id);
+  rWStep(wStep,0);
+}
+
+function rWDots(){
+  document.getElementById('wdots').innerHTML=Array.from({length:WSTEPS},(_,i)=>
+    `<div class="wiz-dot ${i<wStep?'done':i===wStep?'active':''}"></div>`).join('');
+}
+
+function rWStep(step,dir){
+  const vp=document.getElementById('wvp');
+  const old=vp.querySelector('.wiz-step');
+  const nel=document.createElement('div');
+  nel.className='wiz-step';
+  nel.innerHTML=buildW(step);
+  if(old&&dir!==0){
+    old.className=`wiz-step ${dir>0?'exit-l':'exit-r'}`;
+    nel.className=`wiz-step ${dir>0?'enter-r':'enter-l'}`;
+    vp.appendChild(nel);
+    setTimeout(()=>{old.remove();nel.className='wiz-step';},380);
+  }else{
+    if(old)old.remove();
+    vp.appendChild(nel);
+  }
+  // nav
+  const nav=document.getElementById('wnav');
+  nav.style.display='flex';
+  nav.innerHTML=`
+    ${step>0?`<button class="wbk" onclick="wGo(-1)">← Back</button>`:`<div></div>`}
+    <span class="sctr">${step+1} / ${WSTEPS}</span>
+    <button class="wnx" id="wnx" onclick="wGo(1)">${step===WSTEPS-1?"Let's go →":"Next →"}</button>`;
+  setTimeout(()=>{wChkNext();if(step===1)updLT();},30);
+}
+
+function wGo(dir){
+  if(dir===1){
+    if(wStep===0&&!(parseFloat(wd.sal)>0)){toast('Please enter your salary','err');return;}
+    if(wStep===2&&!wd.ct){toast('Please select your contract type','err');return;}
+    if(wStep===3&&wd.quals.includes('tco')&&!wd.tcoSen){toast('Please select how long you have been TCO','err');return;}
+    if(wStep===WSTEPS-1){finishWiz();return;}
+  }
+  wDir=dir;wStep=Math.max(0,Math.min(WSTEPS-1,wStep+dir));
+  rWDots();rWStep(wStep,dir);
+}
+
+function finishWiz(){
+  const tm=(parseInt(wd.yrs)||0)*12+(parseInt(wd.mos)||0);
+  profile={
+    salary:parseFloat(wd.sal),totalMonths:tm,lontrin:getLT(tm),
+    ct:wd.ct,quals:[...wd.quals],tcoSen:wd.tcoSen,
+    traek:parseFloat(wd.traek)||38,fradrag:parseFloat(wd.fradrag)||8965,
+  };
+  saveP();
+  document.getElementById('wizard').classList.add('hidden');
+  document.getElementById('app').classList.add('show');
+  render();toast('Profile saved!','ok');
+}
+
+function startWiz(){
+  wStep=0;
+  if(profile){
+    const y=Math.floor((profile.totalMonths||0)/12);
+    wd={sal:String(profile.salary||''),yrs:String(y),mos:String((profile.totalMonths||0)%12),
+        ct:profile.ct||'',quals:[...(profile.quals||[])],tcoSen:profile.tcoSen||'',
+        traek:String(profile.traek||38),fradrag:String(profile.fradrag||8965)};
+  }else{
+    wd={sal:'',yrs:'0',mos:'0',ct:'',quals:[],tcoSen:'',traek:'38',fradrag:'8965'};
+  }
+  document.getElementById('wizard').classList.remove('hidden');
+  document.getElementById('app').classList.remove('show');
+  document.getElementById('wvp').innerHTML='';
+  rWDots();rWStep(0,1);
+}
+
+// ═══ PROFILE ═══
+function saveP(){localStorage.setItem(PK,JSON.stringify({profile,shifts,CY,CM,manuals}));}
+function loadP(){
+  try{
+    const s=localStorage.getItem(PK);
+    if(!s)return;
+    const d=JSON.parse(s);
+    profile=d.profile||null;
+    shifts=(d.shifts||[]).map(s=>({...s,id:s.id||uid()}));
+    CY=d.CY||new Date().getFullYear();CM=d.CM||new Date().getMonth();
+    manuals=d.manuals||{forlangelse:0,bytteRec:0,bytteGiv:0,driftHrs:0,tcoStudy:0,trainerHrs:0,instruktorHrs:0,helpdeskHrs:0,ankomstHrs:0};
+  }catch(e){}
+}
+
+// ═══ THEME ═══
+function applyTheme(t){
+  curTheme=t;localStorage.setItem(TK,t);
+  const h=document.documentElement;
+  if(t==='dark')h.setAttribute('data-theme','dark');
+  else if(t==='light')h.setAttribute('data-theme','light');
+  else h.setAttribute('data-theme',window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  document.querySelectorAll('.thopt').forEach(e=>e.classList.toggle('sel',e.dataset.th===t));
+}
+function setTheme(t){applyTheme(t);}
+
+// ═══ SETTINGS ═══
+function openSettings(){
+  const p=profile;
+  if(p){
+    const lt=p.lontrin||1;
+    document.getElementById('profcard').innerHTML=
+      `<div class="prof-row"><span class="prlbl">Base salary</span><span class="prval">${fmt(p.salary,0)} kr/mo</span></div>
+       <div class="prof-row"><span class="prlbl">Seniority</span><span class="prval">${Math.floor((p.totalMonths||0)/12)}y ${(p.totalMonths||0)%12}mo → Løntrin ${lt}</span></div>
+       <div class="prof-row"><span class="prlbl">Contract</span><span class="prval">${p.ct==='study'?'Study contract':'Permanent'}</span></div>
+       <div class="prof-row"><span class="prlbl">Qualifications</span><span class="prval">${(p.quals||[]).length?p.quals.join(', '):'None'}</span></div>
+       <div class="prof-row"><span class="prlbl">Trækprocent</span><span class="prval">${p.traek}%</span></div>
+       <div class="prof-row"><span class="prlbl">Fradrag</span><span class="prval">${fmt(p.fradrag,0)} kr</span></div>`;
+  }
+  document.querySelectorAll('.thopt').forEach(e=>e.classList.toggle('sel',e.dataset.th===curTheme));
+  document.getElementById('sovl').classList.add('open');
+}
+function closeSett(e){if(!e||e.target===document.getElementById('sovl'))document.getElementById('sovl').classList.remove('open');}
+function restartWiz(){startWiz();}
+
+// ═══ MATHS ═══
+const uid=()=>Date.now()+Math.random()*1e6|0;
+const tm=s=>{if(!s)return 0;if(s==='24:00')return 1440;const[h,m]=s.split(':').map(Number);return h*60+(m||0);};
+const toH=m=>m/60;
+const fmt=(n,d=2)=>n.toLocaleString('en-GB',{minimumFractionDigits:d,maximumFractionDigits:d});
+const fkr=(n,sign=false)=>(sign&&n>0?'+':'')+fmt(n,2)+' kr';
+
+function calcAftenMins(s,e){
+  return Math.max(0,Math.min(tm(e),24*60)-Math.max(tm(s),18*60));
+}
+function calcNatAmt(s,e){
+  const mins=Math.max(0,Math.min(tm(e),6*60)-Math.max(tm(s),0));
+  if(mins<=0)return 0;
+  return Math.ceil(mins/30)*RATES.natHalf;
+}
 function isHol(y,m,d){return HOLS.has(`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`);}
 
-let CY=2026, CM=3, editId=null;
-const store={};
-
-function key(){return `${CY}-${String(CM+1).padStart(2,'0')}`;}
-function initM(){
-  const k=key();
-  if(!store[k]) store[k]=[];
-}
-
-function tm(s){if(!s)return 0;if(s==='24:00')return 1440;const[h,m]=s.split(':').map(Number);return h*60+(m||0);}
-function toH(m){return m/60;}
-function fn2(n,d=2){return n.toLocaleString('en-GB',{minimumFractionDigits:d,maximumFractionDigits:d});}
-function fkr(n){return fn2(n,2)+' kr';}
-
-function nightM(s,e){const sm=tm(s),em=tm(e);if(em<=sm)return 0;let n=0;[[0,420],[1260,1440]].forEach(([a,b])=>n+=Math.max(0,Math.min(em,b)-Math.max(sm,a)));return n;}
-function wkndM(s,e,sat,sun){if(!sat&&!sun)return{sat:0,sun:0};const sm=tm(s),em=tm(e),ds=420,de=1260,ov=Math.max(0,Math.min(em,de)-Math.max(sm,ds));return{sat:sat?ov:0,sun:sun?ov:0};}
-
-function calcS(sh){
-  const sm=tm(sh.s),em=tm(sh.e),hrs=toH(Math.max(0,em-sm));
+function calcShift(sh){
+  const sm=tm(sh.s),em=tm(sh.e);
+  const hrs=toH(Math.max(0,em-sm));
   const dow=new Date(CY,CM,sh.d).getDay();
   const sat=dow===6,sun=dow===0,hol=isHol(CY,CM,sh.d);
-  const R=rates();
-  const nH=toH(nightM(sh.s,sh.e));
-  const{sat:sM,sun:uM}=wkndM(sh.s,sh.e,sat,sun);
-  const sH=toH(sM),uH=toH(uM);
-  const na=nH*R.night,sa=sH*R.sat,ua=uH*R.sun,ha=hol?hrs*R.hol:0;
-  return{hrs,nH,sH,uH,na,sa,ua,ha,supp:na+sa+ua+ha,sat,sun,hol,dow};
+  const aftenM=calcAftenMins(sh.s,sh.e);
+  const aftenA=toH(aftenM)*RATES.aftenHr;
+  const natA=calcNatAmt(sh.s,sh.e);
+  const satA=sat?toH(Math.max(0,Math.min(em,24*60)-Math.max(sm,6*60)))*RATES.lordagHr:0;
+  const sunA=sun?toH(Math.max(0,Math.min(em,24*60)-Math.max(sm,6*60)))*RATES.sondagHr:0;
+  const holA=hol?hrs*RATES.helligHr:0;
+  const supp=aftenA+natA+satA+sunA+holA;
+  return{hrs,aftenM,aftenA,natA,satA,sunA,holA,supp,sat,sun,hol,dow};
 }
 
-function rates(){
-  const g=id=>parseFloat(document.getElementById(id).value)||0;
-  return{base:g('r-base')||32017.25,norm:g('r-norm')||130,night:g('r-night')||71.78,sat:g('r-sat')||15,sun:g('r-sun')||30,hol:g('r-hol')||209.74,ot1:g('r-ot1')||346.85,ot2:g('r-ot2')||481.73,vl:g('r-varsko-l')||166.57,vs:g('r-varsko-s')||347.62};
+function calcTax(gross){
+  const pct=(profile.traek||38)/100;
+  const frad=profile.fradrag||8965;
+  const am=gross*0.08;
+  const taxable=Math.max(0,gross*0.92-frad);
+  const askat=taxable*pct;
+  const atp=RATES.atp;
+  const net=gross-am-askat-atp;
+  return{am,taxable,askat,atp,net,effRate:gross>0?(am+askat+atp)/gross*100:0,frad};
 }
 
-/* ── RTF / DOC parser ── */
-function stripRtf(raw){
-  const hexMap={0xe6:'æ',0xf8:'ø',0xe5:'å',0xc6:'Æ',0xd8:'Ø',0xc5:'Å'};
-  return raw
-    .replace(/\\'([0-9a-fA-F]{2})/g,(_,h)=>hexMap[parseInt(h,16)]||'')
-    .replace(/\{\\[^{}]*\}/g,'')
-    .replace(/\\[a-z*]+[-]?\d*\s?/gi,'')
-    .replace(/[{}]/g,'');
+function manCalc(key){
+  const v=manuals[key]||0;
+  const p=profile;const lr=OTR[p.lontrin||1];
+  const hourly=p.salary/130;
+  switch(key){
+    case 'forlangelse':return v*RATES.forlangelse;
+    case 'bytteRec':return v*hourly;
+    case 'bytteGiv':return-(v*hourly);
+    case 'driftHrs':return v*RATES.driftHr;
+    case 'tcoStudy':{const r=p.tcoSen==='over'?RATES.tcoStudy2:RATES.tcoStudy1;return Math.min(v*r,RATES.tcoFixed1);}
+    case 'trainerHrs':return v*RATES.trainerHr;
+    case 'instruktorHrs':return v*RATES.instruktorHr;
+    case 'helpdeskHrs':return v*RATES.helpdeskHr;
+    case 'ankomstHrs':return v*RATES.ankomstHr;
+    default:return 0;
+  }
 }
 
-function parseText(text){
-  const lines=text.split(/\r?\n/);
-  const log=[],shifts=[];
+// ═══ FILE PARSING ═══
+function stripRtf(t){
+  const hm={0xe6:'ae',0xf8:'o',0xe5:'a',0xc6:'AE',0xd8:'O',0xc5:'A'};
+  return t.replace(/\'([0-9a-fA-F]{2})/g,(_,h)=>hm[parseInt(h,16)]||''  )
+    .replace(/\{[^{}]*\}/g,'').replace(/\\[a-z*]+[-]?\d*\s?/gi,'').replace(/[{}]/g,'');
+}
+function parseFile(txt){
+  const lines=txt.split(/\r?\n/),out=[],log=[];
   let py=CY,pm=CM;
-
-  // Detect month/year header
-  for(const l of lines.slice(0,8)){
+  for(const l of lines.slice(0,10)){
     const m=l.match(/\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d\d)\b/i);
-    if(m){py=parseInt(m[2]);pm=MONTHS.findIndex(mo=>mo.toLowerCase()===m[1].toLowerCase());log.push(`Detected: ${m[1]} ${py}`);break;}
+    if(m){py=parseInt(m[2]);pm=MONTHS_LONG.findIndex(mo=>mo.toLowerCase()===m[1].toLowerCase());log.push('Month detected: '+m[1]+' '+py);break;}
   }
-
   for(const raw of lines){
-    const l=raw.replace(/\s+/g,' ').trim();
-    if(!l) continue;
-
-    // Main pattern: "  1 Wednesday  0800-1700F  note" — handles 3 or 4 digit times
-    const mS=l.match(/^(\d{1,2})\s+\w+\s+(\d{3,4})[:\-](\d{3,4})[A-Z]?\s*(.*)?$/i);
+    const l=raw.replace(/\s+/g,' ').trim();if(!l)continue;
+    const mS=l.match(/^(\d{1,2})\s+\w+\s+(\d{3,4})[:\-](\d{3,4})[A-Z0-9]?\s*(.*)?$/i);
     if(mS){
-      const d=parseInt(mS[1]);
-      const pad=t=>t.padStart(4,'0');
-      const fmt=t=>`${t.slice(0,2)}:${t.slice(2)}`;
-      const s=fmt(pad(mS[2]));
-      let e=fmt(pad(mS[3]));
-      if(mS[3]==='2400'||e==='24:00') e='24:00';
+      const d=parseInt(mS[1]),p4=t=>t.padStart(4,'0'),f=t=>t.slice(0,2)+':'+t.slice(2);
+      const s=f(p4(mS[2]));let e=f(p4(mS[3]));if(mS[3]==='2400')e='24:00';
       const note=(mS[4]||'').replace(/[FGf]$/,'').trim();
-      shifts.push({d,s,e,note,id:Date.now()+shifts.length*7+Math.random()*100|0});
-      log.push(`Day ${d}: ${s}–${e}${note?' '+note:''}`);
-      continue;
+      out.push({d,s,e,note,id:uid()});log.push('Day '+d+': '+s+'-'+e+(note?' '+note:''));continue;
     }
-
-    // KET standby: "13 Monday  KET(5.45)" or "KET(05:45)"
-    const mK=l.match(/^(\d{1,2})\s+\w+\s+KET\s*[\(]?(\d+)[.:](\d+)[\)]?/i);
+    const mK=l.match(/^(\d{1,2})\s+\w+\s+KET\s*[\(]?(\d+)[.:]?(\d*)[\)]?/i);
     if(mK){
-      const d=parseInt(mK[1]),h=mK[2].padStart(2,'0'),mi=mK[3].padStart(2,'0');
-      shifts.push({d,s:`${h}:${mi}`,e:'12:45',note:'KET',id:Date.now()+shifts.length*7+Math.random()*100|0});
-      log.push(`Day ${d}: KET ${h}:${mi}–12:45 (end estimated)`);
-      continue;
+      const d=parseInt(mK[1]),h=(mK[2]||'').padStart(2,'0'),mi=(mK[3]||'00').padStart(2,'0');
+      out.push({d,s:h+':'+mi,e:'12:45',note:'KET',id:uid()});log.push('Day '+d+': KET '+h+':'+mi+'-12:45');continue;
     }
-
-    // Skip days off
-    if(/fridag|fri dag|day\s*off/i.test(l)) continue;
   }
-
-  return{shifts,year:py,month:pm,log};
+  return{shifts:out,py,pm,log};
 }
-
 function handleFile(file){
-  if(!file) return;
+  if(!file)return;
   const r=new FileReader();
   r.onload=e=>{
     let txt=e.target.result;
-    if(txt.trim().startsWith('{\\rtf')||file.name.toLowerCase().endsWith('.rtf')||file.name.toLowerCase().endsWith('.doc')) txt=stripRtf(txt);
-    const{shifts,year,month,log}=parseText(txt);
-    if(!shifts.length){toast('No shifts found — check file format','err');showLog(['No shifts parsed. Expected: "  1 Wednesday  0800-1700F  note"',...log]);return;}
-    CY=year;CM=month;
-    store[key()]=shifts;
-    editId=null;
-    showLog([`Loaded ${shifts.length} shifts for ${MONTHS[month]} ${year}`,...log]);
-    toast(`Loaded ${shifts.length} shifts from "${file.name}"`,'ok');
-    render();
+    if(txt.trim().startsWith('{\\rtf')||/\.(rtf|doc)$/i.test(file.name))txt=stripRtf(txt);
+    const{shifts:s,py,pm,log}=parseFile(txt);
+    if(!s.length){toast('No shifts found in file','err');showLog(['Could not parse shifts',...log]);return;}
+    CY=py;CM=pm;shifts=s;editId=null;
+    showLog([`Loaded ${s.length} shifts · ${MONTHS_LONG[pm]} ${py}`,...log]);
+    toast(`Loaded ${s.length} shifts · ${MONTHS_LONG[pm]} ${py}`,'ok');
+    saveP();render();
   };
   r.readAsText(file,'windows-1252');
 }
+function showLog(lines){const el=document.getElementById('plog');el.style.display='block';el.innerHTML=lines.map(l=>`<div>${l}</div>`).join('');}
+function onDrop(e){e.preventDefault();document.getElementById('dropz').classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleFile(f);}
 
-function showLog(lines){const el=document.getElementById('parse-log');el.style.display='block';el.innerHTML=lines.map(l=>`<div>${l}</div>`).join('');}
-
-function onDrop(e){e.preventDefault();document.getElementById('drop-zone').classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleFile(f);}
-
-/* ── Toast ── */
-let tT;
-function toast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),3500);}
-
-function downloadSummary(){
-  initM();
-  const shifts=store[key()];
-  const R=rates();
-  const mn=MONTHS[CM];
-  const lastD=new Date(CY,CM+1,0).getDate();
-  const calcs=shifts.map(calcS);
-  let tH=0,tS=0;calcs.forEach(c=>{tH+=c.hrs;tS+=c.supp;});
-  const ot=Math.max(0,tH-R.norm),otAmt=ot*R.ot1;
-  const vl=parseInt(document.getElementById('v-l').value)||0;
-  const vs=parseInt(document.getElementById('v-s').value)||0;
-  const vc=parseInt(document.getElementById('v-c').value)||0;
-  const vlA=vl*R.vl,vsA=vs*R.vs,vcA=vc*334.86,vtot=vlA+vsA+vcA;
-  const gross=R.base+tS+otAmt+vtot;
-  const p2=R.base*.02,p11=R.base*.11;
-  const nT=calcs.reduce((a,c)=>a+c.na,0),sT=calcs.reduce((a,c)=>a+c.sa,0),uT=calcs.reduce((a,c)=>a+c.ua,0),hT=calcs.reduce((a,c)=>a+c.ha,0);
-  const nH=calcs.reduce((a,c)=>a+c.nH,0),sH=calcs.reduce((a,c)=>a+c.sH,0),uH=calcs.reduce((a,c)=>a+c.uH,0),hH=calcs.reduce((a,c)=>a+(c.hol?c.hrs:0),0);
-
-  const now=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-  const line=(label,val,pad=38)=>label.padEnd(pad)+val;
-  const sep=(c='-',n=52)=>c.repeat(n);
-
-  // Build shift rows
-  const shiftRows=shifts.map((sh,i)=>{
-    const c=calcs[i];
-    const dow=DSHORT[c.dow];
-    const flags=[];
-    if(c.nH>0)flags.push('night');if(c.sat)flags.push('sat');if(c.sun)flags.push('sun');if(c.hol)flags.push('holiday');
-    const note=flags.length?` [${flags.join(',')}]`:'';
-    return `  ${String(sh.d).padStart(2)} ${mn.slice(0,3)} (${dow})  ${sh.s}–${sh.e}  ${fn2(c.hrs,2).padStart(5)} h  +${fn2(c.supp,2).padStart(8)} kr${sh.note?'  '+sh.note:''}${note}`;
-  }).join('\n');
-
-  const txt=[
-    'PAYCALC · AVIATOR OPS',
-    sep('='),
-    `Pay period : 1 ${mn} ${CY} – ${lastD} ${mn} ${CY}`,
-    `Generated  : ${now}`,
-    `Contract   : 130 hrs/month · Pay class 4 · >36 months seniority`,
-    '',
-    sep(),
-    'SHIFTS',
-    sep(),
-    shiftRows||'  (no shifts)',
-    '',
-    sep(),
-    'PAY BREAKDOWN',
-    sep(),
-    line('Base salary',`${fn2(R.base,2)} kr`),
-    line('Night supplement',`+${fn2(nT,2)} kr  (${fn2(nH,2)} h × ${fn2(R.night,2)} kr/h)`),
-    line('Saturday supplement',`+${fn2(sT,2)} kr  (${fn2(sH,2)} h × ${fn2(R.sat,2)} kr/h)`),
-    line('Sunday supplement',`+${fn2(uT,2)} kr  (${fn2(uH,2)} h × ${fn2(R.sun,2)} kr/h)`),
-    line('Holiday supplement',`+${fn2(hT,2)} kr  (${fn2(hH,2)} h × ${fn2(R.hol,2)} kr/h)`),
-    line('Overtime OT1',`+${fn2(otAmt,2)} kr  (${fn2(ot,2)} h × ${fn2(R.ot1,2)} kr/h)`),
-    line('Varsko / schedule changes',`+${fn2(vtot,2)} kr  (${vl+vs+vc} total)`),
-    sep(),
-    line('ESTIMATED GROSS PAY',`${fn2(gross,2)} kr`),
-    sep(),
-    '',
-    line('Employer pension (11%)',`+${fn2(p11,2)} kr`),
-    line('Employee pension (2%)',`-${fn2(p2,2)} kr`),
-    '',
-    sep(),
-    'HOURS SUMMARY',
-    sep(),
-    line('Total hours worked',`${fn2(tH,2)} h`),
-    line('Monthly norm',`${R.norm} h`),
-    line('Overtime',`${fn2(ot,2)} h`),
-    '',
-    sep('='),
-    'Generated by PayCalc · Aviator OPS · paycalc.html',
-    sep('='),
-  ].join('\n');
-
-  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  a.download=`paycalc-${mn.toLowerCase()}-${CY}.txt`;
-  a.click();
-  URL.revokeObjectURL(url);
-  toast('Summary downloaded','ok');
-}
-
-/* ── Render ── */
+// ═══ RENDER ═══
 function render(){
-  initM();
-  const shifts=store[key()];
-  const R=rates();
-  const mn=MONTHS[CM];
-  document.getElementById('month-lbl').textContent=`${mn} ${CY}`;
-  const lastD=new Date(CY,CM+1,0).getDate();
-  document.getElementById('pay-period').textContent=`1 ${mn} ${CY} – ${lastD} ${mn} ${CY}`;
+  if(!profile)return;
+  const p=profile;
+  document.getElementById('monthpill').textContent='📅 '+MONTHS_LONG[CM]+' '+CY;
+  const calcs=shifts.map(calcShift);
+  let totalSupp=0;calcs.forEach(c=>totalSupp+=c.supp);
+  const totalHrs=calcs.reduce((a,c)=>a+c.hrs,0);
+  const otHrs=Math.max(0,totalHrs-OT_NORM);
+  const otAmt=otHrs*(OTR[p.lontrin||1].o1);
+  // manual totals
+  const mkeys=Object.keys(manuals);
+  const mTotal=mkeys.reduce((a,k)=>a+manCalc(k),0);
+  // guaranteed
+  const tcoFix=p.quals.includes('tco')&&p.ct==='permanent'?(p.tcoSen==='over'?RATES.tcoFixed2:RATES.tcoFixed1):0;
+  const gGross=p.salary+tcoFix;
+  const gTax=calcTax(gGross);
+  // next month supplements gross
+  const nGross=totalSupp+otAmt+mTotal;
+  // marginal tax on supplements (fradrag already consumed by base)
+  const nAM=nGross*0.08;const nAsk=nGross*0.92*(p.traek/100);const nNet=nGross-nAM-nAsk;
 
-  const calcs=shifts.map(calcS);
-  let tH=0,tS=0;calcs.forEach(c=>{tH+=c.hrs;tS+=c.supp;});
-  const ot=Math.max(0,tH-R.norm),otAmt=ot*R.ot1;
+  // PANELS
+  document.getElementById('panels').innerHTML=`
+    <div class="panel panel-g">
+      <div class="plabel plabel-g">Guaranteed this month</div>
+      <div class="pgross pgross-g">${fmt(gGross,0)} kr</div>
+      <div class="pnet">≈ ${fmt(gTax.net,0)} kr after tax</div>
+      <div class="pitems">
+        <div class="pitem"><span class="pil">Base salary</span><span class="piv">${fkr(p.salary)}</span></div>
+        ${tcoFix?`<div class="pitem"><span class="pil">TCO allowance</span><span class="piv pos">+${fkr(tcoFix)}</span></div>`:''  }
+        <div class="pitem"><span class="pil">AM-bidrag 8%</span><span class="piv neg">−${fkr(gTax.am)}</span></div>
+        <div class="pitem"><span class="pil">A-skat ${p.traek}%</span><span class="piv neg">−${fkr(gTax.askat)}</span></div>
+        <div class="pitem"><span class="pil">ATP</span><span class="piv neg">−${fkr(gTax.atp)}</span></div>
+      </div>
+    </div>
+    <div class="panel panel-a">
+      <div class="plabel plabel-a">From this month → paid next month</div>
+      <div class="pgross pgross-a">${fmt(nGross,0)} kr</div>
+      <div class="pnet">≈ ${fmt(nNet,0)} kr estimated after tax</div>
+      <div class="pitems">
+        ${totalSupp>0?`<div class="pitem"><span class="pil">Shift supplements</span><span class="piv pos">+${fkr(totalSupp)}</span></div>`:''  }
+        ${otAmt>0?`<div class="pitem"><span class="pil">OT1 (${fmt(otHrs,2)} hrs above ${OT_NORM})</span><span class="piv pos">+${fkr(otAmt)}</span></div>`:''  }
+        ${mTotal!==0?`<div class="pitem"><span class="pil">Manual adjustments</span><span class="piv ${mTotal>0?'pos':'neg'}">${fkr(mTotal,true)}</span></div>`:''  }
+        ${nGross===0?`<div class="pitem" style="color:var(--text3);font-size:11px;font-family:var(--fm)">Upload a shift file to calculate</div>`:''  }
+      </div>
+    </div>`;
 
-  const vl=parseInt(document.getElementById('v-l').value)||0;
-  const vs=parseInt(document.getElementById('v-s').value)||0;
-  const vc=parseInt(document.getElementById('v-c').value)||0;
-  const vlA=vl*R.vl,vsA=vs*R.vs,vcA=vc*334.86;
-  document.getElementById('va-l').textContent=fkr(vlA);
-  document.getElementById('va-s').textContent=fkr(vsA);
-  document.getElementById('va-c').textContent=fkr(vcA);
-  const vtot=vlA+vsA+vcA;
-  const gross=R.base+tS+otAmt+vtot;
-
-  document.getElementById('s-hrs').textContent=fn2(tH,2)+' h';
-  document.getElementById('s-hrs-sub').textContent=`of ${R.norm} hr norm`;
-  document.getElementById('s-sup').textContent=fn2(tS,0);
-  document.getElementById('s-ot').textContent=fn2(ot,2)+' h';
-  document.getElementById('s-gross').textContent=fn2(gross,0)+' kr';
-
-  // Table
-  const tbody=document.getElementById('shifts-body');
-  tbody.innerHTML='';
-  document.getElementById('empty-msg').style.display=shifts.length?'none':'';
-
+  // SHIFTS TABLE
+  const sb=document.getElementById('sb');sb.innerHTML='';
+  document.getElementById('empty').style.display=shifts.length?'none':'';
   shifts.forEach((sh,i)=>{
-    const c=calcs[i];
-    const tr=document.createElement('tr');
-    const dl=`${sh.d} ${mn.slice(0,3)}`;
-    const dn=DSHORT[c.dow];
-
+    const c=calcs[i],tr=document.createElement('tr');
+    const dow=DAYS_SHORT[c.dow];
     if(editId===sh.id){
-      tr.className='editing';
-      tr.innerHTML=`
-        <td class="tm"><input class="ei ei-d" id="eid" type="number" min="1" max="31" value="${sh.d}"></td>
-        <td class="dim">${dn}</td>
-        <td colspan="5"><div class="erow">
-          <input class="ei ei-t" id="eis" type="time" value="${sh.s==='24:00'?'23:59':sh.s}">
+      tr.className='ed';
+      tr.innerHTML=`<td class="mono"><input class="ei eid" type="number" min="1" max="31" value="${sh.d}" id="ed"></td>
+        <td class="dim">${dow}</td>
+        <td colspan="4"><div class="erow">
+          <input class="ei eit" type="time" id="es" value="${sh.s==='24:00'?'23:59':sh.s}">
           <span style="color:var(--text3)">→</span>
-          <input class="ei ei-t" id="eie" type="time" value="${sh.e==='24:00'?'23:59':sh.e}">
-          <input class="ei ei-n" id="ein" type="text" value="${sh.note||''}" placeholder="note">
-          <button class="sv" onclick="saveEdit(${sh.id})">Save</button>
-          <button class="dv" onclick="delShift(${sh.id})">Delete</button>
-        </div></td>
-        <td></td>`;
-    } else {
-      const bg=[];
-      if(c.nH>0) bg.push('<span class="badge bn">night</span>');
-      if(c.sat)  bg.push('<span class="badge bs">sat</span>');
-      if(c.sun)  bg.push('<span class="badge bu">sun</span>');
-      if(c.hol)  bg.push('<span class="badge bh">holiday</span>');
-      tr.innerHTML=`
-        <td class="tm">${dl}${sh.note?` <span class="dim">${sh.note}</span>`:''}
-        </td>
-        <td class="dim">${dn}</td>
-        <td class="tm">${sh.s}</td>
-        <td class="tm">${sh.e}</td>
-        <td class="tm">${fn2(c.hrs,2)} h</td>
-        <td><div class="badges">${bg.join('')||'—'}</div></td>
-        <td style="text-align:right" class="tm">${c.supp>0?'+'+fn2(c.supp,2):'0.00'}</td>
-        <td><button class="ei-ico" onclick="event.stopPropagation();startEdit(${sh.id})">✎</button></td>`;
-      tr.onclick=()=>startEdit(sh.id);
+          <input class="ei eit" type="time" id="ee" value="${sh.e==='24:00'?'23:59':sh.e}">
+          <input class="ei" style="width:90px" type="text" id="en" value="${sh.note||''}" placeholder="note">
+          <button class="esv" onclick="saveEd(${sh.id})">Save</button>
+          <button class="edl" onclick="delShift(${sh.id})">Delete</button>
+        </div></td><td></td><td></td>`;
+    }else{
+      const bgs=[];
+      if(toH(c.aftenM)>0)bgs.push('<span class="b ba">aften</span>');
+      if(c.natA>0)bgs.push('<span class="b bn">nat</span>');
+      if(c.sat&&!c.hol)bgs.push('<span class="b bs">lør</span>');
+      if(c.sun&&!c.hol)bgs.push('<span class="b bu">søn</span>');
+      if(c.hol)bgs.push('<span class="b bh">helligdag</span>');
+      tr.innerHTML=`<td class="mono">${sh.d} ${MONTHS_LONG[CM].slice(0,3)}${sh.note?` <span class="dim">${sh.note}</span>`:''}</td>
+        <td class="dim">${dow}</td><td class="mono">${sh.s}</td><td class="mono">${sh.e}</td>
+        <td class="mono">${fmt(c.hrs,2)}h</td>
+        <td><div class="bgs">${bgs.join('')||'—'}</div></td>
+        <td style="text-align:right" class="mono">${c.supp>0?'<span style="color:var(--green)">+'+fmt(c.supp,2)+'</span>':'0.00'}</td>
+        <td><button class="eico" onclick="event.stopPropagation();startEd(${sh.id})">✎</button></td>`;
+      tr.onclick=()=>startEd(sh.id);
     }
-    tbody.appendChild(tr);
+    sb.appendChild(tr);
   });
 
-  // Breakdown
-  const nT=calcs.reduce((a,c)=>a+c.na,0),sT=calcs.reduce((a,c)=>a+c.sa,0),uT=calcs.reduce((a,c)=>a+c.ua,0),hT=calcs.reduce((a,c)=>a+c.ha,0);
-  const nH=calcs.reduce((a,c)=>a+c.nH,0),sH=calcs.reduce((a,c)=>a+c.sH,0),uH=calcs.reduce((a,c)=>a+c.uH,0),hH=calcs.reduce((a,c)=>a+(c.hol?c.hrs:0),0);
-  const p2=R.base*.02,p11=R.base*.11;
+  // MANUAL GRID
+  const mrows=[
+    {k:'forlangelse',l:'Extensions (forlængelse)',u:'events',show:true},
+    {k:'bytteRec',l:'Swap hours received',u:'hrs',show:true},
+    {k:'bytteGiv',l:'Swap hours given away',u:'hrs',show:true},
+    {k:'driftHrs',l:'Drift support hours',u:'hrs',show:p.quals.includes('drift')},
+    {k:'tcoStudy',l:'TCO shifts (study contract)',u:'shifts',show:p.quals.includes('tco')&&p.ct==='study'},
+    {k:'trainerHrs',l:'Trainer hours',u:'hrs',show:p.quals.includes('trainer')},
+    {k:'instruktorHrs',l:'Instruktør hours',u:'hrs',show:p.quals.includes('instruktor')},
+    {k:'helpdeskHrs',l:'Helpdesk hours',u:'hrs',show:p.quals.includes('helpdesk')},
+    {k:'ankomstHrs',l:'Ankomst hours',u:'hrs',show:p.quals.includes('ankomst')},
+  ].filter(r=>r.show);
+  document.getElementById('mgrid').innerHTML=mrows.map(r=>{
+    const amt=manCalc(r.k);
+    return`<div class="mrow">
+      <span class="ml">${r.l}</span>
+      <input class="mi" type="number" min="0" value="${manuals[r.k]||0}" onchange="manuals['${r.k}']=parseFloat(this.value)||0;saveP();render()">
+      <span class="mu">${r.u}</span>
+      <span class="ma ${amt>=0?'pos':'neg'}">${fkr(amt,true)}</span>
+    </div>`;
+  }).join('');
 
-  const rows=[
-    ['Base salary',`${R.norm} hrs norm`,fn2(R.base,2),'p'],
-    ['Night suppl.',`${fn2(nH,2)} h × ${fn2(R.night,2)} kr/h`,nT>0?'+'+fn2(nT,2):'0.00',nT>0?'p':''],
-    ['Saturday suppl.',`${fn2(sH,2)} h × ${fn2(R.sat,2)} kr/h`,sT>0?'+'+fn2(sT,2):'0.00',sT>0?'p':''],
-    ['Sunday suppl.',`${fn2(uH,2)} h × ${fn2(R.sun,2)} kr/h`,uT>0?'+'+fn2(uT,2):'0.00',uT>0?'p':''],
-    ['Holiday suppl.',`${fn2(hH,2)} h × ${fn2(R.hol,2)} kr/h`,hT>0?'+'+fn2(hT,2):'0.00',hT>0?'p':''],
-    ['Overtime OT1',`${fn2(ot,2)} h × ${fn2(R.ot1,2)} kr/h`,ot>0?'+'+fn2(otAmt,2):'0.00',ot>0?'p':''],
-    ['Varsko / changes',`${vl+vs+vc} total`,vtot>0?'+'+fn2(vtot,2):'0.00',vtot>0?'p':''],
-  ];
-
-  let html=rows.map(([l,d,v,c])=>`<div class="bdr"><span class="bdl">${l}<span class="bdd">${d}</span></span><span class="bdv ${c}">${v} kr</span></div>`).join('');
-  html+=`<div class="bdr tot"><span class="bdl">Estimated gross pay</span><span class="bdv big">${fn2(gross,2)} kr</span></div>`;
-  html+=`<div class="bdr"><span class="bdl">Employer pension (11%)</span><span class="bdv p">+${fn2(p11,2)} kr</span></div>`;
-  html+=`<div class="bdr"><span class="bdl">Employee pension (2%)</span><span class="bdv n">−${fn2(p2,2)} kr</span></div>`;
-  document.getElementById('breakdown').innerHTML=html;
+  // TAX CARD
+  const totalGross=gGross+nGross;
+  const tx=calcTax(totalGross);
+  document.getElementById('taxcard').innerHTML=`
+    <div class="txh"><div class="txht">Danish tax breakdown (SKAT 2026 verified formula)</div></div>
+    <div class="trow"><span class="tl">Guaranteed gross (base + fixed quals)</span><span class="tv">${fkr(gGross)}</span></div>
+    <div class="trow"><span class="tl">Supplements from this month's shifts</span><span class="tv">${fkr(nGross)}</span></div>
+    <div class="trow"><span class="tl">Combined gross estimate</span><span class="tv" style="font-weight:600">${fkr(totalGross)}</span></div>
+    <div class="trow"><span class="tl">AM-bidrag (gross × 8%)</span><span class="tv neg">− ${fkr(tx.am)}</span></div>
+    <div class="trow"><span class="tl">Månedligt fradrag</span><span class="tv neg">− ${fkr(tx.frad)}</span></div>
+    <div class="trow"><span class="tl">Taxable income (gross×92% − fradrag)</span><span class="tv">${fkr(tx.taxable)}</span></div>
+    <div class="trow"><span class="tl">A-skat (${p.traek}% trækprocent)</span><span class="tv neg">− ${fkr(tx.askat)}</span></div>
+    <div class="trow"><span class="tl">ATP A-sats (fixed)</span><span class="tv neg">− ${fkr(tx.atp)}</span></div>
+    <div class="trow"><span class="tl">Effective rate</span><span class="tv">${fmt(tx.effRate,1)}%</span></div>
+    <div class="trow nrow"><span class="tl" style="color:var(--teal);font-weight:600">Estimated net pay</span><span class="tv teal">${fkr(tx.net)}</span></div>`;
 }
 
-function recalc(){render();}
-
-function startEdit(id){editId=id;render();}
-function saveEdit(id){
-  const k=key(),sh=store[k].find(s=>s.id===id);if(!sh)return;
-  const nd=parseInt(document.getElementById('eid').value);
-  if(nd>=1&&nd<=31)sh.d=nd;
-  sh.s=document.getElementById('eis').value;
-  const ev=document.getElementById('eie').value;sh.e=ev==='23:59'?'24:00':ev;
-  sh.note=document.getElementById('ein').value;
-  store[k].sort((a,b)=>a.d-b.d);editId=null;render();
+// ═══ SHIFT EDITING ═══
+function startEd(id){editId=id;render();}
+function saveEd(id){
+  const d=parseInt(document.getElementById('ed').value)||1;
+  const s=document.getElementById('es').value||'08:00';
+  const e=document.getElementById('ee').value||'16:00';
+  const n=document.getElementById('en').value.trim();
+  const i=shifts.findIndex(x=>x.id===id);
+  if(i>=0)shifts[i]={...shifts[i],d,s,e,note:n};
+  editId=null;saveP();render();
 }
-function delShift(id){const k=key();store[k]=store[k].filter(s=>s.id!==id);editId=null;render();}
+function delShift(id){shifts=shifts.filter(x=>x.id!==id);editId=null;saveP();render();}
 function addShift(){
-  const k=key(),last=new Date(CY,CM+1,0).getDate();
-  const used=store[k].map(s=>s.d);
-  let d=1;while(used.includes(d)&&d<=last)d++;if(d>last)d=last;
-  const sh={d,s:'08:00',e:'16:00',note:'',id:Date.now()};
-  store[k].push(sh);store[k].sort((a,b)=>a.d-b.d);editId=sh.id;render();
+  const lastD=shifts.length?shifts[shifts.length-1].d+1:1;
+  shifts.push({d:Math.min(lastD,28),s:'08:00',e:'16:00',note:'',id:uid()});
+  editId=shifts[shifts.length-1].id;saveP();render();
+  // scroll to bottom of table
+  setTimeout(()=>document.getElementById('sb').lastElementChild?.scrollIntoView({behavior:'smooth',block:'center'}),50);
 }
 
-function changeMonth(dir){
-  CM+=dir;if(CM>11){CM=0;CY++;}if(CM<0){CM=11;CY--;}editId=null;render();
+// ═══ TOAST ═══
+function toast(msg,type='ok'){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='toast show '+type;
+  setTimeout(()=>el.classList.remove('show'),2600);
 }
 
-let dark=true;
-function toggleTheme(){
-  dark=!dark;
-  document.documentElement.setAttribute('data-theme',dark?'':'light');
-  document.getElementById('theme-icon').textContent=dark?'☀':'☾';
-  document.getElementById('theme-lbl').textContent=dark?'Light mode':'Dark mode';
+// ═══ PDF ═══
+function dlPDF(){
+  if(typeof jspdf==='undefined'&&typeof window.jspdf==='undefined'){toast('PDF library not loaded','err');return;}
+  const{jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+  const p=profile;
+  const calcs=shifts.map(calcShift);
+  const totalSupp=calcs.reduce((a,c)=>a+c.supp,0);
+  const totalHrs=calcs.reduce((a,c)=>a+c.hrs,0);
+  const otHrs=Math.max(0,totalHrs-OT_NORM);
+  const otAmt=otHrs*(OTR[p.lontrin||1].o1);
+  const mkeys=Object.keys(manuals);const mTotal=mkeys.reduce((a,k)=>a+manCalc(k),0);
+  const tcoFix=p.quals.includes('tco')&&p.ct==='permanent'?(p.tcoSen==='over'?RATES.tcoFixed2:RATES.tcoFixed1):0;
+  const gGross=p.salary+tcoFix;const nGross=totalSupp+otAmt+mTotal;
+  const tx=calcTax(gGross+nGross);
+  let y=18;
+  doc.setFontSize(18);doc.setFont('helvetica','bold');
+  doc.text('PayCalc · Aviator PAX',14,y);y+=8;
+  doc.setFontSize(11);doc.setFont('helvetica','normal');
+  doc.text(MONTHS_LONG[CM]+' '+CY+' — Salary Summary',14,y);y+=10;
+  doc.setFontSize(10);
+  const rows=[
+    ['Base salary',fkr(p.salary)],['TCO allowance',tcoFix?fkr(tcoFix):'—'],
+    ['Shift supplements',fkr(totalSupp)],['Overtime ('+fmt(otHrs,2)+'h)',fkr(otAmt)],
+    ['Manual adjustments',fkr(mTotal)],['Combined gross',fkr(gGross+nGross)],
+    ['AM-bidrag (8%)','−'+fkr(tx.am)],['A-skat ('+p.traek+'%)','−'+fkr(tx.askat)],
+    ['ATP A-sats','−'+fkr(tx.atp)],['Effective rate',fmt(tx.effRate,1)+'%'],
+    ['ESTIMATED NET',fkr(tx.net)],
+  ];
+  rows.forEach(([l,v])=>{
+    doc.text(l,14,y);doc.text(v,140,y,{align:'right'});y+=7;
+    if(l==='Combined gross'||l==='Estimated net')y+=3;
+  });
+  y+=4;doc.setFontSize(8);doc.setTextColor(150);
+  doc.text('Generated by PayCalc · PAX · Aviator Flight Services. Estimate only — verify with your official payslip.',14,y);
+  doc.save('paycalc-'+MONTHS_LONG[CM].toLowerCase()+'-'+CY+'.pdf');
+  toast('PDF downloaded','ok');
 }
 
-render();
+// ═══ INIT ═══
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(curTheme==='auto')applyTheme('auto');});
+loadP();
+curTheme=localStorage.getItem(TK)||'auto';
+applyTheme(curTheme);
+if(profile){
+  document.getElementById('wizard').classList.add('hidden');
+  document.getElementById('app').classList.add('show');
+  render();
+}else{
+  startWiz();
+}
 </script>
 </body>
 </html>
