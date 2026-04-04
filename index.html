@@ -223,6 +223,55 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
   .wiz-card{padding:22px 18px;}
   th:nth-child(6),td:nth-child(6){display:none;}
 }
+
+/* ── WALKTHROUGH ── */
+.guide-btn{font-size:15px;font-weight:700;font-family:var(--fn);}
+#wt-overlay{position:fixed;inset:0;z-index:500;pointer-events:all;}
+#wt-spot{
+  position:fixed;
+  border-radius:10px;
+  box-shadow:0 0 0 9999px rgba(0,0,0,0.72);
+  transition:top 0.38s cubic-bezier(0.4,0,0.2,1),
+             left 0.38s cubic-bezier(0.4,0,0.2,1),
+             width 0.38s cubic-bezier(0.4,0,0.2,1),
+             height 0.38s cubic-bezier(0.4,0,0.2,1);
+  pointer-events:none;
+  z-index:501;
+}
+#wt-card{
+  position:fixed;
+  z-index:502;
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:var(--rxl);
+  padding:24px 24px 20px;
+  width:320px;
+  max-width:calc(100vw - 32px);
+  box-shadow:0 24px 64px rgba(0,0,0,0.55);
+  transition:top 0.38s cubic-bezier(0.4,0,0.2,1),
+             left 0.38s cubic-bezier(0.4,0,0.2,1),
+             bottom 0.38s cubic-bezier(0.4,0,0.2,1),
+             transform 0.38s cubic-bezier(0.4,0,0.2,1);
+}
+#wt-x{
+  position:absolute;top:14px;right:14px;
+  background:none;border:none;font-size:16px;cursor:pointer;
+  color:var(--text3);line-height:1;padding:4px;border-radius:4px;
+  transition:color 0.15s;
+}
+#wt-x:hover{color:var(--text);background:var(--bg3);}
+#wt-step-lbl{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);font-family:var(--fm);margin-bottom:8px;}
+#wt-title{font-size:17px;font-weight:700;letter-spacing:-0.02em;margin-bottom:8px;}
+#wt-body{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:20px;}
+#wt-nav{display:flex;align-items:center;justify-content:space-between;}
+#wt-back,#wt-next{
+  padding:8px 18px;border-radius:var(--r);font-family:var(--fn);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all 0.15s;
+}
+#wt-back{background:var(--bg3);color:var(--text2);border:1px solid var(--border2);}
+#wt-back:hover{background:var(--bg4);color:var(--text);}
+#wt-next{background:var(--accent);color:#fff;}
+#wt-next:hover{background:var(--accent2);}
+#wt-ctr{font-size:11px;color:var(--text3);font-family:var(--fm);}
 </style>
 </head>
 <body>
@@ -240,10 +289,12 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
 <div id="app">
   <header class="app-hdr">
     <div class="logo">
-      <div class="logo-ico">✈</div>
-      <div><div class="logo-tx">PayCalc</div><div class="logo-sx">Aviator · PAX</div></div>
+      <div><div class="logo-tx">PayBuddy</div><div class="logo-sx">Aviator · PAX</div></div>
     </div>
-    <button class="ibtn" onclick="openSett()" title="Settings">⚙</button>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="ibtn guide-btn" onclick="startTour()" title="Guide">?</button>
+      <button class="ibtn" onclick="openSett()" title="Settings">⚙</button>
+    </div>
   </header>
   <main class="app-body">
     <div class="upz" id="dropz" onclick="document.getElementById('fin').click()"
@@ -282,6 +333,22 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
     <div class="txc" id="taxcard"></div>
     <p class="fn2">AM-bidrag 8% · A-skat = (gross×92% − fradrag) × trækpct · ATP 99 kr · Formula verified against SKAT 2026</p>
   </main>
+</div>
+
+<!-- Walkthrough overlay -->
+<div id="wt-overlay" style="display:none">
+  <div id="wt-spot"></div>
+  <div id="wt-card">
+    <button id="wt-x" onclick="endTour()" title="Close">✕</button>
+    <div id="wt-step-lbl"></div>
+    <div id="wt-title"></div>
+    <div id="wt-body"></div>
+    <div id="wt-nav">
+      <button id="wt-back" onclick="tourGo(-1)">← Back</button>
+      <span id="wt-ctr"></span>
+      <button id="wt-next" onclick="tourGo(1)">Next →</button>
+    </div>
+  </div>
 </div>
 
 <!-- Settings modal -->
@@ -341,15 +408,33 @@ let profile=null,shifts=[],CY=new Date().getFullYear(),CM=new Date().getMonth(),
 let manuals={forl:0,bytteRec:0,bytteGiv:0,driftHrs:0,tcoStudy:0,trainerHrs:0,instruktorHrs:0,helpdeskHrs:0,ankomstHrs:0};
 let curTheme='auto';
 
+// ═══ SALARY FORMATTING ═══
+function fmtSalDisp(raw){
+  const n=raw.replace(/\D/g,'');
+  if(!n)return '';
+  return n.length<=4?n:n.replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+}
+function onSalInput(el){
+  const raw=el.value.replace(/\s/g,'').replace(/\D/g,'');
+  wd.sal=raw;
+  const fmt=raw?(raw.length<=4?raw:raw.replace(/\B(?=(\d{3})+(?!\d))/g,' ')):'';
+  const pos=el.selectionStart;
+  const oldLen=el.value.length;
+  el.value=fmt;
+  const diff=fmt.length-oldLen;
+  try{el.setSelectionRange(pos+diff,pos+diff);}catch(e){}
+  chkNext();
+}
+
 // ═══ WIZARD STATE ═══
-// Steps: 0=salary+hours, 1=seniority, 2=contract, 3=quals, 4=tco-seniority(conditional), 5=tax
+// Steps: 0=salary, 1=hours, 2=seniority, 3=contract, 4=quals, 5=tco(conditional), 6=tax
 let wStep=0,wDir=1;
 let wd={sal:'',hrs:'',yrs:'0',mos:'0',ct:'',quals:[],tcoSen:'',traek:'38',fradrag:'8965'};
 
 // Compute the actual step sequence based on current wd
 function getSteps(){
-  // Always: 0,1,2,3,5. Insert 4 between 3 and 5 only if TCO selected.
-  return wd.quals.includes('tco')?[0,1,2,3,4,5]:[0,1,2,3,5];
+  // Always: 0,1,2,3,4,6. Insert 5 between 4 and 6 only if TCO selected.
+  return wd.quals.includes('tco')?[0,1,2,3,4,5,6]:[0,1,2,3,4,6];
 }
 function totalSteps(){return getSteps().length;}
 function stepPos(){return getSteps().indexOf(wStep);}  // position in sequence
@@ -365,26 +450,26 @@ function getLT(mo){
 function buildStep(s){
   switch(s){
     case 0: return`<div class="wiz-card">
-      <div class="wiz-title">Your contract details</div>
-      <div class="wiz-sub">We need both your salary and your guaranteed hours</div>
-      <div style="margin-bottom:18px">
-        <div class="wlbl">Monthly base salary</div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <input class="wii" id="w-sal" type="number" min="0" placeholder="e.g. 30609" value="${wd.sal}" oninput="wd.sal=this.value;chkNext()">
-          <span style="font-family:var(--fm);color:var(--text2);white-space:nowrap;font-size:13px">kr / month</span>
-        </div>
+      <div class="wiz-title">Your monthly salary</div>
+      <div class="wiz-sub">From your employment contract</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <input class="wii" id="w-sal" type="text" inputmode="numeric" placeholder="30 000" value="" oninput="onSalInput(this)">
+        <span style="font-family:var(--fm);color:var(--text2);white-space:nowrap;font-size:13px">kr / month</span>
       </div>
-      <div>
-        <div class="wlbl">Guaranteed hours per month (contract minimum)</div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <input class="wii" id="w-hrs" type="number" min="0" max="200" placeholder="e.g. 130" value="${wd.hrs}" oninput="wd.hrs=this.value;chkNext()">
-          <span style="font-family:var(--fm);color:var(--text2);white-space:nowrap;font-size:13px">hrs / month</span>
-        </div>
-      </div>
-      <div class="hbox">Base salary is what you'd earn at full-time (151.66 hrs). Your contract hours determine your overtime base hourly rate.<br>Common contracts: 130 hrs, 121 hrs, 89.7 hrs, study (15–65 hrs)</div>
+      <div class="hbox" style="margin-top:14px">Your base pay — the fixed amount on your contract before any supplements or overtime.</div>
     </div>`;
 
     case 1: return`<div class="wiz-card">
+      <div class="wiz-title">Contract hours</div>
+      <div class="wiz-sub">Your guaranteed minimum per month</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <input class="wii" id="w-hrs" type="number" min="1" max="200" step="0.1" placeholder="e.g. 130" value="" oninput="wd.hrs=this.value;chkNext()">
+        <span style="font-family:var(--fm);color:var(--text2);white-space:nowrap;font-size:13px">hrs / month</span>
+      </div>
+      <div class="hbox" style="margin-top:14px">Common: 130, 121, 89.7 hrs. Study contracts: 15\u201365 hrs.<br>Used to calculate your hourly rate for swap hours and overtime.</div>
+    </div>`;
+
+    case 2: return`<div class="wiz-card">
       <div class="wiz-title">How long have you worked here?</div>
       <div class="wiz-sub">Determines your løntrin and overtime rates</div>
       <div class="irow">
@@ -396,46 +481,46 @@ function buildStep(s){
       <div id="ltpill" style="margin-top:12px"></div>
     </div>`;
 
-    case 2: return`<div class="wiz-card">
+    case 3: return`<div class="wiz-card">
       <div class="wiz-title">Contract type?</div>
       <div class="wiz-sub">Affects how some allowances are calculated</div>
       <div class="tc-wrap">
         <div class="tc ${wd.ct==='permanent'?'sel':''}" onclick="wd.ct='permanent';this.closest('.tc-wrap').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));this.classList.add('sel');chkNext()">
-          <div class="tc-ico">📋</div><div class="tc-t">Permanent</div>
+          <div class="tc-ico">\u{1F4CB}</div><div class="tc-t">Permanent</div>
           <div class="tc-d">130 / 121 / 89.7 hrs</div>
         </div>
         <div class="tc ${wd.ct==='study'?'sel':''}" onclick="wd.ct='study';this.closest('.tc-wrap').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));this.classList.add('sel');chkNext()">
-          <div class="tc-ico">🎓</div><div class="tc-t">Study contract</div>
-          <div class="tc-d">15–65 hrs flexible</div>
+          <div class="tc-ico">\u{1F393}</div><div class="tc-t">Study contract</div>
+          <div class="tc-d">15\u201365 hrs flexible</div>
         </div>
       </div>
     </div>`;
 
-    case 3:{
+    case 4:{
       const QS=[
-        {id:'tco',i:'🔄',t:'TCO',r:'Turnaround Coordinator'},
-        {id:'drift',i:'🛠',t:'Drift Support',r:'+10.00 kr/hr'},
-        {id:'trainer',i:'📚',t:'Trainer',r:'+48.26 kr/hr'},
-        {id:'instruktor',i:'🎓',t:'Instruktør',r:'+63.50 kr/hr'},
-        {id:'helpdesk',i:'💻',t:'Helpdesk',r:'+24.12 kr/hr'},
-        {id:'ankomst',i:'🛬',t:'Ankomst',r:'+3.10 kr/hr'},
+        {id:'tco',i:'\u{1F504}',t:'TCO',r:'Turnaround Coordinator'},
+        {id:'drift',i:'\u{1F6E0}',t:'Drift Support',r:'+10.00 kr/hr'},
+        {id:'trainer',i:'\u{1F4DA}',t:'Trainer',r:'+48.26 kr/hr'},
+        {id:'instruktor',i:'\u{1F393}',t:'Instrukt\u00F8r',r:'+63.50 kr/hr'},
+        {id:'helpdesk',i:'\u{1F4BB}',t:'Helpdesk',r:'+24.12 kr/hr'},
+        {id:'ankomst',i:'\u{1F6EC}',t:'Ankomst',r:'+3.10 kr/hr'},
       ];
       return`<div class="wiz-card">
         <div class="wiz-title">Any qualifications?</div>
-        <div class="wiz-sub">Select all that apply — change anytime in settings</div>
+        <div class="wiz-sub">Select all that apply \u2014 change anytime in settings</div>
         <div class="qg">${QS.map(q=>`
           <div class="qc ${wd.quals.includes(q.id)?'sel':''}" onclick="tglQ('${q.id}')">
             <div class="qi">${q.i}</div>
             <div><div class="qt">${q.t}</div><div class="qr">${q.r}</div></div>
             <div class="qck"></div>
           </div>`).join('')}</div>
-        <div style="font-size:11px;color:var(--text3);font-family:var(--fm);margin-top:10px">No qualifications? Just click Next ↓</div>
+        <div style="font-size:11px;color:var(--text3);font-family:var(--fm);margin-top:10px">No qualifications? Just click Next \u2193</div>
       </div>`;
     }
 
-    case 4: return`<div class="wiz-card">
+    case 5: return`<div class="wiz-card">
       <div class="wiz-title">How long have you been TCO?</div>
-      <div class="wiz-sub">Your TCO seniority — not your company seniority</div>
+      <div class="wiz-sub">Your TCO seniority \u2014 not your company seniority</div>
       <div class="rg">
         <div class="ro ${wd.tcoSen==='under'?'sel':''}" onclick="selTCO('under')">
           <div class="rd"></div>
@@ -446,45 +531,41 @@ function buildStep(s){
           <div><div style="font-weight:600">12 months or more as TCO</div><div class="rs">1,900.00 kr/month fixed</div></div>
         </div>
       </div>
-      <div class="hbox" style="margin-top:14px">This is your seniority in the TCO <em>role</em>, not at Aviator overall. Someone with 3 years at the company but 6 months as TCO would pick "Under 12 months".</div>
+      <div class="hbox" style="margin-top:14px">This is your seniority in the TCO role, not at Aviator overall. 3 years at the company but 6 months as TCO = "Under 12 months".</div>
     </div>`;
 
-    case 5: return`<div class="wiz-card">
+    case 6: return`<div class="wiz-card">
       <div class="wiz-title">Your Danish tax settings</div>
-      <div class="wiz-sub">Find these on your skattekort at <a href="https://skat.dk" target="_blank" style="color:var(--accent)">skat.dk → TastSelv</a></div>
+      <div class="wiz-sub">Find these on your skattekort at <a href="https://skat.dk" target="_blank" style="color:var(--accent)">skat.dk \u2192 TastSelv</a></div>
       <div style="margin-bottom:16px">
-        <div class="wlbl">Trækprocent (withholding %)</div>
+        <div class="wlbl">Tr\u00E6kprocent (withholding %)</div>
         <div style="display:flex;align-items:center;gap:10px">
           <input class="wii" type="number" min="0" max="65" step="0.1" value="${wd.traek}" oninput="wd.traek=this.value">
           <span style="font-family:var(--fm);color:var(--text2)">%</span>
         </div>
       </div>
       <div>
-        <div class="wlbl">Månedligt fradrag (kr)</div>
+        <div class="wlbl">M\u00E5nedligt fradrag (kr)</div>
         <div style="display:flex;align-items:center;gap:10px">
           <input class="wii" type="number" min="0" step="100" value="${wd.fradrag}" oninput="wd.fradrag=this.value">
           <span style="font-family:var(--fm);color:var(--text2)">kr</span>
         </div>
       </div>
       <div class="hbox" style="margin-top:14px">
-        Your fradrag bundles personfradrag, beskæftigelsesfradrag, and personal deductions.<br><br>
-        Formula used:<br>
-        AM-bidrag = gross × 8%<br>
-        A-skat = max(0, gross × 92% − fradrag) × trækpct<br>
-        ATP = 99 kr (fixed)<br>
-        Net = gross − AM − A-skat − ATP
+        Your fradrag bundles personfradrag, besk\u00E6ftigelsesfradrag, and personal deductions.<br><br>
+        Formula: AM-bidrag = gross \u00D7 8% \u00B7 A-skat = (gross\u00D792% \u2212 fradrag) \u00D7 tr\u00E6kpct \u00B7 ATP = 99 kr \u00B7 Net = gross \u2212 AM \u2212 A-skat \u2212 ATP
       </div>
     </div>`;
   }
 }
-
 // ═══ WIZARD NAV ═══
 function chkNext(){
   const btn=document.getElementById('wnx');if(!btn)return;
   let ok=true;
-  if(wStep===0)ok=parseFloat(wd.sal)>0&&parseFloat(wd.hrs)>0;
-  else if(wStep===2)ok=wd.ct!=='';
-  else if(wStep===4)ok=wd.tcoSen!=='';
+  if(wStep===0)ok=parseFloat(wd.sal)>0;
+  else if(wStep===1)ok=parseFloat(wd.hrs)>0;
+  else if(wStep===3)ok=wd.ct!=='';
+  else if(wStep===5)ok=wd.tcoSen!=='';
   btn.disabled=!ok;
 }
 
@@ -538,16 +619,17 @@ function rStep(step,dir){
     ${prev!==null?`<button class="wbk" onclick="wGo(-1)">← Back</button>`:`<div></div>`}
     <span class="sctr">${pos+1} / ${tot}</span>
     <button class="wnx" id="wnx" onclick="wGo(1)">${isLast?"Let's go →":"Next →"}</button>`;
-  setTimeout(()=>{chkNext();if(step===1)updLT();},30);
+  setTimeout(()=>{chkNext();if(step===2)updLT();},30);
   // scroll wizard to top
   document.getElementById('wizard').scrollTop=0;
 }
 
 function wGo(dir){
   if(dir===1){
-    if(wStep===0&&!(parseFloat(wd.sal)>0&&parseFloat(wd.hrs)>0)){toast('Please enter your salary and contract hours','err');return;}
-    if(wStep===2&&!wd.ct){toast('Please select your contract type','err');return;}
-    if(wStep===4&&!wd.tcoSen){toast('Please select your TCO seniority','err');return;}
+    if(wStep===0&&!(parseFloat(wd.sal)>0)){toast('Please enter your monthly salary','err');return;}
+    if(wStep===1&&!(parseFloat(wd.hrs)>0)){toast('Please enter your contract hours','err');return;}
+    if(wStep===3&&!wd.ct){toast('Please select your contract type','err');return;}
+    if(wStep===5&&!wd.tcoSen){toast('Please select your TCO seniority','err');return;}
     const nxt=nextLogicalStep();
     if(nxt===null){finishWiz();return;}
     wStep=nxt;
@@ -578,12 +660,12 @@ function startWiz(){
   wStep=0;
   if(profile){
     const y=Math.floor((profile.totalMonths||0)/12);
-    wd={sal:String(profile.salary||''),hrs:String(profile.contractHrs||''),
+    wd={sal:String(profile.salary||'').replace(/\..*$/,''),hrs:String(profile.contractHrs||'').replace(/^0$/,''),
         yrs:String(y),mos:String((profile.totalMonths||0)%12),
         ct:profile.ct||'',quals:[...(profile.quals||[])],tcoSen:profile.tcoSen||'',
         traek:String(profile.traek||38),fradrag:String(profile.fradrag||8965)};
   }else{
-    wd={sal:'',hrs:'130',yrs:'0',mos:'0',ct:'',quals:[],tcoSen:'',traek:'38',fradrag:'8965'};
+    wd={sal:'',hrs:'',yrs:'0',mos:'0',ct:'',quals:[],tcoSen:'',traek:'38',fradrag:'8965'};
   }
   document.getElementById('wizard').classList.remove('hidden');
   document.getElementById('app').classList.remove('show');
@@ -905,6 +987,154 @@ function dlPDF(){
   doc.text('Generated by PayCalc · PAX · Aviator Flight Services · Estimate only — verify with your official payslip.',14,y);
   doc.save('paycalc-'+MO[CM].toLowerCase()+'-'+CY+'.pdf');
   toast('PDF downloaded','ok');
+}
+
+// ═══ WALKTHROUGH ═══
+const TOUR = [
+  {
+    el: null,
+    title: `Welcome to PayBuddy 👋`,
+    body: `This quick tour walks you through the app in about a minute. It shows you what each section does and how to use it.`
+  },
+  {
+    el: 'dropz',
+    title: `Upload your shift schedule`,
+    body: `Drag and drop your .doc or .rtf roster file here, or click to browse. PayBuddy detects the month automatically and calculates all your supplements.`
+  },
+  {
+    el: 'panels',
+    title: `Two pay estimates`,
+    body: `The <strong style="color:var(--green)">green panel</strong> shows what you're guaranteed this month — your base salary plus any fixed TCO allowance, after tax.<br><br>The <strong style="color:var(--amber)">amber panel</strong> shows supplements earned from this month's shifts — paid next month.`
+  },
+  {
+    el: 'sb',
+    title: `Your shifts`,
+    body: `Every shift from your roster appears here with automatically calculated supplements — evening, night, weekend and holiday rates.<br><br>Click any row to edit times or delete it. Use <strong>+ Add shift</strong> to add one manually.`
+  },
+  {
+    el: 'mgrid',
+    title: `Manual adjustments`,
+    body: `Things the shift file can't tell us — extensions (forlængelse), swap hours given or received, and hours worked in qualified roles like Drift Support, Trainer, or Helpdesk.<br><br>Only fields relevant to your qualifications are shown.`
+  },
+  {
+    el: 'taxcard',
+    title: `Tax breakdown`,
+    body: `A full step-by-step breakdown using the verified SKAT 2026 formula: AM-bidrag 8%, A-skat based on your trækprocent and fradrag, plus the 99 kr ATP deduction.<br><br>Hit <strong>⚙ Settings</strong> at any time to update your tax numbers or re-run the setup wizard.`
+  },
+];
+
+let tourStep = 0;
+
+function startTour() {
+  tourStep = 0;
+  document.getElementById('wt-overlay').style.display = 'block';
+  showTourStep(tourStep);
+}
+
+function endTour() {
+  document.getElementById('wt-overlay').style.display = 'none';
+  // Reset spotlight to centre so next open animates nicely
+  setSpot(null);
+}
+
+function tourGo(dir) {
+  tourStep = Math.max(0, Math.min(TOUR.length - 1, tourStep + dir));
+  showTourStep(tourStep);
+}
+
+function setSpot(el) {
+  const spot = document.getElementById('wt-spot');
+  if (!el) {
+    // Centre invisible spot (for welcome step)
+    const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+    Object.assign(spot.style, {top:cy+'px',left:cx+'px',width:'0px',height:'0px',borderRadius:'0px',boxShadow:'none'});
+    return;
+  }
+  const r = el.getBoundingClientRect();
+  const pad = 8;
+  Object.assign(spot.style, {
+    top:(r.top - pad)+'px',
+    left:(r.left - pad)+'px',
+    width:(r.width + pad*2)+'px',
+    height:(r.height + pad*2)+'px',
+    borderRadius:'10px',
+    boxShadow:'0 0 0 9999px rgba(0,0,0,0.72)',
+  });
+}
+
+function posCard(el) {
+  const card = document.getElementById('wt-card');
+  const cw = 320, ch = 280; // approx card size
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const pad = 16;
+
+  // Reset any previous absolute positioning
+  card.style.bottom = '';
+  card.style.right = '';
+  card.style.transform = '';
+
+  if (!el) {
+    // Centre card on welcome step
+    card.style.top = '50%';
+    card.style.left = '50%';
+    card.style.transform = 'translate(-50%,-50%)';
+    return;
+  }
+
+  const r = el.getBoundingClientRect();
+  const spotPad = 8;
+  const top = r.top - spotPad;
+  const bottom = r.bottom + spotPad;
+  const left = r.left - spotPad;
+  const right = r.right + spotPad;
+
+  let cardTop, cardLeft;
+
+  // Prefer below, else above
+  if (bottom + ch + pad < vh) {
+    cardTop = bottom + pad;
+  } else if (top - ch - pad > 0) {
+    cardTop = top - ch - pad;
+  } else {
+    cardTop = Math.max(pad, Math.min(vh - ch - pad, top));
+  }
+
+  // Align left with element, keep within viewport
+  cardLeft = Math.max(pad, Math.min(left, vw - cw - pad));
+
+  card.style.top = cardTop + 'px';
+  card.style.left = cardLeft + 'px';
+}
+
+function showTourStep(i) {
+  const step = TOUR[i];
+  const el = step.el ? document.getElementById(step.el) : null;
+
+  // Scroll element into view first
+  if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+
+  // Update spot and card position (slight delay to let scroll settle)
+  setTimeout(() => {
+    setSpot(el);
+    posCard(el);
+  }, el ? 180 : 0);
+
+  document.getElementById('wt-step-lbl').textContent = 'Step ' + (i + 1) + ' of ' + TOUR.length;
+  document.getElementById('wt-title').textContent = step.title;
+  document.getElementById('wt-body').innerHTML = step.body;
+  document.getElementById('wt-ctr').textContent = (i + 1) + ' / ' + TOUR.length;
+
+  const backBtn = document.getElementById('wt-back');
+  const nextBtn = document.getElementById('wt-next');
+  backBtn.style.visibility = i === 0 ? 'hidden' : 'visible';
+
+  if (i === TOUR.length - 1) {
+    nextBtn.textContent = 'Finish ✓';
+    nextBtn.onclick = endTour;
+  } else {
+    nextBtn.textContent = 'Next →';
+    nextBtn.onclick = () => tourGo(1);
+  }
 }
 
 // ═══ INIT ═══
