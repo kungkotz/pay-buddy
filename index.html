@@ -649,8 +649,7 @@ function finishWiz(){
     ct:wd.ct,quals:[...wd.quals],tcoSen:wd.tcoSen,
     traek:parseFloat(wd.traek)||38,fradrag:parseFloat(wd.fradrag)||8965,
   };
-  saveP();
-  document.getElementById('wizard').classList.add('hidden');
+    document.getElementById('wizard').classList.add('hidden');
   document.getElementById('app').classList.add('show');
   render();
   setTimeout(()=>startTour(),400);
@@ -806,7 +805,7 @@ function handleFile(file){
     CY=py;CM=pm;shifts=s;editId=null;
     showLog([`Loaded ${s.length} shifts · ${MO[pm]} ${py}`,...log]);
     toast(`Loaded ${s.length} shifts — ${MO[pm]} ${py}`,'ok');
-    saveP();render();
+    render();
   };
   r.readAsText(file,'windows-1252');
 }
@@ -908,7 +907,7 @@ function render(){
     const amt=manCalc(r.k);
     return`<div class="mrow">
       <span class="ml">${r.l}</span>
-      <input class="mi" type="number" min="0" value="${manuals[r.k]||0}" onchange="manuals['${r.k}']=parseFloat(this.value)||0;saveP();render()">
+      <input class="mi" type="number" min="0" value="${manuals[r.k]||0}" onchange="manuals['${r.k}']=parseFloat(this.value)||0;render()">
       <span class="mu">${r.u}</span>
       <span class="ma ${amt>=0?'pos':'neg'}">${fkr(amt,true)}</span>
     </div>`;
@@ -940,13 +939,13 @@ function saveEd(id){
   const n=document.getElementById('en').value.trim();
   const i=shifts.findIndex(x=>x.id===id);
   if(i>=0)shifts[i]={...shifts[i],d,s,e,note:n};
-  editId=null;saveP();render();
+  editId=null;render();
 }
-function delShift(id){shifts=shifts.filter(x=>x.id!==id);editId=null;saveP();render();}
+function delShift(id){shifts=shifts.filter(x=>x.id!==id);editId=null;render();}
 function addShift(){
   const d=shifts.length?Math.min(shifts[shifts.length-1].d+1,28):1;
   const nw={d,s:'08:00',e:'16:00',note:'',id:uid()};
-  shifts.push(nw);editId=nw.id;saveP();render();
+  shifts.push(nw);editId=nw.id;render();
   setTimeout(()=>document.getElementById('sb').lastElementChild?.scrollIntoView({behavior:'smooth',block:'center'}),60);
 }
 
@@ -1139,7 +1138,6 @@ document.addEventListener('keydown',e=>{
   const btn=document.getElementById('wnx');
   if(btn&&!btn.disabled)wGo(1);
 });
-loadP();
 curTheme=localStorage.getItem(TK)||'auto';
 applyTheme(curTheme);
 if(profile){
