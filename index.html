@@ -380,7 +380,7 @@ const R={
   forl:230.44,driftHr:10.00,
   tcoF1:1517.40,tcoF2:1900.00,
   tcoS1:125.00,tcoS2:156.52,
-  trainerHr:48.26,instruktorHr:63.50,helpdeskHr:24.12,ankomstHr:3.10,
+  trainerHr:48.26,instruktorHr:63.50,helpdeskHr:10.00,ankomstHr:3.10,
   atp:99.00,
 };
 const OTR={
@@ -500,9 +500,7 @@ function buildStep(s){
       const QS=[
         {id:'tco',i:'\u{1F504}',t:'TCO',r:'Turnaround Coordinator'},
         {id:'drift',i:'\u{1F6E0}',t:'Drift Support',r:'+10.00 kr/hr'},
-        {id:'trainer',i:'\u{1F4DA}',t:'Trainer',r:'+48.26 kr/hr'},
-        {id:'instruktor',i:'\u{1F393}',t:'Instrukt\u00F8r',r:'+63.50 kr/hr'},
-        {id:'helpdesk',i:'\u{1F4BB}',t:'Helpdesk',r:'+24.12 kr/hr'},
+        {id:'servicedesk',i:'\u{1F4BB}',t:'Service Desk',r:'+10.00 kr/hr'},
         {id:'ankomst',i:'\u{1F6EC}',t:'Ankomst',r:'+3.10 kr/hr'},
       ];
       return`<div class="wiz-card">
@@ -618,8 +616,8 @@ function rStep(step,dir){
   document.getElementById('wnav').innerHTML=`
     ${prev!==null?`<button class="wbk" onclick="wGo(-1)">← Back</button>`:`<div></div>`}
     <span class="sctr">${pos+1} / ${tot}</span>
-    <button class="wnx" id="wnx" onclick="wGo(1)">${isLast?"Let's go →":"Next →"}</button>`;
-  setTimeout(()=>{chkNext();if(step===2)updLT();},30);
+    <button class="wnx" id="wnx" onclick="wGo(1)" disabled>${isLast?"Let's go →":"Next →"}</button>`;
+  chkNext();if(step===2)setTimeout(updLT,30);
   // scroll wizard to top
   document.getElementById('wizard').scrollTop=0;
 }
@@ -660,7 +658,7 @@ function startWiz(){
   wStep=0;
   if(profile){
     const y=Math.floor((profile.totalMonths||0)/12);
-    wd={sal:String(profile.salary||'').replace(/\..*$/,''),hrs:String(profile.contractHrs||'').replace(/^0$/,''),
+    wd={sal:'',hrs:'',
         yrs:String(y),mos:String((profile.totalMonths||0)%12),
         ct:profile.ct||'',quals:[...(profile.quals||[])],tcoSen:profile.tcoSen||'',
         traek:String(profile.traek||38),fradrag:String(profile.fradrag||8965)};
@@ -901,7 +899,7 @@ function render(){
     {k:'tcoStudy',l:'TCO shifts (study)',u:'shifts',show:p.quals.includes('tco')&&p.ct==='study'},
     {k:'trainerHrs',l:'Trainer hrs',u:'hrs',show:p.quals.includes('trainer')},
     {k:'instruktorHrs',l:'Instruktør hrs',u:'hrs',show:p.quals.includes('instruktor')},
-    {k:'helpdeskHrs',l:'Helpdesk hrs',u:'hrs',show:p.quals.includes('helpdesk')},
+    {k:'helpdeskHrs',l:'Service Desk hrs',u:'hrs',show:p.quals.includes('servicedesk')},
     {k:'ankomstHrs',l:'Ankomst hrs',u:'hrs',show:p.quals.includes('ankomst')},
   ].filter(r=>r.show);
   document.getElementById('mgrid').innerHTML=mrows.map(r=>{
@@ -1014,7 +1012,7 @@ const TOUR = [
   {
     el: 'mgrid',
     title: `Manual adjustments`,
-    body: `Things the shift file can't tell us — extensions (forlængelse), swap hours given or received, and hours worked in qualified roles like Drift Support, Trainer, or Helpdesk.<br><br>Only fields relevant to your qualifications are shown.`
+    body: `Things the shift file can't tell us — extensions (forlængelse), swap hours given or received, and hours worked in qualified roles like Drift Support, Trainer, or Service Desk.<br><br>Only fields relevant to your qualifications are shown.`
   },
   {
     el: 'taxcard',
