@@ -1058,16 +1058,20 @@ Hit <strong>⚙</strong> in the top right to update your tax settings or re-run 
 
 let tourStep = 0;
 
+function _noScroll(e){ e.preventDefault(); }
+
 function startTour() {
   tourStep = 0;
   document.getElementById('wt-overlay').style.display = 'block';
-  document.body.style.overflow = 'hidden';
+  window.addEventListener('wheel', _noScroll, {passive:false});
+  window.addEventListener('touchmove', _noScroll, {passive:false});
   showTourStep(tourStep);
 }
 
 function endTour() {
   document.getElementById('wt-overlay').style.display = 'none';
-  document.body.style.overflow = '';
+  window.removeEventListener('wheel', _noScroll);
+  window.removeEventListener('touchmove', _noScroll);
   _tourEl = null;
 }
 
