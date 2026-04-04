@@ -1128,9 +1128,25 @@ function showTourStep(i) {
   const step = TOUR[i];
   _tourEl = step.el ? document.getElementById(step.el) : null;
 
-  // Scroll instantly so getBoundingClientRect is correct immediately
   if (_tourEl) {
-    _tourEl.scrollIntoView({block:'center', behavior:'instant'});
+    // Scroll so element sits near top of viewport, leaving room for card below
+    const CARD_H = 320;
+    const HEADER_H = 56;
+    const PAD = 16;
+    const vh = window.innerHeight;
+    const elRect = _tourEl.getBoundingClientRect();
+    const elH = elRect.height;
+    const elAbsTop = window.scrollY + elRect.top;
+
+    let targetScrollY;
+    if (elH + CARD_H + PAD * 3 < vh - HEADER_H) {
+      // Element + card fit — place element just below header
+      targetScrollY = elAbsTop - HEADER_H - PAD;
+    } else {
+      // Element is large — center it, card will overlap (best we can do)
+      targetScrollY = elAbsTop - (vh - elH) / 2;
+    }
+    window.scrollTo({top: Math.max(0, targetScrollY), behavior:'instant'});
   } else {
     window.scrollTo({top:0, behavior:'instant'});
   }
