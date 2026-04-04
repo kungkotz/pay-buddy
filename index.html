@@ -429,7 +429,7 @@ function onSalInput(el){
 
 // ═══ WIZARD STATE ═══
 // Steps: 0=salary, 1=hours, 2=seniority, 3=contract, 4=quals, 5=tco(conditional), 6=tax
-let wStep=0,wDir=1;
+let wStep=0,wDir=1,wMosErr=false;
 let wd={sal:'',hrs:'',yrs:'0',mos:'0',ct:'',quals:[],tcoSen:'',traek:'38',fradrag:'8965'};
 
 // Compute the actual step sequence based on current wd
@@ -475,9 +475,10 @@ function buildStep(s){
       <div class="wiz-sub">Determines your løntrin and overtime rates</div>
       <div class="irow">
         <div><div class="wlbl">Years</div>
-        <input class="wii" type="number" min="0" max="30" value="${wd.yrs}" oninput="wd.yrs=this.value;updLT()"></div>
+        <input class="wii" id="w-yrs" type="text" inputmode="numeric" maxlength="2" placeholder="0" value="${wd.yrs==='0'?'':wd.yrs}" oninput="onYrsInput(this)"></div>
         <div><div class="wlbl">Months</div>
-        <input class="wii" type="number" min="0" max="11" value="${wd.mos}" oninput="wd.mos=this.value;updLT()"></div>
+        <input class="wii" id="w-mos" type="text" inputmode="numeric" maxlength="2" placeholder="0" value="${wd.mos==='0'?'':wd.mos}" oninput="onMosInput(this)">
+        <div id="mos-err" style="display:none;font-size:11px;color:var(--red);font-family:var(--fm);margin-top:6px">Enter a number between 0 and 12</div></div>
       </div>
       <div id="ltpill" style="margin-top:12px"></div>
     </div>`;
@@ -558,11 +559,36 @@ function buildStep(s){
   }
 }
 // ═══ WIZARD NAV ═══
+function onYrsInput(el){
+  // Strip non-digits, max 2 chars
+  const raw=el.value.replace(/\D/g,'').slice(0,2);
+  el.value=raw;
+  wd.yrs=raw===''?'0':raw;
+  updLT();
+}
+function onMosInput(el){
+  let raw=el.value.replace(/\D/g,'').slice(0,2);
+  el.value=raw;
+  const err=document.getElementById('mos-err');
+  if(raw!==''&&parseInt(raw)>12){
+    if(err)err.style.display='block';
+    wMosErr=true;
+    wd.mos='0';
+  }else{
+    if(err)err.style.display='none';
+    wMosErr=false;
+    wd.mos=raw===''?'0':raw;
+  }
+  updLT();
+  chkNext();
+}
+
 function chkNext(){
   const btn=document.getElementById('wnx');if(!btn)return;
   let ok=true;
   if(wStep===0)ok=parseFloat(wd.sal)>0;
   else if(wStep===1)ok=parseFloat(wd.hrs)>0;
+  else if(wStep===2)ok=!wMosErr;
   else if(wStep===3)ok=wd.ct!=='';
   else if(wStep===5)ok=wd.tcoSen!=='';
   btn.disabled=!ok;
@@ -579,7 +605,7 @@ function updLT(){
   const el=document.getElementById('ltpill');if(!el)return;
   const tm=(parseInt(wd.yrs)||0)*12+(parseInt(wd.mos)||0);
   const t=getLT(tm);const r=OTR[t];
-  el.innerHTML=`<span class="ltpill">Løntrin ${t} · OT1: ${r.o1.toFixed(2)} kr/hr · OT2: ${r.o2.toFixed(2)} kr/hr</span>`;
+  el.innerHTML=`<span class="ltpill">Løntrin ${t}</span>`;
 }
 
 function tglQ(id){
@@ -618,7 +644,7 @@ function rStep(step,dir){
     ${prev!==null?`<button class="wbk" onclick="wGo(-1)">← Back</button>`:`<div></div>`}
     <span class="sctr">${pos+1} / ${tot}</span>
     <button class="wnx" id="wnx" onclick="wGo(1)" disabled>${isLast?"Let's go →":"Next →"}</button>`;
-  chkNext();if(step===2)setTimeout(updLT,30);
+  chkNext();if(step===2)setTimeout(updLT,30);if(step===0)setTimeout(()=>document.getElementById('w-sal')?.focus(),50);if(step===1)setTimeout(()=>document.getElementById('w-hrs')?.focus(),50);if(step===2){wMosErr=false;setTimeout(()=>document.getElementById('w-yrs')?.focus(),50);}
   // scroll wizard to top
   document.getElementById('wizard').scrollTop=0;
 }
