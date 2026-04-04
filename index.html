@@ -1036,13 +1036,14 @@ let tourStep = 0;
 function startTour() {
   tourStep = 0;
   document.getElementById('wt-overlay').style.display = 'block';
+  document.body.style.overflow = 'hidden';
   showTourStep(tourStep);
 }
 
 function endTour() {
   document.getElementById('wt-overlay').style.display = 'none';
-  // Reset spotlight to centre so next open animates nicely
-  setSpot(null);
+  document.body.style.overflow = '';
+  _tourEl = null;
 }
 
 function tourGo(dir) {
@@ -1050,16 +1051,25 @@ function tourGo(dir) {
   showTourStep(tourStep);
 }
 
-function setSpot(el) {
+
+
+let _tourEl = null;
+
+function positionTour() {
+  const el = _tourEl;
   const spot = document.getElementById('wt-spot');
+  const card = document.getElementById('wt-card');
+  const pad = 8, vw = window.innerWidth, vh = window.innerHeight;
+
   if (!el) {
-    // Centre invisible spot (for welcome step)
-    const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
-    Object.assign(spot.style, {top:cy+'px',left:cx+'px',width:'0px',height:'0px',borderRadius:'0px',boxShadow:'none'});
+    Object.assign(spot.style, {top:'50%',left:'50%',width:'0px',height:'0px',borderRadius:'0px',boxShadow:'none'});
+    Object.assign(card.style, {top:'50%',left:'50%',bottom:'',right:'',transform:'translate(-50%,-50%)'});
     return;
   }
+
   const r = el.getBoundingClientRect();
-  const pad = 8;
+
+  // Spotlight
   Object.assign(spot.style, {
     top:(r.top - pad)+'px',
     left:(r.left - pad)+'px',
@@ -1068,70 +1078,35 @@ function setSpot(el) {
     borderRadius:'10px',
     boxShadow:'0 0 0 9999px rgba(0,0,0,0.72)',
   });
-}
 
-function posCard(el) {
-  const card = document.getElementById('wt-card');
-  const cw = 320, ch = 280; // approx card size
-  const vw = window.innerWidth, vh = window.innerHeight;
-  const pad = 16;
-
-  // Reset any previous absolute positioning
-  card.style.bottom = '';
-  card.style.right = '';
-  card.style.transform = '';
-
-  if (!el) {
-    // Centre card on welcome step
-    card.style.top = '50%';
-    card.style.left = '50%';
-    card.style.transform = 'translate(-50%,-50%)';
-    return;
-  }
-
-  const r = el.getBoundingClientRect();
-  const spotPad = 8;
-  const top = r.top - spotPad;
-  const bottom = r.bottom + spotPad;
-  const left = r.left - spotPad;
-  const right = r.right + spotPad;
-
-  let cardTop, cardLeft;
-
-  // Prefer below, else above
-  if (bottom + ch + pad < vh) {
-    cardTop = bottom + pad;
-  } else if (top - ch - pad > 0) {
-    cardTop = top - ch - pad;
+  // Card: prefer below element, else above, else beside
+  const cw=320, ch=300;
+  let ct, cl;
+  const below = r.bottom + pad + ch + 16;
+  const above = r.top - pad - ch - 16;
+  if (below < vh) {
+    ct = r.bottom + pad + 8;
+  } else if (above > 0) {
+    ct = r.top - pad - ch - 8;
   } else {
-    cardTop = Math.max(pad, Math.min(vh - ch - pad, top));
+    ct = Math.max(16, Math.min(vh - ch - 16, r.top));
   }
-
-  // Align left with element, keep within viewport
-  cardLeft = Math.max(pad, Math.min(left, vw - cw - pad));
-
-  card.style.top = cardTop + 'px';
-  card.style.left = cardLeft + 'px';
+  cl = Math.max(16, Math.min(r.left - pad, vw - cw - 16));
+  Object.assign(card.style, {top:ct+'px',left:cl+'px',bottom:'',right:'',transform:''});
 }
 
 function showTourStep(i) {
   const step = TOUR[i];
-  const el = step.el ? document.getElementById(step.el) : null;
+  _tourEl = step.el ? document.getElementById(step.el) : null;
 
-  // Scroll element into view, then position spotlight after scroll settles
-  if (el) {
-    const r = el.getBoundingClientRect();
-    const inView = r.top >= 80 && r.bottom <= window.innerHeight - 80;
-    if (!inView) {
-      window.scrollTo({top: window.scrollY + r.top - window.innerHeight/2 + r.height/2, behavior:'smooth'});
-    }
+  // Scroll instantly so getBoundingClientRect is correct immediately
+  if (_tourEl) {
+    _tourEl.scrollIntoView({block:'center', behavior:'instant'});
+  } else {
+    window.scrollTo({top:0, behavior:'instant'});
   }
 
-  // Update spot and card position after scroll settles
-  setTimeout(() => {
-    setSpot(el);
-    posCard(el);
-  }, el ? 320 : 0);
+  positionTour();
 
   document.getElementById('wt-step-lbl').textContent = 'Step ' + (i + 1) + ' of ' + TOUR.length;
   document.getElementById('wt-title').textContent = step.title;
@@ -1140,7 +1115,7 @@ function showTourStep(i) {
 
   const backBtn = document.getElementById('wt-back');
   const nextBtn = document.getElementById('wt-next');
-  backBtn.style.visibility = i === 0 ? 'hidden' : 'visible';
+  backBtn.style.display = i === 0 ? 'none' : 'inline-block';
 
   if (i === TOUR.length - 1) {
     nextBtn.textContent = 'Finish ✓';
