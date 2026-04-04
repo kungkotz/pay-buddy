@@ -226,7 +226,7 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
 
 /* ── WALKTHROUGH ── */
 .guide-btn{font-size:15px;font-weight:700;font-family:var(--fn);}
-#wt-overlay{position:fixed;inset:0;z-index:500;pointer-events:all;}
+#wt-overlay{position:fixed;inset:0;z-index:500;pointer-events:none;}
 #wt-spot{
   position:fixed;
   border-radius:10px;
@@ -241,6 +241,7 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
 #wt-card{
   position:fixed;
   z-index:502;
+  pointer-events:all;
   background:var(--bg2);
   border:1px solid var(--border2);
   border-radius:var(--rxl);
@@ -1117,14 +1118,20 @@ function showTourStep(i) {
   const step = TOUR[i];
   const el = step.el ? document.getElementById(step.el) : null;
 
-  // Scroll element into view first
-  if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+  // Scroll element into view, then position spotlight after scroll settles
+  if (el) {
+    const r = el.getBoundingClientRect();
+    const inView = r.top >= 80 && r.bottom <= window.innerHeight - 80;
+    if (!inView) {
+      window.scrollTo({top: window.scrollY + r.top - window.innerHeight/2 + r.height/2, behavior:'smooth'});
+    }
+  }
 
-  // Update spot and card position (slight delay to let scroll settle)
+  // Update spot and card position after scroll settles
   setTimeout(() => {
     setSpot(el);
     posCard(el);
-  }, el ? 180 : 0);
+  }, el ? 320 : 0);
 
   document.getElementById('wt-step-lbl').textContent = 'Step ' + (i + 1) + ' of ' + TOUR.length;
   document.getElementById('wt-title').textContent = step.title;
