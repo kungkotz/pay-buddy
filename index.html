@@ -651,7 +651,8 @@ function finishWiz(){
   saveP();
   document.getElementById('wizard').classList.add('hidden');
   document.getElementById('app').classList.add('show');
-  render();toast('Profile saved!','ok');
+  render();
+  setTimeout(()=>startTour(),400);
 }
 
 function startWiz(){
@@ -991,33 +992,41 @@ function dlPDF(){
 const TOUR = [
   {
     el: null,
-    title: `Welcome to PayBuddy 👋`,
-    body: `This quick tour walks you through the app in about a minute. It shows you what each section does and how to use it.`
+    title: `You're all set! 🎉`,
+    body: `Welcome to PayBuddy. Let's take a quick look at how the app works — it'll only take a minute.`
   },
   {
     el: 'dropz',
     title: `Upload your shift schedule`,
-    body: `Drag and drop your .doc or .rtf roster file here, or click to browse. PayBuddy detects the month automatically and calculates all your supplements.`
+    body: `Drag and drop your roster file here (the .doc or .rtf from the scheduling system), or click to browse. PayBuddy reads the month automatically and calculates all your supplements from the shifts.`
   },
   {
     el: 'panels',
     title: `Two pay estimates`,
-    body: `The <strong style="color:var(--green)">green panel</strong> shows what you're guaranteed this month — your base salary plus any fixed TCO allowance, after tax.<br><br>The <strong style="color:var(--amber)">amber panel</strong> shows supplements earned from this month's shifts — paid next month.`
+    body: `<strong style="color:var(--green)">Green</strong> — what you're guaranteed this month: your base salary plus any fixed TCO allowance, after tax.<br><br><strong style="color:var(--amber)">Amber</strong> — supplements earned from this month's shifts. These are paid next month.`
   },
   {
     el: 'sb',
     title: `Your shifts`,
-    body: `Every shift from your roster appears here with automatically calculated supplements — evening, night, weekend and holiday rates.<br><br>Click any row to edit times or delete it. Use <strong>+ Add shift</strong> to add one manually.`
+    body: `Every shift from your roster appears here. Evening (18:00–23:59), night (00:00–05:59, per started half-hour), weekend and holiday supplements are calculated automatically.<br><br>Click any row to edit it. Use <strong>+ Add shift</strong> to add one manually.`
   },
   {
     el: 'mgrid',
     title: `Manual adjustments`,
-    body: `Things the shift file can't tell us — extensions (forlængelse), swap hours given or received, and hours worked in qualified roles like Drift Support, Trainer, or Service Desk.<br><br>Only fields relevant to your qualifications are shown.`
+    body: `Things the roster file can't tell us — enter them here:<br><br>
+• <strong>Extensions (forlængelse)</strong> — 230,44 kr flat per event<br>
+• <strong>Swap hours</strong> — received or given away<br>
+• <strong>Trainer / Instruktør hours</strong> — always visible<br>
+• <strong>Drift Support, TCO, Service Desk, Ankomst</strong> — only shown if you selected those qualifications in setup`
   },
   {
     el: 'taxcard',
     title: `Tax breakdown`,
-    body: `A full step-by-step breakdown using the verified SKAT 2026 formula: AM-bidrag 8%, A-skat based on your trækprocent and fradrag, plus the 99 kr ATP deduction.<br><br>Hit <strong>⚙ Settings</strong> at any time to update your tax numbers or re-run the setup wizard.`
+    body: `A full step-by-step breakdown using the verified SKAT 2026 formula:<br><br>
+AM-bidrag = gross × 8%<br>
+A-skat = (gross × 92% − fradrag) × trækpct<br>
+ATP = 99 kr fixed<br><br>
+Hit <strong>⚙</strong> in the top right to update your tax settings or re-run the setup wizard at any time.`
   },
 ];
 
