@@ -37,6 +37,22 @@
 html,body{height:100%;}
 body{background:var(--bg);color:var(--text);font-family:var(--fn);line-height:1.6;overflow-x:hidden;}
 
+
+/* ── PRIVACY SCREEN ── */
+#privacy{position:fixed;inset:0;z-index:150;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;overflow-y:auto;}
+#privacy.hidden{display:none;}
+.priv-inner{width:100%;max-width:520px;}
+.priv-logo{font-size:28px;font-weight:700;letter-spacing:-0.03em;margin-bottom:4px;}
+.priv-tagline{font-size:12px;color:var(--text3);font-family:var(--fm);margin-bottom:32px;}
+.priv-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rxl);padding:28px;margin-bottom:16px;}
+.priv-title{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.priv-body{font-size:12px;color:var(--text2);line-height:1.8;font-family:var(--fm);}
+.priv-body p{margin-bottom:10px;}.priv-body p:last-child{margin-bottom:0;}
+.priv-body strong{color:var(--text);}
+.priv-accept{width:100%;padding:13px;border-radius:var(--r);background:var(--accent);color:#fff;border:none;font-family:var(--fn);font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s;}
+.priv-accept:hover{background:var(--accent2);}
+.priv-footer{text-align:center;font-size:11px;color:var(--text3);font-family:var(--fm);margin-top:12px;}
+
 /* ── WIZARD ── */
 #wizard{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:40px 20px 100px;overflow-y:auto;}
 #wizard.hidden{display:none;}
@@ -256,6 +272,72 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
 #wt-ctr{font-size:11px;color:var(--text3);font-family:var(--fm);}
 #wt-x{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:4px 8px;}
 
+
+/* ── TOP NAV ── */
+.top-nav{background:var(--bg2);border-bottom:2px solid var(--border);display:flex;position:sticky;top:52px;z-index:48;}
+.tnav{flex:1;padding:0 20px;height:44px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--text3);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.15s;gap:7px;}
+.tnav:hover{color:var(--text2);}
+.tnav.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tnav-ico{font-size:15px;}
+
+/* ── VERIFY TAB ── */
+#verify-tab{display:none;padding:24px 20px;max-width:960px;margin:0 auto;width:100%;}
+#verify-tab.show{display:block;}
+
+.vs-picker{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:24px;margin-bottom:16px;}
+.vs-title{font-size:16px;font-weight:700;margin-bottom:4px;}
+.vs-sub{font-size:12px;color:var(--text2);font-family:var(--fm);margin-bottom:20px;}
+.vs-months{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.vs-mo{background:var(--bg3);border:2px solid var(--border2);border-radius:var(--r);padding:12px 8px;cursor:pointer;text-align:center;transition:all 0.15s;}
+.vs-mo:hover{border-color:var(--accent);}
+.vs-mo.active{border-color:var(--accent);background:var(--bbg);}
+.vs-mo.has-data{border-color:var(--gborder);background:var(--gbg);}
+.vs-mo.has-data.active{border-color:var(--accent);background:var(--bbg);}
+.vs-mo-name{font-size:13px;font-weight:700;}
+.vs-mo-sub{font-size:10px;color:var(--text3);font-family:var(--fm);margin-top:2px;}
+
+.vs-flow{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:14px;}
+.vs-chain{padding:10px 16px;background:var(--bbg);border-bottom:1px solid rgba(96,165,250,0.15);font-size:12px;font-family:var(--fm);color:var(--text2);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.vs-chain strong{color:var(--text);}
+.vs-chain .arr{color:var(--text3);}
+
+.vs-upz{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;background:var(--bg3);border-bottom:1px solid var(--border);transition:background 0.15s;}
+.vs-upz:hover{background:var(--bg4);}
+.vs-upz.ok{background:var(--gbg);border-bottom-color:var(--gborder);}
+.vs-upz input{display:none;}
+.vs-ico{font-size:18px;flex-shrink:0;}
+.vs-utx{flex:1;}
+.vs-ut{font-size:12px;font-weight:600;}
+.vs-us{font-size:11px;color:var(--text3);font-family:var(--fm);}
+
+.vs-sect{padding:7px 16px;font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);background:var(--bg3);border-bottom:1px solid var(--border);}
+.vs-col{display:grid;grid-template-columns:68px 1fr 90px 90px 72px;padding:5px 16px;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);}
+.vs-row{display:grid;grid-template-columns:68px 1fr 90px 90px 72px;align-items:center;padding:7px 16px;border-bottom:1px solid var(--border);font-size:12px;}
+.vs-row:last-child{border-bottom:none;}
+.vs-code{font-family:var(--fm);font-size:10px;color:var(--text3);}
+.vs-lbl{color:var(--text2);}
+.vs-num{font-family:var(--fm);text-align:right;}
+.vs-ok{color:var(--green);font-family:var(--fm);font-size:13px;text-align:right;font-weight:700;}
+.vs-bad{color:var(--red);font-family:var(--fm);font-size:11px;font-weight:700;text-align:right;}
+.vs-sum{display:flex;justify-content:space-between;align-items:center;padding:11px 16px;background:var(--bg3);border-top:2px solid var(--border2);font-size:12px;}
+.vs-sum strong{font-family:var(--fm);font-weight:700;}
+.vs-banner{padding:12px 16px;font-size:13px;font-family:var(--fm);text-align:center;font-weight:700;letter-spacing:-0.01em;}
+.vs-banner.ok{background:var(--gbg);color:var(--green);}
+.vs-banner.err{background:var(--rbg);color:var(--red);}
+.vs-banner.warn{background:var(--abg);color:var(--amber);}
+.vs-msg{padding:18px 16px;font-size:12px;color:var(--text3);font-family:var(--fm);text-align:center;}
+#shifts-tab.hidden{display:none !important;}
+
+.vs-expected{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:14px;}
+.vs-exp-row{display:grid;grid-template-columns:68px 1fr 80px 110px;align-items:center;padding:7px 16px;border-bottom:1px solid var(--border);font-size:12px;}
+.vs-exp-row:last-child{border-bottom:none;}
+.vs-exp-col{display:grid;grid-template-columns:68px 1fr 80px 110px;padding:5px 16px;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);}
+
+@media(max-width:680px){
+  .vs-months{grid-template-columns:repeat(3,1fr);}
+  .vs-col,.vs-row{grid-template-columns:56px 1fr 76px 76px 56px;}
+}
+
 @media(max-width:680px){
   .summary,.mgrid,.qg,.thopts,.tc-wrap{grid-template-columns:1fr;}
   .app-body{padding:16px 12px;}
@@ -266,6 +348,28 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
 </style>
 </head>
 <body>
+
+<!-- PRIVACY POLICY -->
+<div id="privacy">
+  <div class="priv-inner">
+    <div class="priv-logo">PayBuddy</div>
+    <div class="priv-tagline">Aviator · PAX</div>
+    <div class="priv-card">
+      <div class="priv-title">🔒 Privacy Policy</div>
+      <div class="priv-body">
+        <p><strong>No data leaves your device.</strong> PayBuddy stores everything — your shifts, salary, tax settings, and payroll data — exclusively in your browser's local storage. Nothing is transmitted to any server, database, or third party.</p>
+        <p><strong>No account required.</strong> PayBuddy does not collect your name, email address, employee number, or any personally identifiable information.</p>
+        <p><strong>No tracking or analytics.</strong> PayBuddy does not use cookies, tracking pixels, or any analytics tools.</p>
+        <p><strong>Your right to erasure.</strong> You can delete all stored data at any time by clearing your browser's local storage, or by using your browser's "Clear site data" function. All data is immediately and permanently removed.</p>
+        <p><strong>GDPR compliance.</strong> As PayBuddy processes no personal data on any server and stores data solely on your own device, it operates outside the scope of data controller obligations under the EU General Data Protection Regulation (GDPR). You retain full control of your data at all times.</p>
+        <p style="color:var(--text3)">By continuing you acknowledge that you have read this policy.</p>
+      </div>
+    </div>
+    <button class="priv-accept" onclick="acceptPrivacy()">I understand — continue</button>
+    <div class="priv-footer">Data stays on your device · No servers · No tracking</div>
+  </div>
+</div>
+
 
 <!-- WIZARD -->
 <div id="wizard">
@@ -285,8 +389,12 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
       <button class="ibtn" onclick="openSett()" title="Settings">⚙</button>
     </div>
   </header>
+  <div class="top-nav">
+    <div class="tnav active" id="tnav-shifts" onclick="switchTab('shifts')"><span class="tnav-ico">📋</span>Shifts</div>
+    <div class="tnav" id="tnav-verify" onclick="switchTab('verify')"><span class="tnav-ico">🔍</span>Verify Salary</div>
+  </div>
   <div class="month-tabs" id="month-tabs"></div>
-  <main class="app-body">
+  <main class="app-body" id="shifts-tab">
     <div class="upz" id="dropz" onclick="document.getElementById('fin').click()"
          ondragover="event.preventDefault();this.classList.add('drag')"
          ondragleave="this.classList.remove('drag')" ondrop="onDrop(event)">
@@ -322,11 +430,12 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
     </div>
     <div class="txc" id="taxcard"></div>
     <p class="fn2">AM-bidrag 8% · A-skat = (gross×92% − fradrag) × trækpct · ATP 99 kr</p>
-    <div class="sh" style="margin-top:4px">
-      <div class="st">Verify payslip</div>
-    </div>
-    <div class="vfy-wrap"><div class="vfy-body" id="vfy-body"></div></div>
+
   </main>
+  <div id="verify-tab">
+    <div class="vs-picker" id="vs-picker"></div>
+    <div id="vs-content"></div>
+  </div>
 </div>
 
 <!-- TOUR -->
@@ -572,14 +681,17 @@ function renderSummary(){
     </div>
     <div class="sum-card amber">
       <div class="sum-label amber">Expected ${MOS[nextM]} ${nextY} lønseddel</div>
-      <div class="sum-big" style="color:var(--amber)">${fmt(suppTotal,0)}<span style="font-size:14px;font-weight:400;color:var(--text2)"> kr</span></div>
-      <div class="sum-sub">${suppSource} · guaranteed ${fmt(gGross,0)} kr separate</div>
+      <div class="sum-big" style="color:var(--amber)">${fmt(calcTax(gGross+suppTotal).net,0)}<span style="font-size:14px;font-weight:400;color:var(--text2)"> kr</span></div>
+      <div class="sum-sub">estimated NemKonto transfer · ${suppSource}</div>
       <div class="sum-rows">
-        <div class="sum-row"><span class="sum-rl">Base salary</span><span class="sum-rv">${fkr(p.salary)}</span></div>
-        ${tcoFix?`<div class="sum-row"><span class="sum-rl">TCO fixed</span><span class="sum-rv pos">+${fkr(tcoFix)}</span></div>`:''}
-        <div class="sum-row"><span class="sum-rl">After tax (base)</span><span class="sum-rv pos">≈ ${fmt(gTax.net,0)} kr</span></div>
+        <div class="sum-row"><span class="sum-rl">Base + TCO</span><span class="sum-rv">${fkr(gGross)}</span></div>
         <div class="sum-row"><span class="sum-rl">Supplements</span><span class="sum-rv amb">${fkr(suppTotal,true)}</span></div>
-        <div class="sum-row" style="font-size:10px;color:var(--text3)"><span>Supplements taxed separately at pay date</span><span></span></div>
+        <div class="sum-row"><span class="sum-rl">Total gross</span><span class="sum-rv">${fkr(gGross+suppTotal)}</span></div>
+        <div class="sum-row"><span class="sum-rl">AM-bidrag 8%</span><span class="sum-rv neg">− ${fkr(calcTax(gGross+suppTotal).am)}</span></div>
+        <div class="sum-row"><span class="sum-rl">Fradrag</span><span class="sum-rv neg">− ${fkr(p.fradrag)}</span></div>
+        <div class="sum-row"><span class="sum-rl">A-skat ${p.traek}%</span><span class="sum-rv neg">− ${fkr(calcTax(gGross+suppTotal).askat)}</span></div>
+        <div class="sum-row"><span class="sum-rl">ATP</span><span class="sum-rv neg">− ${fkr(R.atp)}</span></div>
+        <div class="sum-row" style="border-top:1px solid var(--border2);padding-top:6px;margin-top:2px"><span class="sum-rl" style="font-weight:600">Expected net pay</span><span class="sum-rv pos" style="font-weight:700">≈ ${fmt(calcTax(gGross+suppTotal).net,0)} kr</span></div>
       </div>
     </div>`;
 }
@@ -806,135 +918,241 @@ function render(){
     <div class="trow"><span class="tl">ATP</span><span class="tv neg">− ${fkr(R.atp)}</span></div>
     <div class="trow nrow"><span class="tl" style="color:var(--teal);font-weight:600">Estimated net pay</span><span class="tv teal">${fkr(tx.net)}</span></div>`;
 
-  renderVerify();
 }
 
-// ═══ VERIFY ═══
-function renderVerify(){
-  const body=document.getElementById('vfy-body');
-  if(!body||!profile)return;
-  const p=profile;
-  const data=md();
-  const shifts=data.shifts;
-  const payroll=data.payrollData;
-  const hasPay=Object.keys(payroll.codes).length>0;
-  const hasShifts=shifts.length>0;
-  const baseH=p.salary/151.66;
-  const label=MO[activeMonth]+' '+activeYear;
-  const nextY=activeMonth===11?activeYear+1:activeYear;
-  const nextLabel=MO[(activeMonth+1)%12]+' '+nextY;
-  const prevY=activeMonth===0?activeYear-1:activeYear;
-  const prevLabel=MO[(activeMonth+11)%12]+' '+prevY;
+// ═══ TAB SWITCHING ═══
+let activeTab='shifts';
+function switchTab(tab){
+  activeTab=tab;
+  document.getElementById('shifts-tab').classList.toggle('hidden', tab!=='shifts');
+  document.getElementById('verify-tab').classList.toggle('show', tab==='verify');
+  document.getElementById('month-tabs').style.display = tab==='shifts'?'':'none';
+  document.getElementById('tnav-shifts').classList.toggle('active', tab==='shifts');
+  document.getElementById('tnav-verify').classList.toggle('active', tab==='verify');
+  if(tab==='verify')renderVerifyTab();
+}
 
-  const upHtml=`<label class="vfy-upz${hasPay?' ok':''}" onclick="document.getElementById('vfy-pay-in').click()" style="cursor:pointer;display:flex">
-    <input type="file" id="vfy-pay-in" accept=".txt,.doc,.rtf" onchange="uploadPayroll(this.files[0])" style="display:none">
-    <span class="vfy-ico">${hasPay?'✅':'📋'}</span>
-    <span class="vfy-utx">
-      <div class="vfy-ut">${hasPay?payroll.label+' payroll loaded — click to replace':'Upload '+prevLabel+' payroll.txt'}</div>
-      <div class="vfy-us">${hasPay?Object.keys(payroll.codes).length+' salary lines found':'Received by email at start of '+label}</div>
+// ═══ VERIFY TAB ═══
+let vsMonth=null; // which lönseddel month user is checking (0-11)
+let vsYear=null;
+let vsPayrollData=null; // payroll from previous month
+
+function renderVerifyTab(){
+  renderVsPicker();
+  renderVsContent();
+}
+
+function renderVsPicker(){
+  const picker=document.getElementById('vs-picker');
+  const now=new Date();
+  // Show months that have shift data, plus current and last few months
+  const items=MOS.map((mo,i)=>{
+    const data=months[activeYear]&&months[activeYear][i];
+    const hasShifts=data&&data.shifts&&data.shifts.length>0;
+    const isSelected=vsMonth===i&&vsYear===activeYear;
+    // Lönseddel arrives last weekday of month - so it makes sense from month 1 onwards
+    let sub=hasShifts?'shifts loaded':'no shifts';
+    return `<div class="vs-mo${isSelected?' active':''}${hasShifts?' has-data':''}" onclick="selectVsMonth(${i},${activeYear})">
+      <div class="vs-mo-name">${mo} ${activeYear}</div>
+      <div class="vs-mo-sub">${sub}</div>
+    </div>`;
+  }).join('');
+  picker.innerHTML=`
+    <div class="vs-title">Which lønseddel do you want to check?</div>
+    <div class="vs-sub">Pick the month whose lønseddel arrived in your inbox</div>
+    <div class="vs-months">${items}</div>`;
+}
+
+function selectVsMonth(m,y){
+  vsMonth=m;vsYear=y;
+  // Load existing payroll for prev month if saved
+  const prevM=(m+11)%12;
+  const prevY=m===0?y-1:y;
+  const prevData=months[prevY]&&months[prevY][prevM];
+  vsPayrollData=(prevData&&Object.keys(prevData.payrollData.codes).length>0)?prevData.payrollData:null;
+  renderVsPicker();
+  renderVsContent();
+}
+
+function uploadVsPayroll(file){
+  if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const parsed=parsePayrollTxt(e.target.result);
+    if(!Object.keys(parsed.codes).length){toast('No salary lines found','err');return;}
+    // Store in the previous month slot
+    const prevM=(vsMonth+11)%12;
+    const prevY=vsMonth===0?vsYear-1:vsYear;
+    getMonthData(prevY,prevM).payrollData=parsed;
+    vsPayrollData=parsed;
+    saveP();renderVsContent();
+    toast('Loaded '+parsed.label+' payroll','ok');
+  };
+  r.onerror=()=>toast('Could not read file','err');
+  r.readAsText(file,'windows-1252');
+}
+
+function renderVsContent(){
+  const el=document.getElementById('vs-content');
+  if(vsMonth===null){el.innerHTML='';return;}
+
+  const p=profile;
+  const baseH=p.salary/151.66;
+  const slipLabel=MOS[vsMonth]+' '+vsYear; // the lönseddel being checked
+  const prevM=(vsMonth+11)%12;
+  const prevY=vsMonth===0?vsYear-1:vsYear;
+  const prevLabel=MOS[prevM]+' '+prevY; // the month whose work generated it
+
+  // Shifts from previous month
+  const prevData=getMonthData(prevY,prevM);
+  const prevShifts=prevData.shifts||[];
+  const hasShifts=prevShifts.length>0;
+  const hasPay=vsPayrollData&&Object.keys(vsPayrollData.codes).length>0;
+
+  // ── Upload zone ──
+  const upHtml=`<label class="vs-upz${hasPay?' ok':''}" onclick="document.getElementById('vs-pay-in').click()" style="cursor:pointer;display:flex">
+    <input type="file" id="vs-pay-in" accept=".txt,.doc,.rtf" onchange="uploadVsPayroll(this.files[0])" style="display:none">
+    <span class="vs-ico">${hasPay?'✅':'📋'}</span>
+    <span class="vs-utx">
+      <div class="vs-ut">${hasPay?prevLabel+' payroll loaded — click to replace':'Upload '+prevLabel+' payroll.txt'}</div>
+      <div class="vs-us">${hasPay?Object.keys(vsPayrollData.codes).length+' salary lines':'This is the email you got at the start of '+slipLabel}</div>
     </span>
   </label>`;
 
+  // ── Chain explanation ──
+  const chainHtml=`<div class="vs-chain">
+    <span>You worked in</span><strong>${prevLabel}</strong>
+    <span class="arr">→</span>
+    <span>Aviator registered it in</span><strong>${prevLabel} payroll.txt</strong>
+    <span class="arr">→</span>
+    <span>It was paid in your</span><strong style="color:var(--amber)">${slipLabel} lønseddel</strong>
+  </div>`;
+
   if(!hasPay){
-    body.innerHTML=upHtml+'<div class="vfy-msg">Upload the '+prevLabel+' payroll.txt to verify your '+label+' lønseddel.</div>';
+    el.innerHTML=`<div class="vs-flow">${upHtml}
+      <div class="vs-msg">Upload the ${prevLabel} payroll.txt to verify your ${slipLabel} lønseddel.<br><span style="color:var(--text3);font-size:11px">This is the email you received at the start of ${slipLabel}.</span></div>
+    </div>`;
     return;
   }
 
-  // ── Shift vs payroll comparison ──
-  let compHtml='',discCount=0;
-  if(hasShifts){
-    const calcs=shifts.map(s=>calcShift(s));
-    const myHrs={
-      '1318':calcs.reduce((a,c)=>a+c.aftenHrs,0),
-      '1319':calcs.reduce((a,c)=>a+c.natUnits,0),
-      '1331':calcs.reduce((a,c)=>a+c.satHrs,0),
-      '1332':calcs.reduce((a,c)=>a+c.sunHrs,0),
-      '1334':data.manuals.forl||0,
-      '1316':data.manuals.driftHrs||0,
-    };
-    const COMP=[
-      {code:'1318',label:'Aftentillæg',unit:'hr'},
-      {code:'1319',label:'Nattillæg',unit:'unit'},
-      {code:'1331',label:'Lørdagstillæg',unit:'hr'},
-      {code:'1332',label:'Søndagstillæg',unit:'hr'},
-      {code:'1334',label:'Forlængelsetillæg',unit:'event'},
-      {code:'1316',label:'Drift support',unit:'hr'},
-    ];
-    const THRESH=0.11;
-    const rows=COMP.map(l=>{
-      const mine=myHrs[l.code]||0;
-      const theirs=Math.abs(payroll.codes[l.code]||0);
-      if(mine<0.01&&theirs<0.01)return'';
-      const diff=theirs-mine;
-      const ok=Math.abs(diff)<=THRESH;
-      if(!ok)discCount++;
-      const diffCell=ok
-        ?'<span class="vfy-ok">✓</span>'
-        :`<span class="vfy-bad">${diff>0?'+':''}${fmt(diff,2)} ${diff>0?'too much':'too little'}</span>`;
-      return`<div class="vfy-row">
-        <span class="vfy-code">${l.code}</span>
-        <span class="vfy-lbl">${l.label}</span>
-        <span class="vfy-num">${mine>0.005?fmt(mine,2)+' '+l.unit:'—'}</span>
-        <span class="vfy-num">${theirs>0.005?fmt(theirs,2)+' '+l.unit:'—'}</span>
-        ${diffCell}
-      </div>`;
-    }).join('');
-    if(rows){
-      compHtml=`<div class="vfy-sect">Your shifts vs Aviator's registration — ${label}</div>
-        <div class="vfy-col"><span>Code</span><span>Line</span>
-          <span style="text-align:right">Your calc</span>
-          <span style="text-align:right">Registered</span>
-          <span style="text-align:right">Diff</span></div>
-        ${rows}`;
-    }
-  }
+  // ── Comparison: user log vs payroll ──
+  const SUPP_CODES=[
+    {code:'1318',label:'Aftentillæg',unit:'hr'},
+    {code:'1319',label:'Nattillæg',unit:'unit'},
+    {code:'1331',label:'Lørdagstillæg',unit:'hr'},
+    {code:'1332',label:'Søndagstillæg',unit:'hr'},
+    {code:'1334',label:'Forlængelsetillæg',unit:'event'},
+    {code:'1316',label:'Drift support',unit:'hr'},
+    {code:'1090',label:'Overtid 1',unit:'hr'},
+    {code:'1443',label:'Byttetimer',unit:'hr'},
+    {code:'1444',label:'Byttetimer træk',unit:'hr'},
+  ];
+
+  // Calculate my hours from prev month shifts
+  const calcs=prevShifts.map(s=>calcShift(s,prevY,prevM));
+  const myHrs={
+    '1318':calcs.reduce((a,c)=>a+c.aftenHrs,0),
+    '1319':calcs.reduce((a,c)=>a+c.natUnits,0),
+    '1331':calcs.reduce((a,c)=>a+c.satHrs,0),
+    '1332':calcs.reduce((a,c)=>a+c.sunHrs,0),
+    '1334':prevData.manuals.forl||0,
+    '1316':prevData.manuals.driftHrs||0,
+    '1090':Math.max(0,calcs.reduce((a,c)=>a+c.hrs,0)-OT_NORM-(p.contractHrs||0)),
+    '1443':prevData.manuals.bytteRec||0,
+    '1444':prevData.manuals.bytteGiv||0,
+  };
+
+  const THRESH=0.11;
+  let discCount=0;
+  const compRows=SUPP_CODES.map(l=>{
+    const mine=myHrs[l.code]||0;
+    const theirs=Math.abs(vsPayrollData.codes[l.code]||0);
+    if(mine<0.01&&theirs<0.01)return'';
+    const diff=theirs-mine;
+    const ok=Math.abs(diff)<=THRESH;
+    if(!ok)discCount++;
+    const diffCell=ok
+      ?'<span class="vs-ok">✓</span>'
+      :`<span class="vs-bad">${diff>0?'+':''}${fmt(diff,2)} ${diff>0?'too much':'too little'}</span>`;
+    return`<div class="vs-row">
+      <span class="vs-code">${l.code}</span>
+      <span class="vs-lbl">${l.label}</span>
+      <span class="vs-num">${mine>0.005?fmt(mine,2)+' '+l.unit:'—'}</span>
+      <span class="vs-num">${theirs>0.005?fmt(theirs,2)+' '+l.unit:'—'}</span>
+      ${diffCell}
+    </div>`;
+  }).join('');
+
+  const compHtml=hasShifts?`
+    <div class="vs-sect">Your ${prevLabel} log vs Aviator's registration</div>
+    <div class="vs-col"><span>Code</span><span>Line</span><span style="text-align:right">Your log</span><span style="text-align:right">Registered</span><span style="text-align:right">Diff</span></div>
+    ${compRows||'<div class="vs-msg">No supplement lines to compare.</div>'}
+  `:`<div class="vs-msg" style="color:var(--amber)">No ${prevLabel} shifts logged — add them in the ${prevLabel} tab to compare against the payroll</div>`;
 
   // ── Expected lønseddel ──
-  const RATES={'1318':R.aftenHr,'1319':R.natHalf,'1331':R.lordagHr,'1332':R.sondagHr,
+  const RATES={
+    '1318':R.aftenHr,'1319':R.natHalf,'1331':R.lordagHr,'1332':R.sondagHr,
     '1334':R.forl,'1316':R.driftHr,'1090':OTR[p.lontrin||1].o1,
-    '1091':OTR[p.lontrin||1].o2,'1443':baseH,'1444':baseH};
-  const SLIP=[
+    '1091':OTR[p.lontrin||1].o2,'1443':baseH,'1444':baseH
+  };
+  const SLIP_CODES=[
     {code:'1318',label:'Aftentillæg'},{code:'1319',label:'Nattillæg'},
     {code:'1331',label:'Lørdagstillæg'},{code:'1332',label:'Søndagstillæg'},
     {code:'1334',label:'Forlængelsetillæg'},{code:'1316',label:'Drift support'},
     {code:'1090',label:'Overtid 1'},{code:'1091',label:'Overtid 2'},
     {code:'1443',label:'Byttetimer'},{code:'1444',label:'Byttetimer træk'},
   ];
-  let slipTotal=0;
-  const slipRows=SLIP.map(l=>{
-    const hrs=payroll.codes[l.code];
+  let suppGross=0;
+  const slipRows=SLIP_CODES.map(l=>{
+    const hrs=vsPayrollData.codes[l.code];
     if(!hrs||Math.abs(hrs)<0.005)return'';
     const kr=hrs*(RATES[l.code]||0);
-    slipTotal+=kr;
-    return`<div class="vfy-row" style="grid-template-columns:68px 1fr 80px 110px 0">
-      <span class="vfy-code">${l.code}</span>
-      <span class="vfy-lbl">${l.label}</span>
-      <span class="vfy-num">${fmt(Math.abs(hrs),2)}</span>
-      <span class="vfy-num" style="color:${kr<0?'var(--red)':'var(--green)'}">${fmt(kr,2)} kr</span>
-      <span></span>
+    suppGross+=kr;
+    return`<div class="vs-exp-row">
+      <span class="vs-code">${l.code}</span>
+      <span class="vs-lbl">${l.label}</span>
+      <span class="vs-num">${fmt(Math.abs(hrs),2)}</span>
+      <span class="vs-num" style="color:${kr<0?'var(--red)':'var(--green)'}">${fmt(kr,2)} kr</span>
     </div>`;
   }).join('');
-  const slipHtml=`<div class="vfy-sect">Expected ${nextLabel} lønseddel lines</div>
-    <div class="vfy-col" style="grid-template-columns:68px 1fr 80px 110px 0">
-      <span>Code</span><span>Line</span><span style="text-align:right">Hours</span><span style="text-align:right">Amount</span><span></span>
+
+  // Full tax calc on total gross
+  const tcoFix=p.quals.includes('tco')&&p.ct==='permanent'?(p.tcoSen==='over'?R.tcoF2:R.tcoF1):0;
+  const totalGross=p.salary+tcoFix+suppGross;
+  const tx=calcTax(totalGross);
+
+  const expHtml=`
+    <div class="vs-expected">
+      <div class="vs-sect">Your ${slipLabel} lønseddel should show these supplement lines</div>
+      <div class="vs-exp-col"><span>Code</span><span>Line</span><span style="text-align:right">Hours</span><span style="text-align:right">Amount</span></div>
+      ${slipRows||'<div class="vs-msg">No supplement lines.</div>'}
+      <div class="vs-sum">
+        <span>Supplements gross</span>
+        <strong style="color:var(--amber)">${fmt(suppGross,2)} kr</strong>
+      </div>
     </div>
-    ${slipRows||'<div class="vfy-msg">No supplement lines.</div>'}
-    <div class="vfy-sum">
-      <span>Total supplements → <strong>${nextLabel}</strong> lønseddel</span>
-      <strong>${fmt(slipTotal,2)} kr</strong>
+    <div class="vs-expected">
+      <div class="vs-sect">Expected NemKonto transfer — ${slipLabel}</div>
+      <div class="vs-exp-row"><span class="vs-code"></span><span class="vs-lbl" style="color:var(--text2)">Base salary + TCO</span><span></span><span class="vs-num">${fkr(p.salary+tcoFix)}</span></div>
+      <div class="vs-exp-row"><span class="vs-code"></span><span class="vs-lbl" style="color:var(--text2)">Supplements (gross)</span><span></span><span class="vs-num" style="color:var(--amber)">${fkr(suppGross,true)}</span></div>
+      <div class="vs-exp-row"><span class="vs-code"></span><span class="vs-lbl" style="color:var(--text2)">AM-bidrag 8%</span><span></span><span class="vs-num" style="color:var(--red)">− ${fkr(tx.am)}</span></div>
+      <div class="vs-exp-row"><span class="vs-code"></span><span class="vs-lbl" style="color:var(--text2)">Fradrag</span><span></span><span class="vs-num" style="color:var(--red)">− ${fkr(p.fradrag)}</span></div>
+      <div class="vs-exp-row"><span class="vs-code"></span><span class="vs-lbl" style="color:var(--text2)">A-skat ${p.traek}%</span><span></span><span class="vs-num" style="color:var(--red)">− ${fkr(tx.askat)}</span></div>
+      <div class="vs-exp-row"><span class="vs-code"></span><span class="vs-lbl" style="color:var(--text2)">ATP</span><span></span><span class="vs-num" style="color:var(--red)">− ${fkr(R.atp)}</span></div>
+      <div class="vs-sum"><span style="font-weight:700">Expected net pay</span><strong style="color:var(--green);font-size:18px">${fmt(tx.net,0)} kr</strong></div>
     </div>`;
 
   // ── Verdict ──
-  let bannerHtml='';
-  if(discCount>0){
-    bannerHtml=`<div class="vfy-banner err">⚠ ${discCount} discrepanc${discCount===1?'y':'ies'} between your shifts and Aviator's registration — contact Aviator before the ${nextLabel} lønseddel locks in</div>`;
-  }else if(hasShifts){
-    bannerHtml=`<div class="vfy-banner ok">✓ Shifts match Aviator's registration — your ${nextLabel} lønseddel supplements should be ${fmt(slipTotal,2)} kr</div>`;
+  let verdict='';
+  if(hasShifts){
+    verdict=discCount>0
+      ?`<div class="vs-banner err">⚠ ${discCount} discrepanc${discCount===1?'y':'ies'} found — Aviator did not register your ${prevLabel} work correctly. Contact them now — your ${slipLabel} lønseddel is affected.</div>`
+      :`<div class="vs-banner ok">✓ Everything checks out — your ${slipLabel} lønseddel should be correct</div>`;
   }else{
-    bannerHtml=`<div class="vfy-banner warn">Load your ${label} shifts above to compare against the payroll registration</div>`;
+    verdict=`<div class="vs-banner warn">Add your ${prevLabel} shifts to confirm Aviator registered everything correctly</div>`;
   }
 
-  body.innerHTML=upHtml+compHtml+slipHtml+bannerHtml;
+  el.innerHTML=`<div class="vs-flow">${upHtml}${chainHtml}${compHtml}</div>${expHtml}${verdict}`;
 }
 
 // ═══ SHIFT EDITING ═══
@@ -963,6 +1181,21 @@ function addShift(){
   const nw={d,s:'08:00',e:'16:00',note:'',id:uid(),origS:'08:00',origE:'16:00',extra:true};
   shifts.push(nw);editId=nw.id;saveP();render();
   setTimeout(()=>document.getElementById('sb').lastElementChild?.scrollIntoView({behavior:'smooth',block:'center'}),60);
+}
+
+
+// ═══ PRIVACY ═══
+const PRIV_KEY='paybuddy_privacy_v1';
+function acceptPrivacy(){
+  localStorage.setItem(PRIV_KEY,'1');
+  document.getElementById('privacy').classList.add('hidden');
+  if(profile){
+    document.getElementById('wizard').classList.add('hidden');
+    document.getElementById('app').classList.add('show');
+    render();
+  }else{
+    startWiz();
+  }
 }
 
 // ═══ WIZARD ═══
@@ -1010,11 +1243,11 @@ function chkNext(){
 function buildStep(s){
   switch(s){
     case 0:return`<div class="wiz-card"><div class="wiz-title">Your monthly salary</div><div class="wiz-sub">From your employment contract</div>
-      <div style="display:flex;align-items:center;gap:10px"><input class="wii" id="w-sal" type="text" inputmode="numeric" placeholder="30 000" oninput="onSalInput(this)">
+      <div style="display:flex;align-items:center;gap:10px"><input class="wii" id="w-sal" type="text" inputmode="numeric" placeholder="" value="${wd.sal?(wd.sal.length<=4?wd.sal:wd.sal.replace(/\B(?=(\d{3})+(?!\d))/g,' ')):''}" oninput="onSalInput(this)">
       <span style="font-family:var(--fm);color:var(--text2);white-space:nowrap;font-size:13px">kr / month</span></div>
       <div class="hbox" style="margin-top:14px">Your base pay — fixed amount before supplements.</div></div>`;
     case 1:return`<div class="wiz-card"><div class="wiz-title">Contract hours</div><div class="wiz-sub">Your guaranteed minimum per month</div>
-      <div style="display:flex;align-items:center;gap:10px"><input class="wii" id="w-hrs" type="number" min="1" max="200" step="0.1" placeholder="e.g. 121" oninput="wd.hrs=this.value;chkNext()">
+      <div style="display:flex;align-items:center;gap:10px"><input class="wii" id="w-hrs" type="number" min="1" max="200" step="0.1" placeholder="" value="${wd.hrs||''}" oninput="wd.hrs=this.value;chkNext()">
       <span style="font-family:var(--fm);color:var(--text2);white-space:nowrap;font-size:13px">hrs / month</span></div>
       <div class="hbox" style="margin-top:14px">Used to calculate merarbejde — hours above contract up to ${OT_NORM}h norm.</div></div>`;
     case 2:return`<div class="wiz-card"><div class="wiz-title">How long have you worked here?</div><div class="wiz-sub">Determines løntrin and overtime rates</div>
@@ -1071,8 +1304,8 @@ function rStep(step,dir){
     `<button class="wnx" id="wnx" onclick="wGo(1)" disabled>${isLast?"Let's go →":"Next →"}</button>`;
   chkNext();
   if(step===2)setTimeout(updLT,30);
-  if(step===0)setTimeout(()=>document.getElementById('w-sal')?.focus(),50);
-  if(step===1)setTimeout(()=>document.getElementById('w-hrs')?.focus(),50);
+  if(step===0)setTimeout(()=>{const el=document.getElementById('w-sal');if(el){el.focus();wd.sal=el.value.replace(/\s/g,'');chkNext();}},50);
+  if(step===1)setTimeout(()=>{const el=document.getElementById('w-hrs');if(el){el.focus();wd.hrs=el.value;chkNext();}},50);
   if(step===2){wMosErr=false;setTimeout(()=>document.getElementById('w-yrs')?.focus(),50);}
   document.getElementById('wizard').scrollTop=0;
 }
@@ -1148,14 +1381,30 @@ function dlPDF(){
 
 // ═══ TOUR ═══
 const TOUR=[
-  {el:null,title:'Welcome to PayBuddy',body:'PayBuddy tracks your Aviator PAX pay month by month. Use the month tabs to navigate, upload shifts as you receive them, and verify your lønseddel when payroll.txt arrives.'},
-  {el:'month-tabs',title:'Month tabs',body:'One tab per month. A <span style="color:var(--green)">green dot</span> means shifts loaded. <span style="color:var(--amber)">Amber</span> means payroll.txt also uploaded. Switch months anytime — data is saved separately for each.'},
-  {el:'dropz',title:'Upload your shift file',body:'Upload the roster for this month — .doc, .rtf, or .txt. Shifts are saved to this month tab. When a new roster arrives (~18th), switch to that month and upload there.'},
-  {el:'summary',title:'Month summary',body:'Left: what changed this month — extra shifts, extended shifts, forlængelses, swaps.<br><br>Right: expected supplements for next month\'s lønseddel, either calculated or from payroll.txt.'},
-  {el:'sb',title:'Shift table',body:'All shifts with auto-calculated supplements. Click a row to edit — if you extend a shift beyond its original end time, it\'s automatically marked as extended. Use + Add shift for extra shifts called in.'},
-  {el:'mgrid',title:'Manual adjustments',body:'Enter things the roster cannot show — forlængelses, swap hours, drift, etc. These feed into both the summary and the verify section.'},
-  {el:'taxcard',title:'Tax breakdown',body:'Full SKAT 2026 formula. Update trækprocent and fradrag in ⚙ Settings anytime.'},
-  {el:'vfy-body',title:'Verify payslip',body:'Upload the payroll.txt (received at start of next month). The app compares your shifts against what Aviator registered and shows exactly what your next lønseddel should contain.'},
+  {el:null,
+   title:"Welcome to PayBuddy",
+   body:"PayBuddy helps you track your Aviator PAX pay and verify your lønseddel. This tour takes about a minute — let's go through each part of the app."},
+  {el:"month-tabs",
+   title:"Month tabs",
+   body:"One tab per month. <span style=\"color:var(--green)\">&#9679;</span> green = shifts loaded. <span style=\"color:var(--amber)\">&#9679;</span> amber = payroll.txt uploaded too.<br><br>Around the 18th, switch to next month's tab and upload the new roster. Data is saved separately per month."},
+  {el:"dropz",
+   title:"Upload your shift file",
+   body:"Upload your roster here — .doc, .rtf, or .txt from the scheduling system. Shifts are parsed and saved to the current month automatically.<br><br>Drag &amp; drop or click to browse."},
+  {el:"summary",
+   title:"Month summary",
+   body:"<strong>Left:</strong> what changed from your original schedule — extra shifts, extended shifts, forlængelses, swaps, and net extra hours.<br><br><strong>Right:</strong> what to expect on next month's lønseddel. Uses your calculated shifts until payroll.txt is uploaded, then switches to Aviator's exact figures."},
+  {el:"sb",
+   title:"Shift table",
+   body:"Every shift with auto-calculated supplements — aften, nat, lørdag, søn, helligdag.<br><br>Click any row to edit. Push the end time later than original and it's flagged as <strong>extended</strong> automatically. Use <strong>+ Add shift</strong> for extra shifts called in."},
+  {el:"mgrid",
+   title:"Manual adjustments",
+   body:"For things the roster can't show:<br><br>• <strong>Forlængelses</strong> — flat rate per event<br>• <strong>Swap hours</strong> — received or given away<br>• <strong>Drift, Trainer, Instruktør</strong> — shown based on your qualifications<br><br>These feed into the summary and verify sections."},
+  {el:"taxcard",
+   title:"Tax breakdown",
+   body:"Full SKAT 2026 calculation: AM-bidrag 8% → A-skat at your trækprocent → ATP 99 kr → estimated net pay.<br><br>Update your trækprocent and fradrag anytime via <strong>⚙ Settings</strong> in the top right."},
+  {el:"vs-content",
+   title:"Verify payslip",
+   body:"At the start of each month you receive a payroll.txt by email — Aviator's own record of what they registered last month.<br><br>Upload it in the <em>previous</em> month's tab. PayBuddy compares your shifts against their registration and shows exactly what your lønseddel should contain — line by line.<br><br><span style=\"color:var(--red)\">Red = discrepancy to dispute with Aviator.</span>"},
 ];
 let tourStep=0,_tourEl=null;
 function _noScroll(e){e.preventDefault();}
@@ -1205,14 +1454,17 @@ document.addEventListener('keydown',e=>{
 curTheme=localStorage.getItem(TK)||'auto';
 applyTheme(curTheme);
 loadP();
-if(profile){
-  document.getElementById('wizard').classList.add('hidden');
-  document.getElementById('app').classList.add('show');
-  render();
-
-}else{
-  startWiz();
+if(localStorage.getItem(PRIV_KEY)){
+  document.getElementById('privacy').classList.add('hidden');
+  if(profile){
+    document.getElementById('wizard').classList.add('hidden');
+    document.getElementById('app').classList.add('show');
+    render();
+  }else{
+    startWiz();
+  }
 }
+// else: privacy screen is shown by default
 </script>
 </body>
 </html>
