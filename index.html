@@ -115,7 +115,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);line-height:1.
 .ibtn:hover{background:var(--bg4);color:var(--text);}
 
 /* ── MONTH TABS ── */
-.month-tabs{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:52px;z-index:49;}
+.month-tabs{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:96px;z-index:47;}
 .month-tabs::-webkit-scrollbar{display:none;}
 .mtab{flex-shrink:0;padding:0 14px;height:40px;display:flex;align-items:center;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;position:relative;white-space:nowrap;}
 .mtab:hover{color:var(--text2);}
@@ -1010,7 +1010,7 @@ function renderVsContent(){
   const hasPay=vsPayrollData&&Object.keys(vsPayrollData.codes).length>0;
 
   // ── Upload zone ──
-  const upHtml=`<label class="vs-upz${hasPay?' ok':''}" onclick="document.getElementById('vs-pay-in').click()" style="cursor:pointer;display:flex">
+  const upHtml=`<label class="vs-upz${hasPay?' ok':''}" for="vs-pay-in" style="cursor:pointer;display:flex">
     <input type="file" id="vs-pay-in" accept=".txt,.doc,.rtf" onchange="uploadVsPayroll(this.files[0])" style="display:none">
     <span class="vs-ico">${hasPay?'✅':'📋'}</span>
     <span class="vs-utx">
@@ -1402,14 +1402,14 @@ const TOUR=[
   {el:"taxcard",
    title:"Tax breakdown",
    body:"Full SKAT 2026 calculation: AM-bidrag 8% → A-skat at your trækprocent → ATP 99 kr → estimated net pay.<br><br>Update your trækprocent and fradrag anytime via <strong>⚙ Settings</strong> in the top right."},
-  {el:"vs-content",
-   title:"Verify payslip",
-   body:"At the start of each month you receive a payroll.txt by email — Aviator's own record of what they registered last month.<br><br>Upload it in the <em>previous</em> month's tab. PayBuddy compares your shifts against their registration and shows exactly what your lønseddel should contain — line by line.<br><br><span style=\"color:var(--red)\">Red = discrepancy to dispute with Aviator.</span>"},
+  {el:"vs-picker",
+   title:"Verify Salary tab",
+   body:"Pick the lønseddel you want to check. The app figures out which payroll.txt you need, walks you through the comparison, and shows your expected NemKonto amount.<br><br><span style=\"color:var(--green)\">Green dot</span> = you have shifts logged for that month."},
 ];
 let tourStep=0,_tourEl=null;
 function _noScroll(e){e.preventDefault();}
 function startTour(){tourStep=0;document.getElementById('wt-overlay').style.display='block';window.addEventListener('wheel',_noScroll,{passive:false});window.addEventListener('touchmove',_noScroll,{passive:false});showTourStep(0);}
-function endTour(){document.getElementById('wt-overlay').style.display='none';window.removeEventListener('wheel',_noScroll);window.removeEventListener('touchmove',_noScroll);_tourEl=null;}
+function endTour(){document.getElementById('wt-overlay').style.display='none';window.removeEventListener('wheel',_noScroll);window.removeEventListener('touchmove',_noScroll);_tourEl=null;if(activeTab!=='shifts')switchTab('shifts');}
 function tourGo(dir){tourStep=Math.max(0,Math.min(TOUR.length-1,tourStep+dir));showTourStep(tourStep);}
 function positionTour(){
   const spot=document.getElementById('wt-spot'),card=document.getElementById('wt-card');
@@ -1425,9 +1425,16 @@ function positionTour(){
   Object.assign(card.style,{top:ct+'px',left:cl+'px',bottom:'',right:'',transform:''});
 }
 function showTourStep(i){
-  const step=TOUR[i];_tourEl=step.el?document.getElementById(step.el):null;
+  const step=TOUR[i];
+  // Switch to correct tab for this step
+  if(step.el==='vs-picker'||step.el==='vs-content'){
+    if(activeTab!=='verify')switchTab('verify');
+  }else if(step.el&&step.el!=='vs-picker'&&step.el!=='vs-content'){
+    if(activeTab!=='shifts')switchTab('shifts');
+  }
+  _tourEl=step.el?document.getElementById(step.el):null;
   if(_tourEl){
-    const vh=window.innerHeight,CARD_H=280,HEADER_H=92,PAD=16;
+    const vh=window.innerHeight,CARD_H=280,HEADER_H=96,PAD=16;
     const r=_tourEl.getBoundingClientRect(),absTop=window.scrollY+r.top;
     const targetY=r.height+CARD_H+PAD*3<vh-HEADER_H?absTop-HEADER_H-PAD:absTop-(vh-r.height)/2;
     window.scrollTo({top:Math.max(0,targetY),behavior:'instant'});
