@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PayCalc · Aviator PAX</title>
+<title>PayBuddy · Aviator PAX</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -45,11 +45,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);line-height:1.
 .wiz-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);transition:all 0.3s;}
 .wiz-dot.active{background:var(--accent);transform:scale(1.3);}
 .wiz-dot.done{background:var(--green);}
-/* Viewport: clip X for slide, allow Y scroll */
 .wiz-viewport{width:100%;overflow-x:hidden;overflow-y:visible;position:relative;}
 .wiz-step{width:100%;animation-duration:0.34s;animation-fill-mode:both;animation-timing-function:cubic-bezier(0.4,0,0.2,1);}
-.wiz-step.enter-r{animation-name:wIR;}
-.wiz-step.enter-l{animation-name:wIL;}
+.wiz-step.enter-r{animation-name:wIR;}.wiz-step.enter-l{animation-name:wIL;}
 .wiz-step.exit-l{animation-name:wOL;position:absolute;top:0;left:0;width:100%;}
 .wiz-step.exit-r{animation-name:wOR;position:absolute;top:0;left:0;width:100%;}
 @keyframes wIR{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
@@ -62,37 +60,26 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);line-height:1.
 .wlbl{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:7px;}
 .wii{width:100%;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--r);padding:12px 15px;font-family:var(--fm);font-size:16px;color:var(--text);outline:none;transition:border-color 0.2s;}
 .wii:focus{border-color:var(--accent);}
-.irow{display:flex;gap:12px;}
-.irow>div{flex:1;}
+.irow{display:flex;gap:12px;}.irow>div{flex:1;}
 .hbox{padding:12px 14px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border);font-size:11px;color:var(--text3);font-family:var(--fm);line-height:1.75;margin-top:10px;}
 .hbox a{color:var(--accent);text-decoration:none;}
-/* type cards */
 .tc-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .tc{background:var(--bg3);border:2px solid var(--border2);border-radius:var(--rl);padding:20px 14px;cursor:pointer;transition:all 0.2s;text-align:center;}
-.tc:hover{border-color:var(--accent);}
-.tc.sel{border-color:var(--accent);background:var(--bbg);}
-.tc-ico{font-size:26px;margin-bottom:7px;}
-.tc-t{font-size:14px;font-weight:600;margin-bottom:3px;}
-.tc-d{font-size:11px;color:var(--text3);font-family:var(--fm);}
-/* qual grid */
+.tc:hover{border-color:var(--accent);}.tc.sel{border-color:var(--accent);background:var(--bbg);}
+.tc-ico{font-size:26px;margin-bottom:7px;}.tc-t{font-size:14px;font-weight:600;margin-bottom:3px;}
+.tc-d{font-size:11px;color:var(--text3);}
 .qg{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .qc{background:var(--bg3);border:2px solid var(--border2);border-radius:var(--rl);padding:13px 11px;cursor:pointer;transition:all 0.2s;display:flex;align-items:flex-start;gap:9px;}
-.qc:hover{border-color:var(--accent);}
-.qc.sel{border-color:var(--accent);background:var(--bbg);}
-.qi{font-size:19px;flex-shrink:0;}
-.qt{font-size:13px;font-weight:600;}
-.qr{font-size:11px;color:var(--text3);font-family:var(--fm);}
+.qc:hover{border-color:var(--accent);}.qc.sel{border-color:var(--accent);background:var(--bbg);}
+.qi{font-size:19px;flex-shrink:0;}.qt{font-size:13px;font-weight:600;}.qr{font-size:11px;color:var(--text3);font-family:var(--fm);}
 .qck{margin-left:auto;width:17px;height:17px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;transition:all 0.2s;}
 .qc.sel .qck{background:var(--accent);border-color:var(--accent);}
-/* radio group */
 .rg{display:flex;flex-direction:column;gap:8px;}
 .ro{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--bg3);border-radius:var(--r);border:2px solid var(--border2);cursor:pointer;font-size:13px;transition:all 0.2s;}
-.ro:hover{border-color:var(--accent);}
-.ro.sel{border-color:var(--accent);background:var(--bbg);}
+.ro:hover{border-color:var(--accent);}.ro.sel{border-color:var(--accent);background:var(--bbg);}
 .rd{width:16px;height:16px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;transition:all 0.2s;}
 .ro.sel .rd{background:var(--accent);border-color:var(--accent);}
 .rs{font-size:11px;color:var(--text3);font-family:var(--fm);}
-/* wiz nav */
 .wiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;width:100%;}
 .wbk{background:transparent;border:1px solid var(--border2);color:var(--text2);padding:10px 20px;border-radius:var(--r);font-family:var(--fn);font-size:13px;cursor:pointer;transition:all 0.15s;}
 .wbk:hover{background:var(--bg3);color:var(--text);}
@@ -102,64 +89,74 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);line-height:1.
 .sctr{font-size:11px;color:var(--text3);font-family:var(--fm);}
 .ltpill{display:inline-flex;align-items:center;gap:8px;padding:7px 13px;background:var(--bbg);border:1px solid rgba(96,165,250,0.2);border-radius:99px;font-family:var(--fm);font-size:11px;color:var(--blue);margin-top:10px;}
 
-/* ── APP ── */
+/* ── APP SHELL ── */
 #app{display:none;min-height:100vh;flex-direction:column;}
 #app.show{display:flex;}
-.app-hdr{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
-.logo{display:flex;align-items:center;gap:10px;}
-.logo-ico{width:30px;height:30px;background:var(--accent);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.app-hdr{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
 .logo-tx{font-size:14px;font-weight:700;letter-spacing:-0.02em;}
 .logo-sx{font-size:10px;color:var(--text3);font-family:var(--fm);}
-.ibtn{width:36px;height:36px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text2);transition:all 0.15s;}
+.ibtn{width:34px;height:34px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;color:var(--text2);transition:all 0.15s;}
 .ibtn:hover{background:var(--bg4);color:var(--text);}
-.app-body{flex:1;padding:28px 24px;max-width:920px;margin:0 auto;width:100%;}
-/* upload */
-.upz{border:1.5px dashed var(--border2);border-radius:var(--rl);padding:22px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all 0.2s;margin-bottom:18px;text-align:center;background:var(--bg2);}
+
+/* ── MONTH TABS ── */
+.month-tabs{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:52px;z-index:49;}
+.month-tabs::-webkit-scrollbar{display:none;}
+.mtab{flex-shrink:0;padding:0 14px;height:40px;display:flex;align-items:center;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;position:relative;white-space:nowrap;}
+.mtab:hover{color:var(--text2);}
+.mtab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.mtab.has-data::after{content:'';position:absolute;top:8px;right:6px;width:5px;height:5px;border-radius:50%;background:var(--green);}
+.mtab.has-payroll::after{background:var(--amber);}
+.mtab.has-mismatch::after{background:var(--red);}
+
+/* ── MAIN BODY ── */
+.app-body{flex:1;padding:24px 20px;max-width:960px;margin:0 auto;width:100%;}
+
+/* ── SUMMARY PANEL ── */
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;}
+.sum-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:18px;}
+.sum-card.green{border-color:var(--gborder);background:var(--gbg);}
+.sum-card.amber{border-color:var(--aborder);background:var(--abg);}
+.sum-card.red{border-color:var(--rborder);background:var(--rbg);}
+.sum-label{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
+.sum-label.green{color:var(--green);}.sum-label.amber{color:var(--amber);}.sum-label.red{color:var(--red);}
+.sum-big{font-size:24px;font-weight:700;font-family:var(--fm);letter-spacing:-0.02em;margin-bottom:2px;}
+.sum-sub{font-size:11px;color:var(--text2);font-family:var(--fm);margin-bottom:12px;}
+.sum-rows{display:flex;flex-direction:column;gap:0;}
+.sum-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border);}
+.sum-row:last-child{border-bottom:none;}
+.sum-rl{color:var(--text2);}.sum-rv{font-family:var(--fm);font-weight:600;}
+.sum-rv.pos{color:var(--green);}.sum-rv.neg{color:var(--red);}.sum-rv.amb{color:var(--amber);}
+.sum-empty{font-size:12px;color:var(--text3);font-family:var(--fm);padding:6px 0;}
+
+/* ── UPLOAD ZONE ── */
+.upz{border:1.5px dashed var(--border2);border-radius:var(--rl);padding:18px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:all 0.2s;margin-bottom:16px;text-align:center;background:var(--bg2);}
 .upz:hover,.upz.drag{border-color:var(--accent);background:var(--bbg);}
-.upz input{display:none;}
-.up-t{font-size:14px;font-weight:600;}
-.up-h{font-size:11px;color:var(--text3);font-family:var(--fm);}
-.up-b{padding:6px 18px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-family:var(--fn);font-size:12px;font-weight:600;cursor:pointer;}
+.upz input{display:none;}.up-t{font-size:13px;font-weight:600;}.up-h{font-size:11px;color:var(--text3);font-family:var(--fm);}
+.up-b{padding:5px 16px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-family:var(--fn);font-size:12px;font-weight:600;cursor:pointer;}
 .up-b:hover{background:var(--accent2);}
-.plog{font-family:var(--fm);font-size:11px;color:var(--text3);background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px 13px;margin-bottom:12px;display:none;max-height:80px;overflow-y:auto;line-height:1.8;}
-.mpill{display:inline-flex;align-items:center;gap:6px;padding:4px 13px;background:var(--bg2);border:1px solid var(--border);border-radius:99px;font-family:var(--fm);font-size:12px;color:var(--text2);margin-bottom:16px;}
-/* panels */
-.panels{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px;}
-.panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:20px;}
-.panel-g{border-color:var(--gborder);background:var(--gbg);}
-.panel-a{border-color:var(--aborder);background:var(--abg);}
-.plbl{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;}
-.plbl-g{color:var(--green);}.plbl-a{color:var(--amber);}
-.pgrs{font-size:26px;font-weight:700;letter-spacing:-0.03em;font-family:var(--fm);}
-.pgrs-g{color:var(--green);}.pgrs-a{color:var(--amber);}
-.pnet{font-size:13px;font-family:var(--fm);margin-top:4px;color:var(--teal);}
-.pit{margin-top:13px;display:flex;flex-direction:column;gap:0;}
-.pi{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border);}
-.pi:last-child{border-bottom:none;}
-.pil{color:var(--text2);}.piv{font-family:var(--fm);}
-.piv.pos{color:var(--green);}.piv.neg{color:var(--red);}
-/* section */
+.plog{font-family:var(--fm);font-size:11px;color:var(--text3);background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:8px 12px;margin-bottom:12px;display:none;max-height:72px;overflow-y:auto;line-height:1.8;}
+
+/* ── SECTION HEADERS ── */
 .sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .st{font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);}
 .bsm{padding:5px 12px;border-radius:var(--r);font-family:var(--fn);font-size:11px;font-weight:600;cursor:pointer;border:none;}
 .bacc{background:var(--accent);color:#fff;}.bacc:hover{background:var(--accent2);}
-/* shift table */
+.fn2{font-size:11px;color:var(--text3);font-family:var(--fm);margin-bottom:16px;}
+
+/* ── SHIFT TABLE ── */
 .stw{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:8px;}
 table{width:100%;border-collapse:collapse;}
-th{text-align:left;padding:8px 12px;font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);background:var(--bg3);border-bottom:1px solid var(--border);}
-td{padding:9px 12px;border-bottom:1px solid var(--border);font-size:12px;}
+th{text-align:left;padding:7px 12px;font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);background:var(--bg3);border-bottom:1px solid var(--border);}
+td{padding:8px 12px;border-bottom:1px solid var(--border);font-size:12px;}
 tbody tr:last-child td{border-bottom:none;}
 tbody tr{cursor:pointer;transition:background 0.1s;}
 tbody tr:hover{background:var(--bg3);}
 tbody tr.ed{background:var(--bg3);cursor:default;}
-.mono{font-family:var(--fm);font-size:11px;}
-.dim{color:var(--text3);font-size:11px;}
+.mono{font-family:var(--fm);font-size:11px;}.dim{color:var(--text3);font-size:11px;}
 .bgs{display:flex;gap:3px;flex-wrap:wrap;}
 .b{display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:600;font-family:var(--fm);}
-.ba{background:var(--abg);color:var(--amber);}
-.bn{background:var(--bbg);color:var(--blue);}
-.bsa{background:rgba(251,191,36,0.12);color:#fbbf24;}
-.bsu{background:var(--rbg);color:var(--red);}
+.ba{background:var(--abg);color:var(--amber);}.bn{background:var(--bbg);color:var(--blue);}
+.bsa{background:rgba(251,191,36,0.12);color:#fbbf24;}.bsu{background:var(--rbg);color:var(--red);}
 .bh{background:var(--pbg);color:var(--purple);}
 .erow{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
 .ei{background:var(--bg4);border:1px solid var(--border2);border-radius:5px;padding:5px 8px;font-family:var(--fm);font-size:11px;color:var(--text);}
@@ -169,9 +166,9 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
 .edl{padding:5px 11px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;background:var(--rbg);color:var(--red);border:1px solid var(--rborder);font-family:var(--fn);}
 .eico{font-size:13px;padding:3px 7px;border-radius:4px;background:none;border:none;color:var(--text3);cursor:pointer;}
 .eico:hover{color:var(--text);background:var(--bg4);}
-.empty{text-align:center;padding:30px;color:var(--text3);font-size:13px;}
-.fn2{font-size:11px;color:var(--text3);font-family:var(--fm);margin-bottom:16px;}
-/* manual */
+.empty{text-align:center;padding:28px;color:var(--text3);font-size:13px;}
+
+/* ── MANUAL GRID ── */
 .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
 .mrow{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px 13px;display:flex;align-items:center;gap:8px;}
 .ml{font-size:12px;color:var(--text2);flex:1;line-height:1.35;}
@@ -180,23 +177,45 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
 .mu{font-size:10px;color:var(--text3);font-family:var(--fm);min-width:24px;}
 .ma{font-family:var(--fm);font-size:12px;min-width:88px;text-align:right;}
 .ma.pos{color:var(--green);}.ma.neg{color:var(--red);}
-/* tax */
+
+/* ── TAX ── */
 .txc{background:var(--tbg);border:1px solid var(--tborder);border-radius:var(--rl);overflow:hidden;margin-bottom:14px;}
 .txh{padding:10px 16px;background:rgba(45,212,191,0.12);border-bottom:1px solid var(--tborder);}
 .txht{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal);}
-.trow{display:flex;justify-content:space-between;align-items:center;padding:9px 16px;border-bottom:1px solid rgba(45,212,191,0.08);font-size:12px;}
+.trow{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;border-bottom:1px solid rgba(45,212,191,0.08);font-size:12px;}
 .trow:last-child{border-bottom:none;}
 .trow.nrow{background:rgba(45,212,191,0.10);border-top:2px solid var(--tborder);}
 .tl{color:var(--text2);}.tv{font-family:var(--fm);}
 .tv.neg{color:var(--red);}.tv.teal{color:var(--teal);font-size:18px;font-weight:700;}
-.bpdf{padding:6px 14px;background:var(--tbg);color:var(--teal);border:1px solid var(--tborder);border-radius:var(--r);font-family:var(--fn);font-size:12px;font-weight:600;cursor:pointer;}
+.bpdf{padding:5px 13px;background:var(--tbg);color:var(--teal);border:1px solid var(--tborder);border-radius:var(--r);font-family:var(--fn);font-size:12px;font-weight:600;cursor:pointer;}
 .bpdf:hover{background:var(--teal);color:#fff;}
-/* toast */
-.toast{position:fixed;bottom:24px;right:24px;padding:10px 18px;border-radius:var(--r);font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(8px);transition:all 0.25s;pointer-events:none;}
-.toast.show{opacity:1;transform:translateY(0);}
-.toast.ok{background:var(--gbg);border:1px solid var(--gborder);color:var(--green);}
-.toast.err{background:var(--rbg);border:1px solid var(--rborder);color:var(--red);}
-/* settings modal */
+
+/* ── VERIFY ── */
+.vfy-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:14px;}
+.vfy-body{display:block;}
+
+.vfy-upz{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;background:var(--bg3);border-bottom:1px solid var(--border);transition:background 0.15s;}
+.vfy-upz:hover{background:var(--bg4);}
+.vfy-upz.ok{background:var(--gbg);border-bottom-color:var(--gborder);}
+.vfy-ico{font-size:18px;flex-shrink:0;}
+.vfy-utx{flex:1;}.vfy-ut{font-size:12px;font-weight:600;}.vfy-us{font-size:11px;color:var(--text3);font-family:var(--fm);}
+.vfy-sect{padding:7px 16px;font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);background:var(--bg3);border-bottom:1px solid var(--border);border-top:1px solid var(--border);}
+.vfy-col{display:grid;grid-template-columns:68px 1fr 90px 90px 68px;padding:5px 16px;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);}
+.vfy-row{display:grid;grid-template-columns:68px 1fr 90px 90px 68px;align-items:center;padding:7px 16px;border-bottom:1px solid var(--border);font-size:12px;}
+.vfy-row:last-child{border-bottom:none;}
+.vfy-code{font-family:var(--fm);font-size:10px;color:var(--text3);}
+.vfy-lbl{color:var(--text2);}
+.vfy-num{font-family:var(--fm);text-align:right;}
+.vfy-ok{color:var(--green);font-family:var(--fm);font-size:12px;text-align:right;}
+.vfy-bad{color:var(--red);font-family:var(--fm);font-size:11px;font-weight:700;text-align:right;}
+.vfy-sum{display:flex;justify-content:space-between;align-items:center;padding:11px 16px;background:var(--bg3);border-top:2px solid var(--border2);font-size:12px;}
+.vfy-banner{padding:10px 16px;font-size:12px;font-family:var(--fm);text-align:center;font-weight:600;}
+.vfy-banner.ok{background:var(--gbg);color:var(--green);}
+.vfy-banner.err{background:var(--rbg);color:var(--red);}
+.vfy-banner.warn{background:var(--abg);color:var(--amber);}
+.vfy-msg{padding:18px 16px;font-size:12px;color:var(--text3);font-family:var(--fm);text-align:center;}
+
+/* ── MODAL / SETTINGS ── */
 .movl{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;padding:20px;}
 .movl.open{opacity:1;pointer-events:all;}
 .modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rxl);padding:28px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto;transform:translateY(12px);transition:transform 0.22s;}
@@ -216,63 +235,34 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
 .prof-row:last-child{border-bottom:none;}
 .prlbl{color:var(--text2);}.prval{font-family:var(--fm);}
 .profcard{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:4px;}
+.toast{position:fixed;bottom:24px;right:24px;padding:10px 18px;border-radius:var(--r);font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(8px);transition:all 0.25s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.ok{background:var(--gbg);border:1px solid var(--gborder);color:var(--green);}
+.toast.err{background:var(--rbg);border:1px solid var(--rborder);color:var(--red);}
 
-@media(max-width:680px){
-  .panels,.mgrid,.qg,.thopts,.tc-wrap{grid-template-columns:1fr;}
-  .app-body{padding:18px 14px;}
-  .wiz-card{padding:22px 18px;}
-  th:nth-child(6),td:nth-child(6){display:none;}
-}
-
-/* ── WALKTHROUGH ── */
-.guide-btn{font-size:15px;font-weight:700;font-family:var(--fn);}
-#wt-overlay{position:fixed;inset:0;z-index:500;pointer-events:none;}
-#wt-spot{
-  position:fixed;
-  border-radius:10px;
-  box-shadow:0 0 0 9999px rgba(0,0,0,0.72);
-  transition:top 0.38s cubic-bezier(0.4,0,0.2,1),
-             left 0.38s cubic-bezier(0.4,0,0.2,1),
-             width 0.38s cubic-bezier(0.4,0,0.2,1),
-             height 0.38s cubic-bezier(0.4,0,0.2,1);
-  pointer-events:none;
-  z-index:501;
-}
-#wt-card{
-  position:fixed;
-  z-index:502;
-  pointer-events:all;
-  background:var(--bg2);
-  border:1px solid var(--border2);
-  border-radius:var(--rxl);
-  padding:24px 24px 20px;
-  width:320px;
-  max-width:calc(100vw - 32px);
-  box-shadow:0 24px 64px rgba(0,0,0,0.55);
-  transition:top 0.38s cubic-bezier(0.4,0,0.2,1),
-             left 0.38s cubic-bezier(0.4,0,0.2,1),
-             bottom 0.38s cubic-bezier(0.4,0,0.2,1),
-             transform 0.38s cubic-bezier(0.4,0,0.2,1);
-}
-#wt-x{
-  position:absolute;top:14px;right:14px;
-  background:none;border:none;font-size:16px;cursor:pointer;
-  color:var(--text3);line-height:1;padding:4px;border-radius:4px;
-  transition:color 0.15s;
-}
-#wt-x:hover{color:var(--text);background:var(--bg3);}
-#wt-step-lbl{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);font-family:var(--fm);margin-bottom:8px;}
-#wt-title{font-size:17px;font-weight:700;letter-spacing:-0.02em;margin-bottom:8px;}
-#wt-body{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:20px;}
-#wt-nav{display:flex;align-items:center;justify-content:space-between;}
-#wt-back,#wt-next{
-  padding:8px 18px;border-radius:var(--r);font-family:var(--fn);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all 0.15s;
-}
-#wt-back{background:var(--bg3);color:var(--text2);border:1px solid var(--border2);}
-#wt-back:hover{background:var(--bg4);color:var(--text);}
+/* ── TOUR ── */
+#wt-overlay{position:fixed;inset:0;z-index:300;pointer-events:none;}
+#wt-overlay[style*="block"]{pointer-events:all;}
+#wt-spot{position:fixed;transition:all 0.3s;pointer-events:none;}
+#wt-card{position:fixed;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:22px;width:300px;box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:301;}
+#wt-step-lbl{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+#wt-title{font-size:16px;font-weight:700;margin-bottom:10px;}
+#wt-body{font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:16px;}
+#wt-nav{display:flex;justify-content:space-between;align-items:center;}
+#wt-back,#wt-next{padding:7px 16px;border-radius:var(--r);font-family:var(--fn);font-size:12px;font-weight:600;cursor:pointer;border:none;}
+#wt-back{background:var(--bg3);color:var(--text2);}
 #wt-next{background:var(--accent);color:#fff;}
 #wt-next:hover{background:var(--accent2);}
 #wt-ctr{font-size:11px;color:var(--text3);font-family:var(--fm);}
+#wt-x{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:4px 8px;}
+
+@media(max-width:680px){
+  .summary,.mgrid,.qg,.thopts,.tc-wrap{grid-template-columns:1fr;}
+  .app-body{padding:16px 12px;}
+  .wiz-card{padding:22px 16px;}
+  .vfy-col,.vfy-row{grid-template-columns:56px 1fr 76px 76px 56px;}
+  th:nth-child(6),td:nth-child(6){display:none;}
+}
 </style>
 </head>
 <body>
@@ -289,30 +279,27 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
 <!-- APP -->
 <div id="app">
   <header class="app-hdr">
-    <div class="logo">
-      <div><div class="logo-tx">PayBuddy</div><div class="logo-sx">Aviator · PAX</div></div>
-    </div>
-    <div style="display:flex;gap:8px;align-items:center;">
-      <button class="ibtn guide-btn" onclick="startTour()" title="Guide">?</button>
+    <div><div class="logo-tx">PayBuddy</div><div class="logo-sx">Aviator · PAX</div></div>
+    <div style="display:flex;gap:8px">
+      <button class="ibtn" onclick="startTour()" title="Guide">?</button>
       <button class="ibtn" onclick="openSett()" title="Settings">⚙</button>
     </div>
   </header>
+  <div class="month-tabs" id="month-tabs"></div>
   <main class="app-body">
     <div class="upz" id="dropz" onclick="document.getElementById('fin').click()"
          ondragover="event.preventDefault();this.classList.add('drag')"
-         ondragleave="this.classList.remove('drag')"
-         ondrop="onDrop(event)">
+         ondragleave="this.classList.remove('drag')" ondrop="onDrop(event)">
       <input type="file" id="fin" accept=".doc,.rtf,.txt" onchange="handleFile(this.files[0])">
-      <div style="font-size:26px">📋</div>
-      <div class="up-t">Upload your shift schedule</div>
-      <div class="up-h">.doc / .rtf / .txt — the roster from the scheduling system</div>
+      <div style="font-size:24px">📋</div>
+      <div class="up-t">Upload shift file</div>
+      <div class="up-h">.doc / .rtf / .txt — your roster for this month</div>
       <button class="up-b" onclick="event.stopPropagation();document.getElementById('fin').click()">Choose file</button>
     </div>
     <div class="plog" id="plog"></div>
-    <div class="mpill" id="mpill">📅 No schedule loaded</div>
-    <div class="panels" id="panels"></div>
+    <div class="summary" id="summary"></div>
     <div class="sh">
-      <div class="st">Shifts this month</div>
+      <div class="st">Shifts</div>
       <button class="bsm bacc" onclick="addShift()">+ Add shift</button>
     </div>
     <div class="stw"><table>
@@ -325,25 +312,29 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
     </table>
     <div class="empty" id="empt">No shifts yet — upload a schedule or add manually.</div></div>
     <p class="fn2">Click any row to edit · Evening 18:00–23:59 · Night 00:00–05:59 (per started ½hr) · Weekend &amp; holidays auto-detected</p>
-    <div class="sh"><div class="st">Manual adjustments <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(paid next month)</span></div></div>
+    <div class="sh">
+      <div class="st">Manual adjustments</div>
+    </div>
     <div class="mgrid" id="mgrid"></div>
-    <div class="sh" style="margin-top:6px">
+    <div class="sh" style="margin-top:4px">
       <div class="st">Tax breakdown</div>
       <button class="bpdf" onclick="dlPDF()">↓ PDF</button>
     </div>
     <div class="txc" id="taxcard"></div>
-    <p class="fn2">AM-bidrag 8% · A-skat = (gross×92% − fradrag) × trækpct · ATP 99 kr · Formula verified against SKAT 2026</p>
+    <p class="fn2">AM-bidrag 8% · A-skat = (gross×92% − fradrag) × trækpct · ATP 99 kr</p>
+    <div class="sh" style="margin-top:4px">
+      <div class="st">Verify payslip</div>
+    </div>
+    <div class="vfy-wrap"><div class="vfy-body" id="vfy-body"></div></div>
   </main>
 </div>
 
-<!-- Walkthrough overlay -->
+<!-- TOUR -->
 <div id="wt-overlay" style="display:none">
   <div id="wt-spot"></div>
   <div id="wt-card">
-    <button id="wt-x" onclick="endTour()" title="Close">✕</button>
-    <div id="wt-step-lbl"></div>
-    <div id="wt-title"></div>
-    <div id="wt-body"></div>
+    <button id="wt-x" onclick="endTour()">✕</button>
+    <div id="wt-step-lbl"></div><div id="wt-title"></div><div id="wt-body"></div>
     <div id="wt-nav">
       <button id="wt-back" onclick="tourGo(-1)">← Back</button>
       <span id="wt-ctr"></span>
@@ -352,11 +343,11 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
   </div>
 </div>
 
-<!-- Settings modal -->
+<!-- SETTINGS -->
 <div class="movl" id="sovl" onclick="closeSett(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="mtitle">Settings</div>
-    <div class="msub">Manage your profile and preferences</div>
+    <div class="msub">Profile &amp; preferences</div>
     <div class="msect">Your profile</div>
     <div class="profcard" id="profcard"></div>
     <div class="msect">Theme</div>
@@ -374,15 +365,13 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
 <script>
 // ═══ CONSTANTS ═══
 const MO=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MOS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const DS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const R={
-  aftenHr:23.05,natHalf:103.70,helligHr:101.38,
-  lordagHr:12.09,sondagHr:30.21,
-  forl:230.44,driftHr:10.00,
-  tcoF1:1517.40,tcoF2:1900.00,
-  tcoS1:125.00,tcoS2:156.52,
-  trainerHr:48.26,instruktorHr:63.50,helpdeskHr:10.00,ankomstHr:3.10,
-  atp:99.00,
+  aftenHr:23.86,natHalf:107.33,helligHr:101.38,
+  lordagHr:12.51,sondagHr:31.27,forl:238.51,driftHr:10.35,
+  tcoF1:1517.40,tcoF2:1900.00,tcoS1:125.00,tcoS2:156.52,
+  trainerHr:48.26,instruktorHr:63.50,helpdeskHr:10.00,ankomstHr:3.10,atp:99.00,
 };
 const OTR={
   1:{o1:219.81,o2:295.44},2:{o1:237.13,o2:318.73},3:{o1:263.28,o2:353.87},
@@ -401,314 +390,54 @@ const HOLS=new Set([
   '2027-12-24','2027-12-25','2027-12-26','2027-12-31',
 ]);
 const OT_NORM=147.33;
-const PK='paycalc_v4';
-const TK='paycalc_theme';
+const PK='paybuddy_v2';
+const TK='paybuddy_theme';
+const EMPTY_MANUALS=()=>({forl:0,bytteRec:0,bytteGiv:0,driftHrs:0,tcoStudy:0,trainerHrs:0,instruktorHrs:0,helpdeskHrs:0,ankomstHrs:0});
+const EMPTY_PAYROLL=()=>({codes:{},days:{},period:'',label:'',year:null,month:null});
 
-// ═══ APP STATE ═══
-let profile=null,shifts=[],CY=new Date().getFullYear(),CM=new Date().getMonth(),editId=null;
-let manuals={forl:0,bytteRec:0,bytteGiv:0,driftHrs:0,tcoStudy:0,trainerHrs:0,instruktorHrs:0,helpdeskHrs:0,ankomstHrs:0};
+// ═══ GLOBAL STATE ═══
+let profile=null;
 let curTheme='auto';
+let activeYear=new Date().getFullYear();
+let activeMonth=new Date().getMonth();
+let editId=null;
 
-// ═══ SALARY FORMATTING ═══
-function fmtSalDisp(raw){
-  const n=raw.replace(/\D/g,'');
-  if(!n)return '';
-  return n.length<=4?n:n.replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+// Per-month state: months[year][month] = {shifts, manuals, payrollData, shiftFileName}
+let months={};
+
+function getMonthData(y,m){
+  if(!months[y])months[y]={};
+  if(!months[y][m])months[y][m]={shifts:[],manuals:EMPTY_MANUALS(),payrollData:EMPTY_PAYROLL(),shiftFileName:''};
+  return months[y][m];
 }
-function onSalInput(el){
-  const raw=el.value.replace(/\s/g,'').replace(/\D/g,'');
-  wd.sal=raw;
-  const fmt=raw?(raw.length<=4?raw:raw.replace(/\B(?=(\d{3})+(?!\d))/g,' ')):'';
-  const pos=el.selectionStart;
-  const oldLen=el.value.length;
-  el.value=fmt;
-  const diff=fmt.length-oldLen;
-  try{el.setSelectionRange(pos+diff,pos+diff);}catch(e){}
-  chkNext();
-}
+function md(){return getMonthData(activeYear,activeMonth);}
+// shifts always accessed via md().shifts directly
 
-// ═══ WIZARD STATE ═══
-// Steps: 0=salary, 1=hours, 2=seniority, 3=contract, 4=quals, 5=tco(conditional), 6=tax
-let wStep=0,wDir=1,wMosErr=false;
-let wd={sal:'',hrs:'',yrs:'0',mos:'0',ct:'',quals:[],tcoSen:'',traek:'38',fradrag:'8965'};
-
-// Compute the actual step sequence based on current wd
-function getSteps(){
-  // Always: 0,1,2,3,4,6. Insert 5 between 4 and 6 only if TCO selected.
-  return wd.quals.includes('tco')?[0,1,2,3,4,5,6]:[0,1,2,3,4,6];
-}
-function totalSteps(){return getSteps().length;}
-function stepPos(){return getSteps().indexOf(wStep);}  // position in sequence
-function nextLogicalStep(){const s=getSteps();const i=s.indexOf(wStep);return i<s.length-1?s[i+1]:null;}
-function prevLogicalStep(){const s=getSteps();const i=s.indexOf(wStep);return i>0?s[i-1]:null;}
-
-function getLT(mo){
-  if(mo<=6)return 1;if(mo<=18)return 2;if(mo<=30)return 3;if(mo<=42)return 4;
-  if(mo<=66)return 5;if(mo<=90)return 6;if(mo<=104)return 7;if(mo<=150)return 8;return 9;
-}
-
-// ═══ STEP CONTENT ═══
-function buildStep(s){
-  switch(s){
-    case 0: return`<div class="wiz-card">
-      <div class="wiz-title">Your monthly salary</div>
-      <div class="wiz-sub">From your employment contract</div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <input class="wii" id="w-sal" type="text" inputmode="numeric" placeholder="30 000" value="" oninput="onSalInput(this)">
-        <span style="font-family:var(--fm);color:var(--text2);white-space:nowrap;font-size:13px">kr / month</span>
-      </div>
-      <div class="hbox" style="margin-top:14px">Your base pay — the fixed amount on your contract before any supplements or overtime.</div>
-    </div>`;
-
-    case 1: return`<div class="wiz-card">
-      <div class="wiz-title">Contract hours</div>
-      <div class="wiz-sub">Your guaranteed minimum per month</div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <input class="wii" id="w-hrs" type="number" min="1" max="200" step="0.1" placeholder="e.g. 130" value="" oninput="wd.hrs=this.value;chkNext()">
-        <span style="font-family:var(--fm);color:var(--text2);white-space:nowrap;font-size:13px">hrs / month</span>
-      </div>
-      <div class="hbox" style="margin-top:14px">Common: 130, 121, 89.7 hrs. Study contracts: 15\u201365 hrs.<br>Used to calculate your hourly rate for swap hours and overtime.</div>
-    </div>`;
-
-    case 2: return`<div class="wiz-card">
-      <div class="wiz-title">How long have you worked here?</div>
-      <div class="wiz-sub">Determines your løntrin and overtime rates</div>
-      <div class="irow">
-        <div><div class="wlbl">Years</div>
-        <input class="wii" id="w-yrs" type="text" inputmode="numeric" maxlength="2" placeholder="0" value="${wd.yrs==='0'?'':wd.yrs}" oninput="onYrsInput(this)"></div>
-        <div><div class="wlbl">Months</div>
-        <input class="wii" id="w-mos" type="text" inputmode="numeric" maxlength="2" placeholder="0" value="${wd.mos==='0'?'':wd.mos}" oninput="onMosInput(this)">
-        <div id="mos-err" style="display:none;font-size:11px;color:var(--red);font-family:var(--fm);margin-top:6px">Enter a number between 0 and 12</div></div>
-      </div>
-      <div id="ltpill" style="margin-top:12px"></div>
-    </div>`;
-
-    case 3: return`<div class="wiz-card">
-      <div class="wiz-title">Contract type?</div>
-      <div class="wiz-sub">Affects how some allowances are calculated</div>
-      <div class="tc-wrap">
-        <div class="tc ${wd.ct==='permanent'?'sel':''}" onclick="wd.ct='permanent';this.closest('.tc-wrap').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));this.classList.add('sel');chkNext()">
-          <div class="tc-ico">\u{1F4CB}</div><div class="tc-t">Permanent</div>
-          <div class="tc-d">130 / 121 / 89.7 hrs</div>
-        </div>
-        <div class="tc ${wd.ct==='study'?'sel':''}" onclick="wd.ct='study';this.closest('.tc-wrap').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));this.classList.add('sel');chkNext()">
-          <div class="tc-ico">\u{1F393}</div><div class="tc-t">Study contract</div>
-          <div class="tc-d">15\u201365 hrs flexible</div>
-        </div>
-      </div>
-    </div>`;
-
-    case 4:{
-      const QS=[
-        {id:'tco',i:'\u{1F504}',t:'TCO',r:'Turnaround Coordinator'},
-        {id:'drift',i:'\u{1F6E0}',t:'Drift Support',r:'+10.00 kr/hr'},
-        {id:'servicedesk',i:'\u{1F4BB}',t:'Service Desk',r:'+10.00 kr/hr'},
-        {id:'ankomst',i:'\u{1F6EC}',t:'Ankomst',r:'+3.10 kr/hr'},
-      ];
-      return`<div class="wiz-card">
-        <div class="wiz-title">Any qualifications?</div>
-        <div class="wiz-sub">Select all that apply \u2014 change anytime in settings</div>
-        <div class="qg">${QS.map(q=>`
-          <div class="qc ${wd.quals.includes(q.id)?'sel':''}" onclick="tglQ('${q.id}')">
-            <div class="qi">${q.i}</div>
-            <div><div class="qt">${q.t}</div><div class="qr">${q.r}</div></div>
-            <div class="qck"></div>
-          </div>`).join('')}</div>
-        <div style="font-size:11px;color:var(--text3);font-family:var(--fm);margin-top:10px">No qualifications? Just click Next \u2193</div>
-      </div>`;
-    }
-
-    case 5: return`<div class="wiz-card">
-      <div class="wiz-title">How long have you been TCO?</div>
-      <div class="wiz-sub">Your TCO seniority \u2014 not your company seniority</div>
-      <div class="rg">
-        <div class="ro ${wd.tcoSen==='under'?'sel':''}" onclick="selTCO('under')">
-          <div class="rd"></div>
-          <div><div style="font-weight:600">Under 12 months as TCO</div><div class="rs">1,517.40 kr/month fixed</div></div>
-        </div>
-        <div class="ro ${wd.tcoSen==='over'?'sel':''}" onclick="selTCO('over')">
-          <div class="rd"></div>
-          <div><div style="font-weight:600">12 months or more as TCO</div><div class="rs">1,900.00 kr/month fixed</div></div>
-        </div>
-      </div>
-      <div class="hbox" style="margin-top:14px">This is your seniority in the TCO role, not at Aviator overall. 3 years at the company but 6 months as TCO = "Under 12 months".</div>
-    </div>`;
-
-    case 6: return`<div class="wiz-card">
-      <div class="wiz-title">Your Danish tax settings</div>
-      <div class="wiz-sub">Find these on your skattekort at <a href="https://skat.dk" target="_blank" style="color:var(--accent)">skat.dk \u2192 TastSelv</a></div>
-      <div style="margin-bottom:16px">
-        <div class="wlbl">Tr\u00E6kprocent (withholding %)</div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <input class="wii" type="number" min="0" max="65" step="0.1" value="${wd.traek}" oninput="wd.traek=this.value">
-          <span style="font-family:var(--fm);color:var(--text2)">%</span>
-        </div>
-      </div>
-      <div>
-        <div class="wlbl">M\u00E5nedligt fradrag (kr)</div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <input class="wii" type="number" min="0" step="100" value="${wd.fradrag}" oninput="wd.fradrag=this.value">
-          <span style="font-family:var(--fm);color:var(--text2)">kr</span>
-        </div>
-      </div>
-      <div class="hbox" style="margin-top:14px">
-        Your fradrag bundles personfradrag, besk\u00E6ftigelsesfradrag, and personal deductions.<br><br>
-        Formula: AM-bidrag = gross \u00D7 8% \u00B7 A-skat = (gross\u00D792% \u2212 fradrag) \u00D7 tr\u00E6kpct \u00B7 ATP = 99 kr \u00B7 Net = gross \u2212 AM \u2212 A-skat \u2212 ATP
-      </div>
-    </div>`;
-  }
-}
-// ═══ WIZARD NAV ═══
-function onYrsInput(el){
-  // Strip non-digits, max 2 chars
-  const raw=el.value.replace(/\D/g,'').slice(0,2);
-  el.value=raw;
-  wd.yrs=raw===''?'0':raw;
-  updLT();
-}
-function onMosInput(el){
-  let raw=el.value.replace(/\D/g,'').slice(0,2);
-  el.value=raw;
-  const err=document.getElementById('mos-err');
-  if(raw!==''&&parseInt(raw)>12){
-    if(err)err.style.display='block';
-    wMosErr=true;
-    wd.mos='0';
-  }else{
-    if(err)err.style.display='none';
-    wMosErr=false;
-    wd.mos=raw===''?'0':raw;
-  }
-  updLT();
-  chkNext();
-}
-
-function chkNext(){
-  const btn=document.getElementById('wnx');if(!btn)return;
-  let ok=true;
-  if(wStep===0)ok=parseFloat(wd.sal)>0;
-  else if(wStep===1)ok=parseFloat(wd.hrs)>0;
-  else if(wStep===2)ok=!wMosErr;
-  else if(wStep===3)ok=wd.ct!=='';
-  else if(wStep===5)ok=wd.tcoSen!=='';
-  btn.disabled=!ok;
-}
-
-function selTCO(v){
-  wd.tcoSen=v;
-  document.querySelectorAll('#wvp .ro').forEach(r=>r.classList.remove('sel'));
-  event.currentTarget.classList.add('sel');
-  chkNext();
-}
-
-function updLT(){
-  const el=document.getElementById('ltpill');if(!el)return;
-  const tm=(parseInt(wd.yrs)||0)*12+(parseInt(wd.mos)||0);
-  const t=getLT(tm);const r=OTR[t];
-  el.innerHTML=`<span class="ltpill">Løntrin ${t}</span>`;
-}
-
-function tglQ(id){
-  const i=wd.quals.indexOf(id);
-  if(i>=0){wd.quals.splice(i,1);if(id==='tco')wd.tcoSen='';}
-  else wd.quals.push(id);
-  rStep(wStep,0);
-}
-
-function rDots(){
-  const total=totalSteps(),pos=stepPos();
-  document.getElementById('wdots').innerHTML=Array.from({length:total},(_,i)=>
-    `<div class="wiz-dot ${i<pos?'done':i===pos?'active':''}"></div>`).join('');
-}
-
-function rStep(step,dir){
-  const vp=document.getElementById('wvp');
-  const old=vp.querySelector('.wiz-step');
-  const nel=document.createElement('div');
-  nel.className='wiz-step';
-  nel.innerHTML=buildStep(step);
-  if(old&&dir!==0){
-    old.className=`wiz-step ${dir>0?'exit-l':'exit-r'}`;
-    nel.className=`wiz-step ${dir>0?'enter-r':'enter-l'}`;
-    vp.appendChild(nel);
-    setTimeout(()=>{old.remove();nel.className='wiz-step';},360);
-  }else{
-    if(old)old.remove();
-    vp.appendChild(nel);
-  }
-  // nav
-  const pos=stepPos(),tot=totalSteps();
-  const isLast=pos===tot-1;
-  const prev=prevLogicalStep();
-  document.getElementById('wnav').innerHTML=`
-    ${prev!==null?`<button class="wbk" onclick="wGo(-1)">← Back</button>`:`<div></div>`}
-    <span class="sctr">${pos+1} / ${tot}</span>
-    <button class="wnx" id="wnx" onclick="wGo(1)" disabled>${isLast?"Let's go →":"Next →"}</button>`;
-  chkNext();if(step===2)setTimeout(updLT,30);if(step===0)setTimeout(()=>document.getElementById('w-sal')?.focus(),50);if(step===1)setTimeout(()=>document.getElementById('w-hrs')?.focus(),50);if(step===2){wMosErr=false;setTimeout(()=>document.getElementById('w-yrs')?.focus(),50);}
-  // scroll wizard to top
-  document.getElementById('wizard').scrollTop=0;
-}
-
-function wGo(dir){
-  if(dir===1){
-    if(wStep===0&&!(parseFloat(wd.sal)>0)){toast('Please enter your monthly salary','err');return;}
-    if(wStep===1&&!(parseFloat(wd.hrs)>0)){toast('Please enter your contract hours','err');return;}
-    if(wStep===3&&!wd.ct){toast('Please select your contract type','err');return;}
-    if(wStep===5&&!wd.tcoSen){toast('Please select your TCO seniority','err');return;}
-    const nxt=nextLogicalStep();
-    if(nxt===null){finishWiz();return;}
-    wStep=nxt;
-  }else{
-    const prv=prevLogicalStep();
-    if(prv===null)return;
-    wStep=prv;
-  }
-  rDots();rStep(wStep,dir);
-}
-
-function finishWiz(){
-  const tm=(parseInt(wd.yrs)||0)*12+(parseInt(wd.mos)||0);
-  profile={
-    salary:parseFloat(wd.sal),
-    contractHrs:parseFloat(wd.hrs)||130,
-    totalMonths:tm,lontrin:getLT(tm),
-    ct:wd.ct,quals:[...wd.quals],tcoSen:wd.tcoSen,
-    traek:parseFloat(wd.traek)||38,fradrag:parseFloat(wd.fradrag)||8965,
-  };
-    document.getElementById('wizard').classList.add('hidden');
-  document.getElementById('app').classList.add('show');
-  render();
-  setTimeout(()=>startTour(),400);
-}
-
-function startWiz(){
-  wStep=0;
-  if(profile){
-    const y=Math.floor((profile.totalMonths||0)/12);
-    wd={sal:'',hrs:'',
-        yrs:String(y),mos:String((profile.totalMonths||0)%12),
-        ct:profile.ct||'',quals:[...(profile.quals||[])],tcoSen:profile.tcoSen||'',
-        traek:String(profile.traek||38),fradrag:String(profile.fradrag||8965)};
-  }else{
-    wd={sal:'',hrs:'',yrs:'0',mos:'0',ct:'',quals:[],tcoSen:'',traek:'38',fradrag:'8965'};
-  }
-  document.getElementById('wizard').classList.remove('hidden');
-  document.getElementById('app').classList.remove('show');
-  document.getElementById('wvp').innerHTML='';
-  rDots();rStep(0,1);
-}
+// ═══ HELPERS ═══
+const uid=()=>Date.now()+(Math.random()*1e6|0);
+const tm=s=>{if(!s)return 0;if(s==='24:00')return 1440;const[h,m]=s.split(':').map(Number);return h*60+(m||0);};
+const toH=m=>m/60;
+const fmt=(n,d=2)=>n.toLocaleString('en-GB',{minimumFractionDigits:d,maximumFractionDigits:d});
+const fkr=(n,sign=false)=>(sign&&n>0?'+':'')+fmt(n,2)+' kr';
+function toast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type+' show';setTimeout(()=>t.classList.remove('show'),2800);}
+function showLog(ls){const el=document.getElementById('plog');el.style.display='block';el.innerHTML=ls.map(l=>'<div>'+l+'</div>').join('');}
 
 // ═══ PERSISTENCE ═══
-const uid=()=>Date.now()+(Math.random()*1e6|0);
-function saveP(){localStorage.setItem(PK,JSON.stringify({profile,shifts,CY,CM,manuals}));}
+function saveP(){
+  try{localStorage.setItem(PK,JSON.stringify({profile,months,activeYear,activeMonth}));}catch(e){}
+}
 function loadP(){
   try{
     const d=JSON.parse(localStorage.getItem(PK)||'null');
     if(!d)return;
     profile=d.profile||null;
-    shifts=(d.shifts||[]).map(s=>({...s,id:s.id||uid()}));
-    CY=d.CY||new Date().getFullYear();CM=d.CM||new Date().getMonth();
-    if(d.manuals)Object.assign(manuals,d.manuals);
+    months=d.months||{};
+    // Fix uid on shifts
+    for(const y of Object.keys(months))
+      for(const m of Object.keys(months[y]))
+        if(months[y][m].shifts)months[y][m].shifts=months[y][m].shifts.map(s=>({...s,id:s.id||uid()}));
+    if(d.activeYear)activeYear=d.activeYear;
+    if(d.activeMonth!==undefined)activeMonth=d.activeMonth;
   }catch(e){}
 }
 
@@ -718,64 +447,47 @@ function applyTheme(t){
   const h=document.documentElement;
   if(t==='dark')h.setAttribute('data-theme','dark');
   else if(t==='light')h.setAttribute('data-theme','light');
-  else h.setAttribute('data-theme',window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  else h.setAttribute('data-theme',window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
   document.querySelectorAll('.thopt').forEach(e=>e.classList.toggle('sel',e.dataset.th===t));
 }
 function setTheme(t){applyTheme(t);}
 
-// ═══ SETTINGS ═══
-function openSett(){
-  const p=profile;
-  if(p){
-    const lt=p.lontrin||1;
-    document.getElementById('profcard').innerHTML=[
-      ['Base salary',fkr(p.salary)],
-      ['Contract hours',(p.contractHrs||130)+' hrs/month'],
-      ['Seniority',Math.floor((p.totalMonths||0)/12)+'y '+(p.totalMonths||0)%12+'mo → Løntrin '+lt],
-      ['Contract',p.ct==='study'?'Study contract':'Permanent'],
-      ['Qualifications',(p.quals||[]).length?(p.quals.join(', ')):('None')],
-      ['TCO seniority',p.quals.includes('tco')?(p.tcoSen==='over'?'12+ months (1,900 kr/mo)':'Under 12 months (1,517 kr/mo)'):'—'],
-      ['Trækprocent',p.traek+'%'],
-      ['Fradrag',fkr(p.fradrag,0)+' kr'],
-    ].map(([l,v])=>`<div class="prof-row"><span class="prlbl">${l}</span><span class="prval">${v}</span></div>`).join('');
-  }
-  document.querySelectorAll('.thopt').forEach(e=>e.classList.toggle('sel',e.dataset.th===curTheme));
-  document.getElementById('sovl').classList.add('open');
-}
-function closeSett(e){if(!e||e.target===document.getElementById('sovl'))document.getElementById('sovl').classList.remove('open');}
-function restartWiz(){startWiz();}
-
 // ═══ MATH ═══
-const tm=s=>{if(!s)return 0;if(s==='24:00')return 1440;const[h,m]=s.split(':').map(Number);return h*60+(m||0);};
-const toH=m=>m/60;
-const fmt=(n,d=2)=>n.toLocaleString('en-GB',{minimumFractionDigits:d,maximumFractionDigits:d});
-const fkr=(n,sign=false)=>(sign&&n>0?'+':'')+fmt(n,2)+' kr';
-
-function calcShift(sh){
+function calcShift(sh,y,m){
+  const ry=y||activeYear,rm=m||activeMonth;
   const sm=tm(sh.s),em=tm(sh.e);
   const hrs=toH(Math.max(0,em-sm));
-  const dow=new Date(CY,CM,sh.d).getDay();
-  const sat=dow===6,sun=dow===0,hol=HOLS.has(`${CY}-${String(CM+1).padStart(2,'0')}-${String(sh.d).padStart(2,'0')}`);
+  const dow=new Date(ry,rm,sh.d).getDay();
+  const sat=dow===6,sun=dow===0;
+  const hol=HOLS.has(ry+'-'+String(rm+1).padStart(2,'0')+'-'+String(sh.d).padStart(2,'0'));
   const aftenM=Math.max(0,Math.min(em,1440)-Math.max(sm,18*60));
-  const aftenA=toH(aftenM)*R.aftenHr;
+  const aftenHrs=toH(aftenM);
   const natM=Math.max(0,Math.min(em,6*60)-Math.max(sm,0));
-  const natA=natM>0?Math.ceil(natM/30)*R.natHalf:0;
-  const satA=sat?toH(Math.max(0,Math.min(em,1440)-Math.max(sm,6*60)))*R.lordagHr:0;
-  const sunA=sun?toH(Math.max(0,Math.min(em,1440)-Math.max(sm,6*60)))*R.sondagHr:0;
-  const holA=hol?hrs*R.helligHr:0;
-  return{hrs,aftenM,aftenA,natA,satA,sunA,holA,supp:aftenA+natA+satA+sunA+holA,sat,sun,hol,dow};
+  const natUnits=natM>0?Math.ceil(natM/30):0;
+  const dayM=Math.max(0,Math.min(em,1440)-Math.max(sm,6*60));
+  const dayHrs=toH(dayM);
+  return{
+    hrs,aftenHrs,natUnits,
+    satHrs:sat&&!hol?dayHrs:0,sunHrs:sun&&!hol?dayHrs:0,
+    aftenA:aftenHrs*R.aftenHr,natA:natUnits*R.natHalf,
+    satA:(sat&&!hol?dayHrs:0)*R.lordagHr,
+    sunA:(sun&&!hol?dayHrs:0)*R.sondagHr,
+    holA:hol?hrs*R.helligHr:0,
+    supp:aftenHrs*R.aftenHr+natUnits*R.natHalf+(sat&&!hol?dayHrs:0)*R.lordagHr+(sun&&!hol?dayHrs:0)*R.sondagHr+(hol?hrs*R.helligHr:0),
+    sat,sun,hol,dow
+  };
 }
 
 function calcTax(gross){
   const pct=(profile.traek||38)/100,frad=profile.fradrag||8965;
   const am=gross*0.08,taxable=Math.max(0,gross*0.92-frad),askat=taxable*pct;
-  const net=gross-am-askat-R.atp;
-  return{am,taxable,askat,atp:R.atp,net,effRate:gross>0?(am+askat+R.atp)/gross*100:0,frad};
+  return{am,taxable,askat,atp:R.atp,net:gross-am-askat-R.atp,frad,
+    effRate:gross>0?(am+askat+R.atp)/gross*100:0};
 }
 
-function manCalc(k){
-  const v=manuals[k]||0,p=profile;
-  const hourly=(p.salary||0)/(p.contractHrs||130);
+function manCalc(k,manuals){
+  const v=(manuals||md().manuals)[k]||0,p=profile;
+  const hourly=(p.salary||0)/151.66;
   switch(k){
     case 'forl':return v*R.forl;
     case 'bytteRec':return v*hourly;
@@ -790,6 +502,114 @@ function manCalc(k){
   }
 }
 
+// ═══ SUMMARY PANEL ═══
+function renderSummary(){
+  const data=md();
+  const p=profile;
+  const shifts=data.shifts;
+  const manuals=data.manuals;
+  const payroll=data.payrollData;
+  const hasPayroll=Object.keys(payroll.codes).length>0;
+  const calcs=shifts.map(s=>calcShift(s));
+  const totalHrs=calcs.reduce((a,c)=>a+c.hrs,0);
+  const baseH=p.salary/151.66;
+  const merHrs=Math.max(0,Math.min(totalHrs,OT_NORM)-(p.contractHrs||0));
+  const otHrs=Math.max(0,totalHrs-OT_NORM);
+  const tcoFix=p.quals.includes('tco')&&p.ct==='permanent'?(p.tcoSen==='over'?R.tcoF2:R.tcoF1):0;
+  const gGross=p.salary+tcoFix;
+  const gTax=calcTax(gGross);
+
+  // ── Left: What changed this month ──
+  const extraShifts=shifts.filter(s=>s.extra).length;
+  const extraHrsFromShifts=shifts.filter(s=>s.extra).reduce((a,s)=>{const c=calcShift(s);return a+c.hrs;},0);
+  const extendedShifts=shifts.filter(s=>s.extended).length;
+  const extendedHrs=shifts.filter(s=>s.extended).reduce((a,s)=>a+(s.extendedBy||0),0);
+  const nightHrs=calcs.reduce((a,c)=>a+c.natUnits,0);
+  const forl=manuals.forl||0;
+  const bytteRec=manuals.bytteRec||0;
+  const bytteGiv=manuals.bytteGiv||0;
+  const netExtra=extraHrsFromShifts+extendedHrs+(bytteRec-bytteGiv);
+
+  // ── Right: Expected supplements (from payroll if available, else from shifts) ──
+  let suppTotal=0,suppSource='estimated';
+  if(hasPayroll){
+    const RATES={'1318':R.aftenHr,'1319':R.natHalf,'1331':R.lordagHr,'1332':R.sondagHr,
+      '1334':R.forl,'1316':R.driftHr,'1090':OTR[p.lontrin||1].o1,'1091':OTR[p.lontrin||1].o2,
+      '1443':baseH,'1444':baseH};
+    for(const [c,h] of Object.entries(payroll.codes)){
+      if(RATES[c])suppTotal+=h*RATES[c];
+    }
+    suppSource='from payroll';
+  }else{
+    const totalSupp=calcs.reduce((a,c)=>a+c.supp,0);
+    const mTotal=Object.keys(manuals).reduce((a,k)=>a+manCalc(k,manuals),0);
+    suppTotal=totalSupp+merHrs*baseH+otHrs*OTR[p.lontrin||1].o1+mTotal;
+    suppSource='estimated';
+  }
+  const nextY=activeMonth===11?activeYear+1:activeYear;
+  const nextM=(activeMonth+1)%12;
+
+  const leftRows=[];
+  if(extraShifts>0)leftRows.push(['Extra shifts taken',extraShifts+' shift'+(extraShifts>1?'s':''),'amb']);
+  if(extendedShifts>0)leftRows.push(['Extended shifts',extendedShifts+' ('+fmt(extendedHrs,1)+'h)','amb']);
+  if(forl>0)leftRows.push(['Forlængelses',forl,'amb']);
+  if(nightHrs>0)leftRows.push(['Night units',fmt(nightHrs,0),'amb']);
+  if(bytteRec>0)leftRows.push(['Swap received',fmt(bytteRec,1)+'h','pos']);
+  if(bytteGiv>0)leftRows.push(['Swap given',fmt(bytteGiv,1)+'h','neg']);
+
+  const leftEmpty=leftRows.length===0;
+
+  document.getElementById('summary').innerHTML=`
+    <div class="sum-card">
+      <div class="sum-label">This month</div>
+      <div class="sum-big">${fmt(totalHrs,1)}<span style="font-size:14px;font-weight:400;color:var(--text2)"> hrs</span></div>
+      <div class="sum-sub">${MOS[activeMonth]} ${activeYear} · ${shifts.length} shift${shifts.length!==1?'s':''}</div>
+      <div class="sum-rows">
+        ${leftEmpty?'<div class="sum-empty">No changes logged yet</div>':''}
+        ${leftRows.map(([l,v,cls])=>`<div class="sum-row"><span class="sum-rl">${l}</span><span class="sum-rv ${cls}">${v}</span></div>`).join('')}
+        ${netExtra>0.05?`<div class="sum-row" style="border-top:1px solid var(--border2);margin-top:4px;padding-top:6px"><span class="sum-rl" style="font-weight:600">Net extra hours</span><span class="sum-rv amb">${fmt(netExtra,1)}h</span></div>`:''}
+      </div>
+    </div>
+    <div class="sum-card amber">
+      <div class="sum-label amber">Expected ${MOS[nextM]} ${nextY} lønseddel</div>
+      <div class="sum-big" style="color:var(--amber)">${fmt(suppTotal,0)}<span style="font-size:14px;font-weight:400;color:var(--text2)"> kr</span></div>
+      <div class="sum-sub">${suppSource} · guaranteed ${fmt(gGross,0)} kr separate</div>
+      <div class="sum-rows">
+        <div class="sum-row"><span class="sum-rl">Base salary</span><span class="sum-rv">${fkr(p.salary)}</span></div>
+        ${tcoFix?`<div class="sum-row"><span class="sum-rl">TCO fixed</span><span class="sum-rv pos">+${fkr(tcoFix)}</span></div>`:''}
+        <div class="sum-row"><span class="sum-rl">After tax (base)</span><span class="sum-rv pos">≈ ${fmt(gTax.net,0)} kr</span></div>
+        <div class="sum-row"><span class="sum-rl">Supplements</span><span class="sum-rv amb">${fkr(suppTotal,true)}</span></div>
+        <div class="sum-row" style="font-size:10px;color:var(--text3)"><span>Supplements taxed separately at pay date</span><span></span></div>
+      </div>
+    </div>`;
+}
+
+// ═══ MONTH TABS ═══
+function renderTabs(){
+  const container=document.getElementById('month-tabs');
+  const now=new Date();
+  container.innerHTML=MOS.map((mo,i)=>{
+    const data=months[activeYear]&&months[activeYear][i];
+    const hasShifts=data&&data.shifts&&data.shifts.length>0;
+    const hasPay=data&&data.payrollData&&Object.keys(data.payrollData.codes).length>0;
+    const isActive=i===activeMonth;
+    const isNow=i===now.getMonth()&&activeYear===now.getFullYear();
+    let cls='mtab';
+    if(isActive)cls+=' active';
+    if(hasPay)cls+=' has-payroll';
+    else if(hasShifts)cls+=' has-data';
+    return `<div class="${cls}" onclick="switchMonth(${i})">${mo}${isNow?' <span style="font-size:9px;color:var(--accent)">●</span>':''}</div>`;
+  }).join('');
+}
+
+function switchMonth(m){
+  activeMonth=m;editId=null;saveP();render();
+  // scroll active tab into view
+  const tabs=document.getElementById('month-tabs');
+  const active=tabs.querySelector('.mtab.active');
+  if(active)active.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+}
+
 // ═══ FILE PARSING ═══
 function stripRtf(t){
   const hm={0xe6:'ae',0xf8:'o',0xe5:'a',0xc6:'AE',0xd8:'O',0xc5:'A'};
@@ -798,7 +618,7 @@ function stripRtf(t){
 }
 function parseFile(txt){
   const lines=txt.split(/\r?\n/),out=[],log=[];
-  let py=CY,pm=CM;
+  let py=activeYear,pm=activeMonth;
   for(const l of lines.slice(0,10)){
     const m=l.match(/\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d\d)\b/i);
     if(m){py=parseInt(m[2]);pm=MO.findIndex(x=>x.toLowerCase()===m[1].toLowerCase());log.push('Month: '+m[1]+' '+py);break;}
@@ -810,12 +630,14 @@ function parseFile(txt){
       const d=parseInt(mS[1]),p4=t=>t.padStart(4,'0'),f=t=>t.slice(0,2)+':'+t.slice(2);
       const s=f(p4(mS[2]));let e=f(p4(mS[3]));if(mS[3]==='2400')e='24:00';
       const note=(mS[4]||'').replace(/[FGf]$/,'').trim();
-      out.push({d,s,e,note,id:uid()});log.push('Day '+d+': '+s+'–'+e+(note?' '+note:''));continue;
+      out.push({d,s,e,note,id:uid(),origS:s,origE:e});
+      log.push('Day '+d+': '+s+'–'+e+(note?' '+note:''));continue;
     }
     const mK=l.match(/^(\d{1,2})\s+\w+\s+KET\s*[\(]?(\d+)[.:]?(\d*)/i);
     if(mK){
       const d=parseInt(mK[1]),h=(mK[2]||'').padStart(2,'0'),mi=(mK[3]||'00').padStart(2,'0');
-      out.push({d,s:h+':'+mi,e:'12:45',note:'KET',id:uid()});log.push('Day '+d+': KET standby');continue;
+      out.push({d,s:h+':'+mi,e:'12:45',note:'KET',id:uid(),origS:h+':'+mi,origE:'12:45'});
+      log.push('Day '+d+': KET standby');continue;
     }
   }
   return{shifts:out,py,pm,log};
@@ -828,61 +650,81 @@ function handleFile(file){
     if(txt.trim().startsWith('{\\rtf')||/\.(rtf|doc)$/i.test(file.name))txt=stripRtf(txt);
     const{shifts:s,py,pm,log}=parseFile(txt);
     if(!s.length){toast('No shifts found','err');showLog(['Could not parse file',...log]);return;}
-    CY=py;CM=pm;shifts=s;editId=null;
-    showLog([`Loaded ${s.length} shifts · ${MO[pm]} ${py}`,...log]);
-    toast(`Loaded ${s.length} shifts — ${MO[pm]} ${py}`,'ok');
-    render();
+    activeYear=py;activeMonth=pm;
+    const data=getMonthData(py,pm);
+    data.shifts=s;data.shiftFileName=file.name;
+    editId=null;
+    showLog(['Loaded '+s.length+' shifts · '+MO[pm]+' '+py,...log]);
+    toast('Loaded '+s.length+' shifts — '+MO[pm]+' '+py,'ok');
+    saveP();render();
   };
   r.readAsText(file,'windows-1252');
 }
-function showLog(ls){const el=document.getElementById('plog');el.style.display='block';el.innerHTML=ls.map(l=>`<div>${l}</div>`).join('');}
-function onDrop(e){e.preventDefault();document.getElementById('dropz').classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleFile(f);}
+function onDrop(e){
+  e.preventDefault();document.getElementById('dropz').classList.remove('drag');
+  const f=e.dataTransfer.files[0];if(f)handleFile(f);
+}
+
+// ═══ PAYROLL PARSER ═══
+function parsePayrollTxt(text){
+  const result={codes:{},days:{},period:'',label:'',year:null,month:null};
+  const pm=text.match(/Period\s+(\d{4})(\d{2})(\d{2})-\d{8}/);
+  if(pm){
+    result.year=parseInt(pm[1]);result.month=parseInt(pm[2])-1;
+    result.label=MO[result.month]+' '+pm[1];
+    result.period=pm[1]+'-'+pm[2]+'-'+pm[3];
+  }
+  const lre=/\d{6}-\d{6}\s+(\d{4,5})\s+([\-\d.]+)/g;
+  let m;
+  while((m=lre.exec(text))!==null)result.codes[m[1]]=parseFloat(m[2]);
+  const dre=/^(\d{4})\/(\d{2})\/(\d{2})\s+(\S+)\s+(\S+)/gm;
+  while((m=dre.exec(text))!==null){
+    const day=parseInt(m[3]);
+    result.days[day]={aktuelt:m[4],oprindeligt:m[5]};
+  }
+  return result;
+}
+function uploadPayroll(file){
+  if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const parsed=parsePayrollTxt(e.target.result);
+    if(!Object.keys(parsed.codes).length){toast('No salary lines found','err');return;}
+    // Store payroll in the month it belongs to
+    const y=parsed.year||activeYear,m=parsed.month!==null?parsed.month:activeMonth;
+    getMonthData(y,m).payrollData=parsed;
+    // Switch to that month
+    activeYear=y;activeMonth=m;
+    saveP();render();
+    toast('Loaded '+parsed.label+' payroll','ok');
+  };
+  r.onerror=()=>toast('Could not read file','err');
+  r.readAsText(file,'windows-1252');
+}
 
 // ═══ RENDER ═══
 function render(){
   if(!profile)return;
+  renderTabs();
+  const data=md();
   const p=profile;
-  document.getElementById('mpill').textContent='📅 '+MO[CM]+' '+CY;
-  const calcs=shifts.map(calcShift);
-  const totalSupp=calcs.reduce((a,c)=>a+c.supp,0);
-  const totalHrs=calcs.reduce((a,c)=>a+c.hrs,0);
-  const otHrs=Math.max(0,totalHrs-OT_NORM);
-  const otAmt=otHrs*OTR[p.lontrin||1].o1;
-  const mkeys=Object.keys(manuals);
-  const mTotal=mkeys.reduce((a,k)=>a+manCalc(k),0);
-  const tcoFix=p.quals.includes('tco')&&p.ct==='permanent'?(p.tcoSen==='over'?R.tcoF2:R.tcoF1):0;
-  const gGross=p.salary+tcoFix;
-  const gTax=calcTax(gGross);
-  const nGross=totalSupp+otAmt+mTotal;
-  const nAM=nGross*0.08,nAsk=nGross*0.92*(p.traek/100),nNet=nGross-nAM-nAsk;
+  const shifts=data.shifts;
+  const manuals=data.manuals;
+  const calcs=shifts.map(s=>calcShift(s));
 
-  // PANELS
-  document.getElementById('panels').innerHTML=`
-    <div class="panel panel-g">
-      <div class="plbl plbl-g">Guaranteed this month</div>
-      <div class="pgrs pgrs-g">${fmt(gGross,0)} kr</div>
-      <div class="pnet">≈ ${fmt(gTax.net,0)} kr after tax</div>
-      <div class="pit">
-        <div class="pi"><span class="pil">Base salary</span><span class="piv">${fkr(p.salary)}</span></div>
-        ${tcoFix?`<div class="pi"><span class="pil">TCO (${p.tcoSen==='over'?'12+ months':'<12 months'})</span><span class="piv pos">+${fkr(tcoFix)}</span></div>`:''}
-        <div class="pi"><span class="pil">AM-bidrag 8%</span><span class="piv neg">−${fkr(gTax.am)}</span></div>
-        <div class="pi"><span class="pil">A-skat ${p.traek}%</span><span class="piv neg">−${fkr(gTax.askat)}</span></div>
-        <div class="pi"><span class="pil">ATP</span><span class="piv neg">−${fkr(R.atp)}</span></div>
-      </div>
-    </div>
-    <div class="panel panel-a">
-      <div class="plbl plbl-a">This month → paid next month</div>
-      <div class="pgrs pgrs-a">${fmt(nGross,0)} kr</div>
-      <div class="pnet">≈ ${fmt(nNet,0)} kr estimated after tax</div>
-      <div class="pit">
-        ${totalSupp>0?`<div class="pi"><span class="pil">Shift supplements</span><span class="piv pos">+${fkr(totalSupp)}</span></div>`:''}
-        ${otAmt>0?`<div class="pi"><span class="pil">OT1 (${fmt(otHrs,2)} hrs over ${OT_NORM}h norm)</span><span class="piv pos">+${fkr(otAmt)}</span></div>`:''}
-        ${mTotal!==0?`<div class="pi"><span class="pil">Manual adjustments</span><span class="piv ${mTotal>0?'pos':'neg'}">${fkr(mTotal,true)}</span></div>`:''}
-        ${nGross===0?`<div class="pi" style="color:var(--text3);font-size:11px;font-family:var(--fm)">Upload a shift file to calculate</div>`:''}
-      </div>
-    </div>`;
+  renderSummary();
 
-  // SHIFTS
+  // Update upload zone label if file loaded
+  const upz=document.getElementById('dropz');
+  if(data.shiftFileName){
+    upz.querySelector('.up-t').textContent=data.shiftFileName;
+    upz.querySelector('.up-h').textContent=MO[activeMonth]+' '+activeYear+' · click to replace';
+  }else{
+    upz.querySelector('.up-t').textContent='Upload shift file';
+    upz.querySelector('.up-h').textContent='.doc / .rtf / .txt — your roster for this month';
+  }
+
+  // Shift table
   const sb=document.getElementById('sb');sb.innerHTML='';
   document.getElementById('empt').style.display=shifts.length?'none':'';
   shifts.forEach((sh,i)=>{
@@ -901,12 +743,14 @@ function render(){
         </div></td><td></td><td></td>`;
     }else{
       const bgs=[];
-      if(toH(c.aftenM)>0)bgs.push('<span class="b ba">aften</span>');
-      if(c.natA>0)bgs.push('<span class="b bn">nat</span>');
+      if(c.aftenHrs>0)bgs.push('<span class="b ba">aften</span>');
+      if(c.natUnits>0)bgs.push('<span class="b bn">nat</span>');
       if(c.sat&&!c.hol)bgs.push('<span class="b bsa">lør</span>');
       if(c.sun&&!c.hol)bgs.push('<span class="b bsu">søn</span>');
       if(c.hol)bgs.push('<span class="b bh">helligdag</span>');
-      tr.innerHTML=`<td class="mono">${sh.d} ${MO[CM].slice(0,3)}${sh.note?` <span class="dim">${sh.note}</span>`:''}</td>
+      if(sh.extra)bgs.push('<span class="b" style="background:var(--gbg);color:var(--green)">extra</span>');
+      if(sh.extended)bgs.push('<span class="b" style="background:var(--pbg);color:var(--purple)">extended</span>');
+      tr.innerHTML=`<td class="mono">${sh.d} ${MOS[activeMonth]}${sh.note?` <span class="dim">${sh.note}</span>`:''}</td>
         <td class="dim">${dow}</td><td class="mono">${sh.s}</td><td class="mono">${sh.e}</td>
         <td class="mono">${fmt(c.hrs,2)}h</td>
         <td><div class="bgs">${bgs.join('')||'—'}</div></td>
@@ -917,9 +761,9 @@ function render(){
     sb.appendChild(tr);
   });
 
-  // MANUAL GRID
+  // Manual grid
   const mrows=[
-    {k:'forl',l:'Extensions (forlængelse)',u:'events',show:true},
+    {k:'forl',l:'Extensions (forlængelses)',u:'events',show:true},
     {k:'bytteRec',l:'Swap hrs received',u:'hrs',show:true},
     {k:'bytteGiv',l:'Swap hrs given away',u:'hrs',show:true},
     {k:'driftHrs',l:'Drift support hrs',u:'hrs',show:p.quals.includes('drift')},
@@ -930,30 +774,167 @@ function render(){
     {k:'ankomstHrs',l:'Ankomst hrs',u:'hrs',show:p.quals.includes('ankomst')},
   ].filter(r=>r.show);
   document.getElementById('mgrid').innerHTML=mrows.map(r=>{
-    const amt=manCalc(r.k);
+    const amt=manCalc(r.k,manuals);
     return`<div class="mrow">
       <span class="ml">${r.l}</span>
-      <input class="mi" type="number" min="0" value="${manuals[r.k]||0}" onchange="manuals['${r.k}']=parseFloat(this.value)||0;render()">
+      <input class="mi" type="number" min="0" value="${manuals[r.k]||0}" onchange="md().manuals['${r.k}']=parseFloat(this.value)||0;saveP();render()">
       <span class="mu">${r.u}</span>
       <span class="ma ${amt>=0?'pos':'neg'}">${fkr(amt,true)}</span>
     </div>`;
   }).join('');
 
-  // TAX CARD
+  // Tax card
+  const totalHrs=calcs.reduce((a,c)=>a+c.hrs,0);
+  const baseH=p.salary/151.66;
+  const merHrs=Math.max(0,Math.min(totalHrs,OT_NORM)-(p.contractHrs||0));
+  const otHrs=Math.max(0,totalHrs-OT_NORM);
+  const totalSupp=calcs.reduce((a,c)=>a+c.supp,0);
+  const mTotal=Object.keys(manuals).reduce((a,k)=>a+manCalc(k,manuals),0);
+  const tcoFix=p.quals.includes('tco')&&p.ct==='permanent'?(p.tcoSen==='over'?R.tcoF2:R.tcoF1):0;
+  const nGross=totalSupp+merHrs*baseH+otHrs*OTR[p.lontrin||1].o1+mTotal;
+  const gGross=p.salary+tcoFix;
   const totalGross=gGross+nGross;
   const tx=calcTax(totalGross);
   document.getElementById('taxcard').innerHTML=`
-    <div class="txh"><div class="txht">Danish tax breakdown — SKAT 2026 verified formula</div></div>
-    <div class="trow"><span class="tl">Guaranteed gross this month</span><span class="tv">${fkr(gGross)}</span></div>
-    <div class="trow"><span class="tl">Supplements from shifts (next month)</span><span class="tv">${fkr(nGross)}</span></div>
+    <div class="txh"><div class="txht">Danish tax breakdown — SKAT 2026</div></div>
+    <div class="trow"><span class="tl">Base salary + TCO</span><span class="tv">${fkr(gGross)}</span></div>
+    <div class="trow"><span class="tl">Supplements + merarbejde</span><span class="tv">${fkr(nGross)}</span></div>
     <div class="trow"><span class="tl">Combined gross estimate</span><span class="tv" style="font-weight:600">${fkr(totalGross)}</span></div>
-    <div class="trow"><span class="tl">AM-bidrag (gross × 8%)</span><span class="tv neg">− ${fkr(tx.am)}</span></div>
+    <div class="trow"><span class="tl">AM-bidrag (8%)</span><span class="tv neg">− ${fkr(tx.am)}</span></div>
     <div class="trow"><span class="tl">Månedligt fradrag</span><span class="tv neg">− ${fkr(tx.frad)}</span></div>
-    <div class="trow"><span class="tl">Taxable income</span><span class="tv">${fkr(tx.taxable)}</span></div>
-    <div class="trow"><span class="tl">A-skat (${p.traek}% trækprocent)</span><span class="tv neg">− ${fkr(tx.askat)}</span></div>
-    <div class="trow"><span class="tl">ATP A-sats (fixed)</span><span class="tv neg">− ${fkr(R.atp)}</span></div>
-    <div class="trow"><span class="tl">Effective rate</span><span class="tv">${fmt(tx.effRate,1)}%</span></div>
+    <div class="trow"><span class="tl">A-skat (${p.traek}%)</span><span class="tv neg">− ${fkr(tx.askat)}</span></div>
+    <div class="trow"><span class="tl">ATP</span><span class="tv neg">− ${fkr(R.atp)}</span></div>
     <div class="trow nrow"><span class="tl" style="color:var(--teal);font-weight:600">Estimated net pay</span><span class="tv teal">${fkr(tx.net)}</span></div>`;
+
+  renderVerify();
+}
+
+// ═══ VERIFY ═══
+function renderVerify(){
+  const body=document.getElementById('vfy-body');
+  if(!body||!profile)return;
+  const p=profile;
+  const data=md();
+  const shifts=data.shifts;
+  const payroll=data.payrollData;
+  const hasPay=Object.keys(payroll.codes).length>0;
+  const hasShifts=shifts.length>0;
+  const baseH=p.salary/151.66;
+  const label=MO[activeMonth]+' '+activeYear;
+  const nextY=activeMonth===11?activeYear+1:activeYear;
+  const nextLabel=MO[(activeMonth+1)%12]+' '+nextY;
+  const prevY=activeMonth===0?activeYear-1:activeYear;
+  const prevLabel=MO[(activeMonth+11)%12]+' '+prevY;
+
+  const upHtml=`<label class="vfy-upz${hasPay?' ok':''}" onclick="document.getElementById('vfy-pay-in').click()" style="cursor:pointer;display:flex">
+    <input type="file" id="vfy-pay-in" accept=".txt,.doc,.rtf" onchange="uploadPayroll(this.files[0])" style="display:none">
+    <span class="vfy-ico">${hasPay?'✅':'📋'}</span>
+    <span class="vfy-utx">
+      <div class="vfy-ut">${hasPay?payroll.label+' payroll loaded — click to replace':'Upload '+prevLabel+' payroll.txt'}</div>
+      <div class="vfy-us">${hasPay?Object.keys(payroll.codes).length+' salary lines found':'Received by email at start of '+label}</div>
+    </span>
+  </label>`;
+
+  if(!hasPay){
+    body.innerHTML=upHtml+'<div class="vfy-msg">Upload the '+prevLabel+' payroll.txt to verify your '+label+' lønseddel.</div>';
+    return;
+  }
+
+  // ── Shift vs payroll comparison ──
+  let compHtml='',discCount=0;
+  if(hasShifts){
+    const calcs=shifts.map(s=>calcShift(s));
+    const myHrs={
+      '1318':calcs.reduce((a,c)=>a+c.aftenHrs,0),
+      '1319':calcs.reduce((a,c)=>a+c.natUnits,0),
+      '1331':calcs.reduce((a,c)=>a+c.satHrs,0),
+      '1332':calcs.reduce((a,c)=>a+c.sunHrs,0),
+      '1334':data.manuals.forl||0,
+      '1316':data.manuals.driftHrs||0,
+    };
+    const COMP=[
+      {code:'1318',label:'Aftentillæg',unit:'hr'},
+      {code:'1319',label:'Nattillæg',unit:'unit'},
+      {code:'1331',label:'Lørdagstillæg',unit:'hr'},
+      {code:'1332',label:'Søndagstillæg',unit:'hr'},
+      {code:'1334',label:'Forlængelsetillæg',unit:'event'},
+      {code:'1316',label:'Drift support',unit:'hr'},
+    ];
+    const THRESH=0.11;
+    const rows=COMP.map(l=>{
+      const mine=myHrs[l.code]||0;
+      const theirs=Math.abs(payroll.codes[l.code]||0);
+      if(mine<0.01&&theirs<0.01)return'';
+      const diff=theirs-mine;
+      const ok=Math.abs(diff)<=THRESH;
+      if(!ok)discCount++;
+      const diffCell=ok
+        ?'<span class="vfy-ok">✓</span>'
+        :`<span class="vfy-bad">${diff>0?'+':''}${fmt(diff,2)} ${diff>0?'too much':'too little'}</span>`;
+      return`<div class="vfy-row">
+        <span class="vfy-code">${l.code}</span>
+        <span class="vfy-lbl">${l.label}</span>
+        <span class="vfy-num">${mine>0.005?fmt(mine,2)+' '+l.unit:'—'}</span>
+        <span class="vfy-num">${theirs>0.005?fmt(theirs,2)+' '+l.unit:'—'}</span>
+        ${diffCell}
+      </div>`;
+    }).join('');
+    if(rows){
+      compHtml=`<div class="vfy-sect">Your shifts vs Aviator's registration — ${label}</div>
+        <div class="vfy-col"><span>Code</span><span>Line</span>
+          <span style="text-align:right">Your calc</span>
+          <span style="text-align:right">Registered</span>
+          <span style="text-align:right">Diff</span></div>
+        ${rows}`;
+    }
+  }
+
+  // ── Expected lønseddel ──
+  const RATES={'1318':R.aftenHr,'1319':R.natHalf,'1331':R.lordagHr,'1332':R.sondagHr,
+    '1334':R.forl,'1316':R.driftHr,'1090':OTR[p.lontrin||1].o1,
+    '1091':OTR[p.lontrin||1].o2,'1443':baseH,'1444':baseH};
+  const SLIP=[
+    {code:'1318',label:'Aftentillæg'},{code:'1319',label:'Nattillæg'},
+    {code:'1331',label:'Lørdagstillæg'},{code:'1332',label:'Søndagstillæg'},
+    {code:'1334',label:'Forlængelsetillæg'},{code:'1316',label:'Drift support'},
+    {code:'1090',label:'Overtid 1'},{code:'1091',label:'Overtid 2'},
+    {code:'1443',label:'Byttetimer'},{code:'1444',label:'Byttetimer træk'},
+  ];
+  let slipTotal=0;
+  const slipRows=SLIP.map(l=>{
+    const hrs=payroll.codes[l.code];
+    if(!hrs||Math.abs(hrs)<0.005)return'';
+    const kr=hrs*(RATES[l.code]||0);
+    slipTotal+=kr;
+    return`<div class="vfy-row" style="grid-template-columns:68px 1fr 80px 110px 0">
+      <span class="vfy-code">${l.code}</span>
+      <span class="vfy-lbl">${l.label}</span>
+      <span class="vfy-num">${fmt(Math.abs(hrs),2)}</span>
+      <span class="vfy-num" style="color:${kr<0?'var(--red)':'var(--green)'}">${fmt(kr,2)} kr</span>
+      <span></span>
+    </div>`;
+  }).join('');
+  const slipHtml=`<div class="vfy-sect">Expected ${nextLabel} lønseddel lines</div>
+    <div class="vfy-col" style="grid-template-columns:68px 1fr 80px 110px 0">
+      <span>Code</span><span>Line</span><span style="text-align:right">Hours</span><span style="text-align:right">Amount</span><span></span>
+    </div>
+    ${slipRows||'<div class="vfy-msg">No supplement lines.</div>'}
+    <div class="vfy-sum">
+      <span>Total supplements → <strong>${nextLabel}</strong> lønseddel</span>
+      <strong>${fmt(slipTotal,2)} kr</strong>
+    </div>`;
+
+  // ── Verdict ──
+  let bannerHtml='';
+  if(discCount>0){
+    bannerHtml=`<div class="vfy-banner err">⚠ ${discCount} discrepanc${discCount===1?'y':'ies'} between your shifts and Aviator's registration — contact Aviator before the ${nextLabel} lønseddel locks in</div>`;
+  }else if(hasShifts){
+    bannerHtml=`<div class="vfy-banner ok">✓ Shifts match Aviator's registration — your ${nextLabel} lønseddel supplements should be ${fmt(slipTotal,2)} kr</div>`;
+  }else{
+    bannerHtml=`<div class="vfy-banner warn">Load your ${label} shifts above to compare against the payroll registration</div>`;
+  }
+
+  body.innerHTML=upHtml+compHtml+slipHtml+bannerHtml;
 }
 
 // ═══ SHIFT EDITING ═══
@@ -963,233 +944,272 @@ function saveEd(id){
   const s=document.getElementById('es').value||'08:00';
   const e=document.getElementById('ee').value||'16:00';
   const n=document.getElementById('en').value.trim();
+  const shifts=md().shifts;
   const i=shifts.findIndex(x=>x.id===id);
-  if(i>=0)shifts[i]={...shifts[i],d,s,e,note:n};
-  editId=null;render();
+  if(i>=0){
+    const sh=shifts[i];
+    // Mark as extended if end time is later than original
+    const wasExtended=sh.origE&&tm(e)>tm(sh.origE);
+    shifts[i]={...sh,d,s,e,note:n,
+      extended:wasExtended,
+      extendedBy:wasExtended?toH(tm(e)-tm(sh.origE)):0};
+  }
+  editId=null;saveP();render();
 }
-function delShift(id){shifts=shifts.filter(x=>x.id!==id);editId=null;render();}
+function delShift(id){md().shifts=md().shifts.filter(x=>x.id!==id);editId=null;saveP();render();}
 function addShift(){
+  const shifts=md().shifts;
   const d=shifts.length?Math.min(shifts[shifts.length-1].d+1,28):1;
-  const nw={d,s:'08:00',e:'16:00',note:'',id:uid()};
-  shifts.push(nw);editId=nw.id;render();
+  const nw={d,s:'08:00',e:'16:00',note:'',id:uid(),origS:'08:00',origE:'16:00',extra:true};
+  shifts.push(nw);editId=nw.id;saveP();render();
   setTimeout(()=>document.getElementById('sb').lastElementChild?.scrollIntoView({behavior:'smooth',block:'center'}),60);
 }
 
-// ═══ TOAST ═══
-function toast(msg,type='ok'){
-  const el=document.getElementById('toast');
-  el.textContent=msg;el.className='toast show '+type;
-  setTimeout(()=>el.classList.remove('show'),2800);
+// ═══ WIZARD ═══
+let wStep=0,wMosErr=false;
+let wd={sal:'',hrs:'',yrs:'0',mos:'0',ct:'',quals:[],tcoSen:'',traek:'38',fradrag:'8965'};
+function getLT(mo){
+  if(mo<=6)return 1;if(mo<=18)return 2;if(mo<=30)return 3;if(mo<=42)return 4;
+  if(mo<=66)return 5;if(mo<=90)return 6;if(mo<=104)return 7;if(mo<=150)return 8;return 9;
+}
+function getSteps(){return wd.quals.includes('tco')?[0,1,2,3,4,5,6]:[0,1,2,3,4,6];}
+function totalSteps(){return getSteps().length;}
+function stepPos(){return getSteps().indexOf(wStep);}
+function nextLogicalStep(){const s=getSteps(),i=s.indexOf(wStep);return i<s.length-1?s[i+1]:null;}
+function prevLogicalStep(){const s=getSteps(),i=s.indexOf(wStep);return i>0?s[i-1]:null;}
+function onSalInput(el){
+  const raw=el.value.replace(/\s/g,'').replace(/\D/g,'');wd.sal=raw;
+  el.value=raw?(raw.length<=4?raw:raw.replace(/\B(?=(\d{3})+(?!\d))/g,' ')):'';chkNext();
+}
+function onYrsInput(el){const raw=el.value.replace(/\D/g,'').slice(0,2);el.value=raw;wd.yrs=raw||'0';updLT();}
+function onMosInput(el){
+  const raw=el.value.replace(/\D/g,'').slice(0,2);el.value=raw;
+  const n=parseInt(raw)||0,err=document.getElementById('mos-err');
+  if(n>12){wMosErr=true;if(err)err.style.display='block';}
+  else{wMosErr=false;if(err)err.style.display='none';wd.mos=raw||'0';}
+  updLT();chkNext();
+}
+function updLT(){
+  const pill=document.getElementById('ltpill');if(!pill)return;
+  const t=(parseInt(wd.yrs)||0)*12+(parseInt(wd.mos)||0);
+  pill.innerHTML='<span style="font-size:14px">🏅</span> Løntrin '+getLT(t)+' · '+t+' month'+(t!==1?'s':'');
+  pill.style.display='inline-flex';
+}
+function tglQc(el,id){
+  const i=wd.quals.indexOf(id);if(i>=0)wd.quals.splice(i,1);else wd.quals.push(id);
+  el.classList.toggle('sel',wd.quals.includes(id));
+  const qck=el.querySelector('.qck');if(qck)qck.style.background=wd.quals.includes(id)?'var(--accent)':'';
+  rDots();chkNext();
+}
+function selTCO(v){wd.tcoSen=v;document.querySelectorAll('.ro').forEach(el=>el.classList.toggle('sel',el.dataset.tco===v));chkNext();}
+function chkNext(){
+  const btn=document.getElementById('wnx');if(!btn)return;
+  const ok={0:parseFloat(wd.sal)>0,1:parseFloat(wd.hrs)>0,2:!wMosErr,3:!!wd.ct,4:true,5:!!wd.tcoSen,6:true};
+  btn.disabled=!ok[wStep];
+}
+function buildStep(s){
+  switch(s){
+    case 0:return`<div class="wiz-card"><div class="wiz-title">Your monthly salary</div><div class="wiz-sub">From your employment contract</div>
+      <div style="display:flex;align-items:center;gap:10px"><input class="wii" id="w-sal" type="text" inputmode="numeric" placeholder="30 000" oninput="onSalInput(this)">
+      <span style="font-family:var(--fm);color:var(--text2);white-space:nowrap;font-size:13px">kr / month</span></div>
+      <div class="hbox" style="margin-top:14px">Your base pay — fixed amount before supplements.</div></div>`;
+    case 1:return`<div class="wiz-card"><div class="wiz-title">Contract hours</div><div class="wiz-sub">Your guaranteed minimum per month</div>
+      <div style="display:flex;align-items:center;gap:10px"><input class="wii" id="w-hrs" type="number" min="1" max="200" step="0.1" placeholder="e.g. 121" oninput="wd.hrs=this.value;chkNext()">
+      <span style="font-family:var(--fm);color:var(--text2);white-space:nowrap;font-size:13px">hrs / month</span></div>
+      <div class="hbox" style="margin-top:14px">Used to calculate merarbejde — hours above contract up to ${OT_NORM}h norm.</div></div>`;
+    case 2:return`<div class="wiz-card"><div class="wiz-title">How long have you worked here?</div><div class="wiz-sub">Determines løntrin and overtime rates</div>
+      <div class="irow">
+        <div><div class="wlbl">Years</div><input class="wii" id="w-yrs" type="text" inputmode="numeric" maxlength="2" placeholder="0" value="${wd.yrs==='0'?'':wd.yrs}" oninput="onYrsInput(this)"></div>
+        <div><div class="wlbl">Months</div><input class="wii" id="w-mos" type="text" inputmode="numeric" maxlength="2" placeholder="0" value="${wd.mos==='0'?'':wd.mos}" oninput="onMosInput(this)">
+        <div id="mos-err" style="display:none;font-size:11px;color:var(--red);font-family:var(--fm);margin-top:6px">Enter 0–12</div></div>
+      </div><div id="ltpill" class="ltpill" style="display:none"></div></div>`;
+    case 3:return`<div class="wiz-card"><div class="wiz-title">Contract type</div><div class="wiz-sub">Affects how some allowances are calculated</div>
+      <div class="tc-wrap">
+        <div class="tc ${wd.ct==='permanent'?'sel':''}" onclick="wd.ct='permanent';this.closest('.tc-wrap').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));this.classList.add('sel');chkNext()">
+          <div class="tc-ico">📋</div><div class="tc-t">Permanent</div><div class="tc-d">Full- or part-time</div></div>
+        <div class="tc ${wd.ct==='study'?'sel':''}" onclick="wd.ct='study';this.closest('.tc-wrap').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));this.classList.add('sel');chkNext()">
+          <div class="tc-ico">🎓</div><div class="tc-t">Study contract</div><div class="tc-d">Flexible alongside studies</div></div>
+      </div></div>`;
+    case 4:{const QS=[{id:'tco',i:'🔄',t:'TCO',r:'Turnaround Coordinator'},{id:'drift',i:'🛠',t:'Drift Support',r:'+10.35 kr/hr'},{id:'servicedesk',i:'💻',t:'Service Desk',r:'+10.35 kr/hr'},{id:'ankomst',i:'🛬',t:'Ankomst',r:'+3.10 kr/hr'}];
+      return`<div class="wiz-card"><div class="wiz-title">Qualifications?</div><div class="wiz-sub">Select all that apply</div>
+        <div class="qg">${QS.map(q=>`<div class="qc ${wd.quals.includes(q.id)?'sel':''}" onclick="tglQc(this,'${q.id}')">
+          <div class="qi">${q.i}</div><div><div class="qt">${q.t}</div><div class="qr">${q.r}</div></div><div class="qck"></div></div>`).join('')}</div>
+        <div style="font-size:11px;color:var(--text3);font-family:var(--fm);margin-top:10px">No qualifications? Just click Next ↓</div></div>`;}
+    case 5:return`<div class="wiz-card"><div class="wiz-title">TCO seniority</div><div class="wiz-sub">Your time in the TCO role — not at Aviator overall</div>
+      <div class="rg">
+        <div class="ro ${wd.tcoSen==='under'?'sel':''}" data-tco="under" onclick="selTCO('under')"><div class="rd"></div>
+          <div><div style="font-weight:600">Under 12 months as TCO</div><div class="rs">1,517.40 kr/month</div></div></div>
+        <div class="ro ${wd.tcoSen==='over'?'sel':''}" data-tco="over" onclick="selTCO('over')"><div class="rd"></div>
+          <div><div style="font-weight:600">12 months or more as TCO</div><div class="rs">1,900.00 kr/month</div></div></div>
+      </div></div>`;
+    case 6:return`<div class="wiz-card"><div class="wiz-title">Danish tax settings</div><div class="wiz-sub">From your skattekort at <a href="https://skat.dk" target="_blank">skat.dk → TastSelv</a></div>
+      <div style="margin-bottom:16px"><div class="wlbl">Trækprocent (%)</div>
+        <div style="display:flex;align-items:center;gap:10px"><input class="wii" type="number" min="0" max="65" step="0.1" value="${wd.traek}" oninput="wd.traek=this.value">
+        <span style="font-family:var(--fm);color:var(--text2)">%</span></div></div>
+      <div><div class="wlbl">Månedligt fradrag (kr)</div>
+        <div style="display:flex;align-items:center;gap:10px"><input class="wii" type="number" min="0" step="100" value="${wd.fradrag}" oninput="wd.fradrag=this.value">
+        <span style="font-family:var(--fm);color:var(--text2)">kr</span></div></div>
+      <div class="hbox" style="margin-top:14px">AM-bidrag = gross × 8% · A-skat = (gross×92% − fradrag) × trækpct · ATP = 99 kr</div></div>`;
+  }
+}
+function rDots(){
+  const pos=stepPos();
+  document.getElementById('wdots').innerHTML=getSteps().map((_,i)=>`<div class="wiz-dot ${i<pos?'done':i===pos?'active':''}"></div>`).join('');
+}
+function rStep(step,dir){
+  const vp=document.getElementById('wvp'),old=vp.querySelector('.wiz-step'),nel=document.createElement('div');
+  nel.className='wiz-step';nel.innerHTML=buildStep(step);
+  if(old&&dir!==0){
+    old.className='wiz-step '+(dir>0?'exit-l':'exit-r');
+    nel.className='wiz-step '+(dir>0?'enter-r':'enter-l');
+    vp.appendChild(nel);setTimeout(()=>{old.remove();nel.className='wiz-step';},360);
+  }else{if(old)old.remove();vp.appendChild(nel);}
+  const pos=stepPos(),tot=totalSteps(),isLast=pos===tot-1,prev=prevLogicalStep();
+  document.getElementById('wnav').innerHTML=
+    (prev!==null?`<button class="wbk" onclick="wGo(-1)">← Back</button>`:`<div></div>`)+
+    `<span class="sctr">${pos+1} / ${tot}</span>`+
+    `<button class="wnx" id="wnx" onclick="wGo(1)" disabled>${isLast?"Let's go →":"Next →"}</button>`;
+  chkNext();
+  if(step===2)setTimeout(updLT,30);
+  if(step===0)setTimeout(()=>document.getElementById('w-sal')?.focus(),50);
+  if(step===1)setTimeout(()=>document.getElementById('w-hrs')?.focus(),50);
+  if(step===2){wMosErr=false;setTimeout(()=>document.getElementById('w-yrs')?.focus(),50);}
+  document.getElementById('wizard').scrollTop=0;
+}
+function wGo(dir){
+  if(dir===1){
+    if(wStep===0&&!(parseFloat(wd.sal)>0)){toast('Please enter your monthly salary','err');return;}
+    if(wStep===1&&!(parseFloat(wd.hrs)>0)){toast('Please enter your contract hours','err');return;}
+    if(wStep===3&&!wd.ct){toast('Please select your contract type','err');return;}
+    if(wStep===5&&!wd.tcoSen){toast('Please select your TCO seniority','err');return;}
+    const nxt=nextLogicalStep();if(nxt===null){finishWiz();return;}wStep=nxt;
+  }else{const prv=prevLogicalStep();if(prv===null)return;wStep=prv;}
+  rDots();rStep(wStep,dir);
+}
+function finishWiz(){
+  const t=(parseInt(wd.yrs)||0)*12+(parseInt(wd.mos)||0);
+  profile={salary:parseFloat(wd.sal),contractHrs:parseFloat(wd.hrs)||130,totalMonths:t,lontrin:getLT(t),
+    ct:wd.ct,quals:[...wd.quals],tcoSen:wd.tcoSen,traek:parseFloat(wd.traek)||38,fradrag:parseFloat(wd.fradrag)||8965};
+  document.getElementById('wizard').classList.add('hidden');
+  document.getElementById('app').classList.add('show');
+  saveP();render();setTimeout(()=>startTour(),400);
+}
+function startWiz(){
+  wStep=0;
+  if(profile){
+    const y=Math.floor((profile.totalMonths||0)/12);
+    wd={sal:'',hrs:'',yrs:String(y),mos:String((profile.totalMonths||0)%12),ct:profile.ct||'',
+      quals:[...(profile.quals||[])],tcoSen:profile.tcoSen||'',traek:String(profile.traek||38),fradrag:String(profile.fradrag||8965)};
+  }else{wd={sal:'',hrs:'',yrs:'0',mos:'0',ct:'',quals:[],tcoSen:'',traek:'38',fradrag:'8965'};}
+  document.getElementById('wizard').classList.remove('hidden');
+  document.getElementById('app').classList.remove('show');
+  document.getElementById('wvp').innerHTML='';
+  rDots();rStep(0,1);
 }
 
-// ═══ PDF ═══
+// ═══ SETTINGS ═══
+function openSett(){
+  if(profile){
+    const p=profile,lt=p.lontrin||1;
+    document.getElementById('profcard').innerHTML=[
+      ['Base salary',fkr(p.salary)],['Contract hours',(p.contractHrs||130)+' hrs/month'],
+      ['Seniority',Math.floor((p.totalMonths||0)/12)+'y '+(p.totalMonths||0)%12+'mo → Løntrin '+lt],
+      ['Contract',p.ct==='study'?'Study contract':'Permanent'],
+      ['Qualifications',(p.quals||[]).length?p.quals.join(', '):'None'],
+      ['TCO',p.quals.includes('tco')?(p.tcoSen==='over'?'12+ months (1,900 kr)':'<12 months (1,517 kr)'):'—'],
+      ['Trækprocent',p.traek+'%'],['Fradrag',fkr(p.fradrag,0)],
+    ].map(([l,v])=>`<div class="prof-row"><span class="prlbl">${l}</span><span class="prval">${v}</span></div>`).join('');
+  }
+  document.querySelectorAll('.thopt').forEach(e=>e.classList.toggle('sel',e.dataset.th===curTheme));
+  document.getElementById('sovl').classList.add('open');
+}
+function closeSett(e){if(!e||e.target===document.getElementById('sovl'))document.getElementById('sovl').classList.remove('open');}
+function restartWiz(){startWiz();}
+
+// ═══ PDF EXPORT ═══
 function dlPDF(){
-  if(!window.jspdf){toast('PDF library not loaded yet — try again','err');return;}
-  const{jsPDF}=window.jspdf,doc=new jsPDF(),p=profile;
-  const calcs=shifts.map(calcShift);
-  const totalSupp=calcs.reduce((a,c)=>a+c.supp,0);
-  const totalHrs=calcs.reduce((a,c)=>a+c.hrs,0);
-  const otHrs=Math.max(0,totalHrs-OT_NORM);
-  const otAmt=otHrs*OTR[p.lontrin||1].o1;
-  const mTotal=Object.keys(manuals).reduce((a,k)=>a+manCalc(k),0);
-  const tcoFix=p.quals.includes('tco')&&p.ct==='permanent'?(p.tcoSen==='over'?R.tcoF2:R.tcoF1):0;
-  const gGross=p.salary+tcoFix,nGross=totalSupp+otAmt+mTotal;
-  const tx=calcTax(gGross+nGross);
-  let y=18;
-  doc.setFontSize(18);doc.setFont('helvetica','bold');doc.text('PayCalc · Aviator PAX',14,y);y+=8;
-  doc.setFontSize(11);doc.setFont('helvetica','normal');doc.text(MO[CM]+' '+CY+' — Salary Summary',14,y);y+=10;
+  if(!window.jspdf){toast('PDF library not ready','err');return;}
+  const{jsPDF}=window.jspdf;const doc=new jsPDF();
+  const data=md();const shifts=data.shifts;const calcs=shifts.map(s=>calcShift(s));
+  doc.setFontSize(16);doc.text('PayBuddy — '+MO[activeMonth]+' '+activeYear,14,18);
+  let y=28;const line=(l,r)=>{doc.text(l,14,y);doc.text(r,196,y,{align:'right'});y+=7;};
   doc.setFontSize(10);
-  [['Base salary',fkr(p.salary)],['Contract hours',(p.contractHrs||130)+' hrs/month'],
-   ['Løntrin',String(p.lontrin||1)],['TCO allowance',tcoFix?fkr(tcoFix):'—'],
-   ['Shift supplements',fkr(totalSupp)],['Overtime ('+fmt(otHrs,2)+'h)',fkr(otAmt)],
-   ['Manual adjustments',fkr(mTotal)],['─────────────────','─────────────'],
-   ['Combined gross',fkr(gGross+nGross)],['AM-bidrag 8%','− '+fkr(tx.am)],
-   ['A-skat '+p.traek+'%','− '+fkr(tx.askat)],['ATP A-sats','− '+fkr(R.atp)],
-   ['Effective rate',fmt(tx.effRate,1)+'%'],['─────────────────','─────────────'],
-   ['ESTIMATED NET',fkr(tx.net)],
-  ].forEach(([l,v])=>{doc.text(l,14,y);doc.text(v,140,y,{align:'right'});y+=7;});
-  y+=4;doc.setFontSize(8);doc.setTextColor(150);
-  doc.text('Generated by PayCalc · PAX · Aviator Flight Services · Estimate only — verify with your official payslip.',14,y);
-  doc.save('paycalc-'+MO[CM].toLowerCase()+'-'+CY+'.pdf');
-  toast('PDF downloaded','ok');
+  shifts.forEach((sh,i)=>{const c=calcs[i];line(sh.d+' '+MOS[activeMonth]+'  '+sh.s+'–'+sh.e+'  '+DS[c.dow],c.supp>0?'+'+fmt(c.supp,2)+' kr':'0.00 kr');});
+  y+=3;
+  const p=profile,baseH=p.salary/151.66,totalHrs=calcs.reduce((a,c)=>a+c.hrs,0);
+  const merHrs=Math.max(0,Math.min(totalHrs,OT_NORM)-(p.contractHrs||0));
+  const otHrs=Math.max(0,totalHrs-OT_NORM);
+  const tcoFix=p.quals.includes('tco')&&p.ct==='permanent'?(p.tcoSen==='over'?R.tcoF2:R.tcoF1):0;
+  const gross=p.salary+tcoFix+calcs.reduce((a,c)=>a+c.supp,0)+merHrs*baseH+otHrs*OTR[p.lontrin||1].o1;
+  const tx=calcTax(gross);
+  doc.setFontSize(11);line('Estimated gross',fmt(gross,2)+' kr');line('Net estimate',fmt(tx.net,2)+' kr');
+  doc.save('paybuddy-'+MO[activeMonth]+'-'+activeYear+'.pdf');
 }
 
-// ═══ WALKTHROUGH ═══
-const TOUR = [
-  {
-    el: null,
-    title: `You're all set! 🎉`,
-    body: `Welcome to PayBuddy. Let's take a quick look at how the app works — it'll only take a minute.`
-  },
-  {
-    el: 'dropz',
-    title: `Upload your shift schedule`,
-    body: `Drag and drop your roster file here (the .doc or .rtf from the scheduling system), or click to browse. PayBuddy reads the month automatically and calculates all your supplements from the shifts.`
-  },
-  {
-    el: 'panels',
-    title: `Two pay estimates`,
-    body: `<strong style="color:var(--green)">Green</strong> — what you're guaranteed this month: your base salary plus any fixed TCO allowance, after tax.<br><br><strong style="color:var(--amber)">Amber</strong> — supplements earned from this month's shifts. These are paid next month.`
-  },
-  {
-    el: 'sb',
-    title: `Your shifts`,
-    body: `Every shift from your roster appears here. Evening (18:00–23:59), night (00:00–05:59, per started half-hour), weekend and holiday supplements are calculated automatically.<br><br>Click any row to edit it. Use <strong>+ Add shift</strong> to add one manually.`
-  },
-  {
-    el: 'mgrid',
-    title: `Manual adjustments`,
-    body: `Things the roster file can't tell us — enter them here:<br><br>
-• <strong>Extensions (forlængelse)</strong> — 230,44 kr flat per event<br>
-• <strong>Swap hours</strong> — received or given away<br>
-• <strong>Trainer / Instruktør hours</strong> — always visible<br>
-• <strong>Drift Support, TCO, Service Desk, Ankomst</strong> — only shown if you selected those qualifications in setup`
-  },
-  {
-    el: 'taxcard',
-    title: `Tax breakdown`,
-    body: `A full step-by-step breakdown using the verified SKAT 2026 formula:<br><br>
-AM-bidrag = gross × 8%<br>
-A-skat = (gross × 92% − fradrag) × trækpct<br>
-ATP = 99 kr fixed<br><br>
-Hit <strong>⚙</strong> in the top right to update your tax settings or re-run the setup wizard at any time.`
-  },
+// ═══ TOUR ═══
+const TOUR=[
+  {el:null,title:'Welcome to PayBuddy',body:'PayBuddy tracks your Aviator PAX pay month by month. Use the month tabs to navigate, upload shifts as you receive them, and verify your lønseddel when payroll.txt arrives.'},
+  {el:'month-tabs',title:'Month tabs',body:'One tab per month. A <span style="color:var(--green)">green dot</span> means shifts loaded. <span style="color:var(--amber)">Amber</span> means payroll.txt also uploaded. Switch months anytime — data is saved separately for each.'},
+  {el:'dropz',title:'Upload your shift file',body:'Upload the roster for this month — .doc, .rtf, or .txt. Shifts are saved to this month tab. When a new roster arrives (~18th), switch to that month and upload there.'},
+  {el:'summary',title:'Month summary',body:'Left: what changed this month — extra shifts, extended shifts, forlængelses, swaps.<br><br>Right: expected supplements for next month\'s lønseddel, either calculated or from payroll.txt.'},
+  {el:'sb',title:'Shift table',body:'All shifts with auto-calculated supplements. Click a row to edit — if you extend a shift beyond its original end time, it\'s automatically marked as extended. Use + Add shift for extra shifts called in.'},
+  {el:'mgrid',title:'Manual adjustments',body:'Enter things the roster cannot show — forlængelses, swap hours, drift, etc. These feed into both the summary and the verify section.'},
+  {el:'taxcard',title:'Tax breakdown',body:'Full SKAT 2026 formula. Update trækprocent and fradrag in ⚙ Settings anytime.'},
+  {el:'vfy-body',title:'Verify payslip',body:'Upload the payroll.txt (received at start of next month). The app compares your shifts against what Aviator registered and shows exactly what your next lønseddel should contain.'},
 ];
-
-let tourStep = 0;
-
-function _noScroll(e){ e.preventDefault(); }
-
-function startTour() {
-  tourStep = 0;
-  document.getElementById('wt-overlay').style.display = 'block';
-  window.addEventListener('wheel', _noScroll, {passive:false});
-  window.addEventListener('touchmove', _noScroll, {passive:false});
-  showTourStep(tourStep);
+let tourStep=0,_tourEl=null;
+function _noScroll(e){e.preventDefault();}
+function startTour(){tourStep=0;document.getElementById('wt-overlay').style.display='block';window.addEventListener('wheel',_noScroll,{passive:false});window.addEventListener('touchmove',_noScroll,{passive:false});showTourStep(0);}
+function endTour(){document.getElementById('wt-overlay').style.display='none';window.removeEventListener('wheel',_noScroll);window.removeEventListener('touchmove',_noScroll);_tourEl=null;}
+function tourGo(dir){tourStep=Math.max(0,Math.min(TOUR.length-1,tourStep+dir));showTourStep(tourStep);}
+function positionTour(){
+  const spot=document.getElementById('wt-spot'),card=document.getElementById('wt-card');
+  const pad=8,vw=window.innerWidth,vh=window.innerHeight;
+  if(!_tourEl){Object.assign(spot.style,{top:'50%',left:'50%',width:'0',height:'0',borderRadius:'0',boxShadow:'none'});Object.assign(card.style,{top:'50%',left:'50%',bottom:'',right:'',transform:'translate(-50%,-50%)'});return;}
+  const r=_tourEl.getBoundingClientRect();
+  Object.assign(spot.style,{top:(r.top-pad)+'px',left:(r.left-pad)+'px',width:(r.width+pad*2)+'px',height:(r.height+pad*2)+'px',borderRadius:'10px',boxShadow:'0 0 0 9999px rgba(0,0,0,0.72)'});
+  const cw=300,ch=280;let ct,cl;
+  if(r.bottom+pad+ch+16<vh)ct=r.bottom+pad+8;
+  else if(r.top-pad-ch-16>0)ct=r.top-pad-ch-8;
+  else ct=Math.max(16,Math.min(vh-ch-16,r.top));
+  cl=Math.max(16,Math.min(r.left-pad,vw-cw-16));
+  Object.assign(card.style,{top:ct+'px',left:cl+'px',bottom:'',right:'',transform:''});
 }
-
-function endTour() {
-  document.getElementById('wt-overlay').style.display = 'none';
-  window.removeEventListener('wheel', _noScroll);
-  window.removeEventListener('touchmove', _noScroll);
-  _tourEl = null;
-}
-
-function tourGo(dir) {
-  tourStep = Math.max(0, Math.min(TOUR.length - 1, tourStep + dir));
-  showTourStep(tourStep);
-}
-
-
-
-let _tourEl = null;
-
-function positionTour() {
-  const el = _tourEl;
-  const spot = document.getElementById('wt-spot');
-  const card = document.getElementById('wt-card');
-  const pad = 8, vw = window.innerWidth, vh = window.innerHeight;
-
-  if (!el) {
-    Object.assign(spot.style, {top:'50%',left:'50%',width:'0px',height:'0px',borderRadius:'0px',boxShadow:'none'});
-    Object.assign(card.style, {top:'50%',left:'50%',bottom:'',right:'',transform:'translate(-50%,-50%)'});
-    return;
-  }
-
-  const r = el.getBoundingClientRect();
-
-  // Spotlight
-  Object.assign(spot.style, {
-    top:(r.top - pad)+'px',
-    left:(r.left - pad)+'px',
-    width:(r.width + pad*2)+'px',
-    height:(r.height + pad*2)+'px',
-    borderRadius:'10px',
-    boxShadow:'0 0 0 9999px rgba(0,0,0,0.72)',
-  });
-
-  // Card: prefer below element, else above, else beside
-  const cw=320, ch=300;
-  let ct, cl;
-  const below = r.bottom + pad + ch + 16;
-  const above = r.top - pad - ch - 16;
-  if (below < vh) {
-    ct = r.bottom + pad + 8;
-  } else if (above > 0) {
-    ct = r.top - pad - ch - 8;
-  } else {
-    ct = Math.max(16, Math.min(vh - ch - 16, r.top));
-  }
-  cl = Math.max(16, Math.min(r.left - pad, vw - cw - 16));
-  Object.assign(card.style, {top:ct+'px',left:cl+'px',bottom:'',right:'',transform:''});
-}
-
-function showTourStep(i) {
-  const step = TOUR[i];
-  _tourEl = step.el ? document.getElementById(step.el) : null;
-
-  if (_tourEl) {
-    // Scroll so element sits near top of viewport, leaving room for card below
-    const CARD_H = 320;
-    const HEADER_H = 56;
-    const PAD = 16;
-    const vh = window.innerHeight;
-    const elRect = _tourEl.getBoundingClientRect();
-    const elH = elRect.height;
-    const elAbsTop = window.scrollY + elRect.top;
-
-    let targetScrollY;
-    if (elH + CARD_H + PAD * 3 < vh - HEADER_H) {
-      // Element + card fit — place element just below header
-      targetScrollY = elAbsTop - HEADER_H - PAD;
-    } else {
-      // Element is large — center it, card will overlap (best we can do)
-      targetScrollY = elAbsTop - (vh - elH) / 2;
-    }
-    window.scrollTo({top: Math.max(0, targetScrollY), behavior:'instant'});
-  } else {
-    window.scrollTo({top:0, behavior:'instant'});
-  }
-
+function showTourStep(i){
+  const step=TOUR[i];_tourEl=step.el?document.getElementById(step.el):null;
+  if(_tourEl){
+    const vh=window.innerHeight,CARD_H=280,HEADER_H=92,PAD=16;
+    const r=_tourEl.getBoundingClientRect(),absTop=window.scrollY+r.top;
+    const targetY=r.height+CARD_H+PAD*3<vh-HEADER_H?absTop-HEADER_H-PAD:absTop-(vh-r.height)/2;
+    window.scrollTo({top:Math.max(0,targetY),behavior:'instant'});
+  }else{window.scrollTo({top:0,behavior:'instant'});}
   positionTour();
-
-  document.getElementById('wt-step-lbl').textContent = 'Step ' + (i + 1) + ' of ' + TOUR.length;
-  document.getElementById('wt-title').textContent = step.title;
-  document.getElementById('wt-body').innerHTML = step.body;
-  document.getElementById('wt-ctr').textContent = (i + 1) + ' / ' + TOUR.length;
-
-  const backBtn = document.getElementById('wt-back');
-  const nextBtn = document.getElementById('wt-next');
-  backBtn.style.display = i === 0 ? 'none' : 'inline-block';
-
-  if (i === TOUR.length - 1) {
-    nextBtn.textContent = 'Finish ✓';
-    nextBtn.onclick = endTour;
-  } else {
-    nextBtn.textContent = 'Next →';
-    nextBtn.onclick = () => tourGo(1);
-  }
+  document.getElementById('wt-step-lbl').textContent='Step '+(i+1)+' of '+TOUR.length;
+  document.getElementById('wt-title').textContent=step.title;
+  document.getElementById('wt-body').innerHTML=step.body;
+  document.getElementById('wt-ctr').textContent=(i+1)+' / '+TOUR.length;
+  document.getElementById('wt-back').style.display=i===0?'none':'inline-block';
+  const nxt=document.getElementById('wt-next');
+  if(i===TOUR.length-1){nxt.textContent='Finish ✓';nxt.onclick=endTour;}
+  else{nxt.textContent='Next →';nxt.onclick=()=>tourGo(1);}
 }
 
 // ═══ INIT ═══
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(curTheme==='auto')applyTheme('auto');});
-
-// Enter key advances wizard
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(curTheme==='auto')applyTheme('auto');});
 document.addEventListener('keydown',e=>{
   if(e.key!=='Enter')return;
-  const wiz=document.getElementById('wizard');
-  if(wiz.classList.contains('hidden'))return;
-  // Don't intercept Enter inside textareas
+  if(document.getElementById('wizard').classList.contains('hidden'))return;
   if(e.target.tagName==='TEXTAREA')return;
-  const btn=document.getElementById('wnx');
-  if(btn&&!btn.disabled)wGo(1);
+  const btn=document.getElementById('wnx');if(btn&&!btn.disabled)wGo(1);
 });
 curTheme=localStorage.getItem(TK)||'auto';
 applyTheme(curTheme);
+loadP();
 if(profile){
   document.getElementById('wizard').classList.add('hidden');
   document.getElementById('app').classList.add('show');
   render();
+
 }else{
   startWiz();
 }
