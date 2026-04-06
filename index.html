@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PayBuddy · Aviator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   /* Aviator dark — deep navy, inspired by Aviator Timeless Blue */
@@ -489,11 +489,22 @@ const R_OPS={
   // OPS does not have aftenHr, natHalf, driftHr, tcoF1/F2
 };
 function R(){return (profile&&profile.dept==='ops')?R_OPS:R_PAX;}
+// PAX OT rates per løntrin
 const OTR={
   1:{o1:219.81,o2:295.44},2:{o1:237.13,o2:318.73},3:{o1:263.28,o2:353.87},
   4:{o1:276.23,o2:371.28},5:{o1:284.39,o2:382.25},6:{o1:291.06,o2:391.21},
   7:{o1:297.27,o2:399.56},8:{o1:302.38,o2:406.42},9:{o1:307.32,o2:413.06},
 };
+// OPS OT rates per anciennitet bracket (1/3 2026), lønklasse 3 (most common)
+const OTR_OPS={
+  1:{o1:290.60,o2:403.60},  // <3 mdr
+  2:{o1:290.60,o2:403.60},  // >3 mdr (same as bracket 1 for lk3)
+  3:{o1:305.14,o2:423.81},  // >12 mdr
+  4:{o1:305.14,o2:423.81},  // >24 mdr
+  5:{o1:305.14,o2:423.81},  // >36 mdr
+  6:{o1:305.14,o2:423.81},7:{o1:305.14,o2:423.81},8:{o1:305.14,o2:423.81},9:{o1:305.14,o2:423.81},
+};
+function getOTR(){return (profile&&profile.dept==='ops')?OTR_OPS:OTR;}
 const HOLS=new Set([
   '2025-01-01','2025-04-17','2025-04-18','2025-04-20','2025-04-21',
   '2025-05-29','2025-06-05','2025-06-08','2025-06-09',
@@ -623,16 +634,18 @@ function calcTax(gross){
 function manCalc(k,manuals){
   const v=(manuals||md().manuals)[k]||0,p=profile;
   const hourly=(p.salary||0)/151.66;
+  const isOPS=p&&p.dept==='ops';
   switch(k){
-    case 'forl':return v*R_OPS.forlLille;
+    case 'forl':    return v*(isOPS?R_OPS.forlLille:R_PAX.forl);
+    case 'forlStor':return v*R_OPS.forlStor;
     case 'bytteRec':return v*hourly;
     case 'bytteGiv':return-(v*hourly);
     case 'driftHrs':return v*R_PAX.driftHr;
     case 'tcoStudy':{const r=p.tcoSen==='over'?R_PAX.tcoS2:R_PAX.tcoS1;return Math.min(v*r,R_PAX.tcoF1);}
-    case 'trainerHrs':return v*R.trainerHr;
-    case 'instruktorHrs':return v*R.instruktorHr;
-    case 'helpdeskHrs':return v*R.helpdeskHr;
-    case 'ankomstHrs':return v*R.ankomstHr;
+    case 'trainerHrs':   return v*(isOPS?R_OPS.trainerHr:R_PAX.trainerHr);
+    case 'instruktorHrs':return v*(isOPS?R_OPS.instruktorHr:R_PAX.instruktorHr);
+    case 'helpdeskHrs':  return v*R_PAX.helpdeskHr;
+    case 'ankomstHrs':   return v*R_PAX.ankomstHr;
     default:return 0;
   }
 }
@@ -669,7 +682,7 @@ function renderSummary(){
   let suppTotal=0,suppSource='estimated';
   if(hasPayroll){
     const RATES={'1318':R_PAX.aftenHr,'1319':R_PAX.natHalf,'1331':R_PAX.lordagHr,'1332':R_PAX.sondagHr,
-      '1334':R_OPS.forlLille,'1316':R_PAX.driftHr,'1090':OTR[p.lontrin||1].o1,'1091':OTR[p.lontrin||1].o2,
+      '1334':R_OPS.forlLille,'1316':R_PAX.driftHr,'1090':(getOTR()[p.lontrin||1]||getOTR()[1]).o1,'1091':(getOTR()[p.lontrin||1]||getOTR()[1]).o2,
       '1443':baseH,'1444':baseH};
     for(const [c,h] of Object.entries(payroll.codes)){
       if(RATES[c])suppTotal+=h*RATES[c];
@@ -677,8 +690,10 @@ function renderSummary(){
     suppSource='from payroll';
   }else{
     const totalSupp=calcs.reduce((a,c)=>a+c.supp,0);
-    const mTotal=Object.keys(manuals).reduce((a,k)=>a+manCalc(k,manuals),0);
-    suppTotal=totalSupp+merHrs*baseH+otHrs*OTR[p.lontrin||1].o1+mTotal;
+    const mTotal=Object.keys(manuals).reduce((a,k)=>a+(manCalc(k,manuals)||0),0);
+    const lt=p.lontrin||1;
+    const otr=getOTR()[lt]||getOTR()[1];
+    suppTotal=totalSupp+merHrs*baseH+otHrs*otr.o1+mTotal;
     suppSource='estimated';
   }
   const nextY=activeMonth===11?activeYear+1:activeYear;
@@ -943,7 +958,7 @@ function render(){
   const totalSupp=calcs.reduce((a,c)=>a+c.supp,0);
   const mTotal=Object.keys(manuals).reduce((a,k)=>a+manCalc(k,manuals),0);
   const tcoFix=p.dept!=='ops'&&p.quals.includes('tco')&&p.ct==='permanent'?(p.tcoSen==='over'?R_PAX.tcoF2:R_PAX.tcoF1):0;
-  const nGross=totalSupp+merHrs*baseH+otHrs*OTR[p.lontrin||1].o1+mTotal;
+  const nGross=totalSupp+merHrs*baseH+otHrs*(getOTR()[p.lontrin||1]||getOTR()[1]).o1+mTotal;
   const gGross=p.salary+tcoFix;
 
 }
@@ -1172,8 +1187,8 @@ function renderVsContent(){
   // ── Expected lønseddel ──
   const RATES={
     '1318':R_PAX.aftenHr,'1319':R_PAX.natHalf,'1331':R_PAX.lordagHr,'1332':R_PAX.sondagHr,
-    '1334':R_OPS.forlLille,'1316':R_PAX.driftHr,'1090':OTR[p.lontrin||1].o1,
-    '1091':OTR[p.lontrin||1].o2,'1443':baseH,'1444':baseH
+    '1334':R_OPS.forlLille,'1316':R_PAX.driftHr,'1090':(getOTR()[p.lontrin||1]||getOTR()[1]).o1,
+    '1091':(getOTR()[p.lontrin||1]||getOTR()[1]).o2,'1443':baseH,'1444':baseH
   };
   const SLIP_CODES=[
     {code:'1318',label:'Aftentillæg'},{code:'1319',label:'Nattillæg'},
@@ -1287,8 +1302,8 @@ function getLT(mo){
 }
 function getSteps(){
   const hasTCO=wd.quals.includes('tco')&&wd.dept!=='ops';
-  const base=hasTCO?[-1,0,1,2,3,4,5,6]:[-1,0,1,2,3,4,6];
-  return base;
+  if(wd.dept==='ops') return hasTCO?[-1,0,1,2,4,5,6]:[-1,0,1,2,4,6];
+  return hasTCO?[-1,0,1,2,3,4,5,6]:[-1,0,1,2,3,4,6];
 }
 function totalSteps(){return getSteps().length;}
 function stepPos(){return getSteps().indexOf(wStep);}
@@ -1429,7 +1444,7 @@ function wGo(dir){
 function finishWiz(){
   const t=(parseInt(wd.yrs)||0)*12+(parseInt(wd.mos)||0);
   profile={dept:wd.dept||'pax',salary:parseFloat(wd.sal),contractHrs:parseFloat(wd.hrs)||130,totalMonths:t,lontrin:getLT(t),
-    ct:wd.ct,quals:[...wd.quals],tcoSen:wd.tcoSen,traek:parseFloat(wd.traek)||38,fradrag:parseFloat(wd.fradrag)||8965};
+    ct:wd.dept==='ops'?'permanent':(wd.ct||'permanent'),quals:[...wd.quals],tcoSen:wd.tcoSen,traek:parseFloat(wd.traek)||38,fradrag:parseFloat(wd.fradrag)||8965};
   updateBranding();
   document.getElementById('wizard').classList.add('hidden');
   document.getElementById('app').classList.add('show');
@@ -1494,7 +1509,7 @@ function dlPDF(){
   const merHrs=Math.max(0,Math.min(totalHrs,OT_NORM)-(p.contractHrs||0));
   const otHrs=Math.max(0,totalHrs-OT_NORM);
   const tcoFix=p.dept!=='ops'&&p.quals.includes('tco')&&p.ct==='permanent'?(p.tcoSen==='over'?R_PAX.tcoF2:R_PAX.tcoF1):0;
-  const gross=p.salary+tcoFix+calcs.reduce((a,c)=>a+c.supp,0)+merHrs*baseH+otHrs*OTR[p.lontrin||1].o1;
+  const gross=p.salary+tcoFix+calcs.reduce((a,c)=>a+c.supp,0)+merHrs*baseH+otHrs*(getOTR()[p.lontrin||1]||getOTR()[1]).o1;
   const tx=calcTax(gross);
   doc.setFontSize(11);line('Estimated gross',fmt(gross,2)+' kr');line('Net estimate',fmt(tx.net,2)+' kr');
   doc.save('paybuddy-'+MO[activeMonth]+'-'+activeYear+'.pdf');
