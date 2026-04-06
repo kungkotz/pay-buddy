@@ -405,7 +405,6 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
       <button class="up-b" onclick="event.stopPropagation();document.getElementById('fin').click()">Choose file</button>
     </div>
     <div class="plog" id="plog"></div>
-    <div class="summary" id="summary"></div>
     <div class="sh">
       <div class="st">Shifts</div>
       <div style="display:flex;gap:8px">
@@ -427,13 +426,7 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
       <div class="st">Manual adjustments</div>
     </div>
     <div class="mgrid" id="mgrid"></div>
-    <div class="sh" style="margin-top:4px">
-      <div class="st">Tax breakdown</div>
-      <button class="bpdf" onclick="dlPDF()">↓ PDF</button>
-    </div>
-    <div class="txc" id="taxcard"></div>
-    <p class="fn2">AM-bidrag 8% · A-skat = (gross×92% − fradrag) × trækpct · ATP 99 kr</p>
-
+    <div class="summary" id="summary"></div>
   </main>
   <div id="verify-tab">
     <div class="vs-picker" id="vs-picker"></div>
@@ -699,14 +692,19 @@ function renderSummary(){
       <div class="sum-big" style="color:var(--amber)">${fmt(calcTax(gGross+suppTotal).net,0)}<span style="font-size:14px;font-weight:400;color:var(--text2)"> kr</span></div>
       <div class="sum-sub">estimated NemKonto transfer · ${suppSource}</div>
       <div class="sum-rows">
-        <div class="sum-row"><span class="sum-rl">Base + TCO</span><span class="sum-rv">${fkr(gGross)}</span></div>
+        <div class="sum-row"><span class="sum-rl">Base salary</span><span class="sum-rv">${fkr(p.salary)}</span></div>
+        ${tcoFix?`<div class="sum-row"><span class="sum-rl">TCO fixed</span><span class="sum-rv pos">+${fkr(tcoFix)}</span></div>`:''}
         <div class="sum-row"><span class="sum-rl">Supplements</span><span class="sum-rv amb">${fkr(suppTotal,true)}</span></div>
-        <div class="sum-row"><span class="sum-rl">Total gross</span><span class="sum-rv">${fkr(gGross+suppTotal)}</span></div>
-        <div class="sum-row"><span class="sum-rl">AM-bidrag 8%</span><span class="sum-rv neg">− ${fkr(calcTax(gGross+suppTotal).am)}</span></div>
-        <div class="sum-row"><span class="sum-rl">Fradrag</span><span class="sum-rv neg">− ${fkr(p.fradrag)}</span></div>
-        <div class="sum-row"><span class="sum-rl">A-skat ${p.traek}%</span><span class="sum-rv neg">− ${fkr(calcTax(gGross+suppTotal).askat)}</span></div>
-        <div class="sum-row"><span class="sum-rl">ATP</span><span class="sum-rv neg">− ${fkr(R.atp)}</span></div>
-        <div class="sum-row" style="border-top:1px solid var(--border2);padding-top:6px;margin-top:2px"><span class="sum-rl" style="font-weight:600">Expected net pay</span><span class="sum-rv pos" style="font-weight:700">≈ ${fmt(calcTax(gGross+suppTotal).net,0)} kr</span></div>
+        <div class="sum-row" style="font-weight:600"><span class="sum-rl">Total gross</span><span class="sum-rv">${fkr(gGross+suppTotal)}</span></div>
+        <div class="sum-row" style="margin-top:4px;padding-top:6px;border-top:1px solid var(--border2);font-size:10px;color:var(--text3)"><span>gross × 8%</span><span class="sum-rv neg" style="font-size:12px">− ${fkr(calcTax(gGross+suppTotal).am)}</span></div>
+        <div class="sum-row" style="font-size:10px;color:var(--text3)"><span>(gross × 92% − ${fmt(p.fradrag,0)} kr) × ${p.traek}%</span><span class="sum-rv neg" style="font-size:12px">− ${fkr(calcTax(gGross+suppTotal).askat)}</span></div>
+        <div class="sum-row" style="font-size:10px;color:var(--text3)"><span>ATP (fixed)</span><span class="sum-rv neg" style="font-size:12px">− ${fkr(R.atp)}</span></div>
+        <div class="sum-row" style="border-top:1px solid var(--border2);padding-top:6px;margin-top:2px"><span class="sum-rl" style="font-weight:700">Net pay</span><span class="sum-rv pos" style="font-weight:700;font-size:15px">≈ ${fmt(calcTax(gGross+suppTotal).net,0)} kr</span></div>
+        <div style="margin-top:10px;padding:10px;background:var(--bg3);border-radius:var(--r);font-family:var(--fm);font-size:10px;color:var(--text3);line-height:2;">
+          <div style="color:var(--text2);margin-bottom:4px;font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase">Formula</div>
+          <div>gross − (gross × 8%) − ((gross × 92% − fradrag) × trækpct) − ATP</div>
+          <div style="margin-top:4px;color:var(--text);border-top:1px solid var(--border);padding-top:6px">${fkr(gGross+suppTotal)} − ${fkr(calcTax(gGross+suppTotal).am)} − ${fkr(calcTax(gGross+suppTotal).askat)} − ${fkr(R.atp)} = <span style="color:var(--green);font-weight:700">${fmt(calcTax(gGross+suppTotal).net,2)} kr</span></div>
+        </div>
       </div>
     </div>`;
 }
@@ -920,18 +918,6 @@ function render(){
   const tcoFix=p.quals.includes('tco')&&p.ct==='permanent'?(p.tcoSen==='over'?R.tcoF2:R.tcoF1):0;
   const nGross=totalSupp+merHrs*baseH+otHrs*OTR[p.lontrin||1].o1+mTotal;
   const gGross=p.salary+tcoFix;
-  const totalGross=gGross+nGross;
-  const tx=calcTax(totalGross);
-  document.getElementById('taxcard').innerHTML=`
-    <div class="txh"><div class="txht">Danish tax breakdown — SKAT 2026</div></div>
-    <div class="trow"><span class="tl">Base salary + TCO</span><span class="tv">${fkr(gGross)}</span></div>
-    <div class="trow"><span class="tl">Supplements + merarbejde</span><span class="tv">${fkr(nGross)}</span></div>
-    <div class="trow"><span class="tl">Combined gross estimate</span><span class="tv" style="font-weight:600">${fkr(totalGross)}</span></div>
-    <div class="trow"><span class="tl">AM-bidrag (8%)</span><span class="tv neg">− ${fkr(tx.am)}</span></div>
-    <div class="trow"><span class="tl">Månedligt fradrag</span><span class="tv neg">− ${fkr(tx.frad)}</span></div>
-    <div class="trow"><span class="tl">A-skat (${p.traek}%)</span><span class="tv neg">− ${fkr(tx.askat)}</span></div>
-    <div class="trow"><span class="tl">ATP</span><span class="tv neg">− ${fkr(R.atp)}</span></div>
-    <div class="trow nrow"><span class="tl" style="color:var(--teal);font-weight:600">Estimated net pay</span><span class="tv teal">${fkr(tx.net)}</span></div>`;
 
 }
 
@@ -1457,7 +1443,7 @@ const TOUR=[
   {el:"mgrid",
    title:"Manual adjustments",
    body:"For things the roster can't show:<br><br>• <strong>Forlængelses</strong> — flat rate per event<br>• <strong>Swap hours</strong> — received or given away<br>• <strong>Drift, Trainer, Instruktør</strong> — shown based on your qualifications<br><br>These feed into the summary and verify sections."},
-  {el:"taxcard",
+  {el:"summary",
    title:"Tax breakdown",
    body:"Full SKAT 2026 calculation: AM-bidrag 8% → A-skat at your trækprocent → ATP 99 kr → estimated net pay.<br><br>Update your trækprocent and fradrag anytime via <strong>⚙ Settings</strong> in the top right."},
   {el:"vs-picker",
