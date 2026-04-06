@@ -17,8 +17,7 @@
   --amber:#f59e0b;--abg:rgba(245,158,11,0.08);--aborder:rgba(245,158,11,0.22);
   --red:#ef4444;--rbg:rgba(239,68,68,0.08);--rborder:rgba(239,68,68,0.22);
   --blue:#89b8d4;--bbg:rgba(137,184,212,0.08);
-  --purple:#a78bfa;--pbg:rgba(167,139,250,0.08);
-  --teal:#2dd4bf;--tbg:rgba(45,212,191,0.06);--tborder:rgba(45,212,191,0.2);
+  --purple:#a78bfa;--pbg:rgba(167,139,250,0.08);--tbg:rgba(45,212,191,0.06);--tborder:rgba(45,212,191,0.2);
   --fn:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--fm:'JetBrains Mono','SF Mono','Consolas',monospace;
   --r:10px;--rl:14px;--rxl:20px;
   --shadow:0 1px 3px rgba(0,0,0,0.5),0 8px 24px rgba(0,0,0,0.3);
@@ -33,8 +32,7 @@
   --amber:#b45309;--abg:rgba(180,83,9,0.07);--aborder:rgba(180,83,9,0.22);
   --red:#b91c1c;--rbg:rgba(185,28,28,0.07);--rborder:rgba(185,28,28,0.18);
   --blue:#1a4a6e;--bbg:rgba(26,74,110,0.07);
-  --purple:#5b21b6;--pbg:rgba(91,33,182,0.07);
-  --teal:#0e6860;--tbg:rgba(14,104,96,0.06);--tborder:rgba(14,104,96,0.2);
+  --purple:#5b21b6;--pbg:rgba(91,33,182,0.07);--tbg:rgba(14,104,96,0.06);--tborder:rgba(14,104,96,0.2);
   --shadow:0 1px 3px rgba(19,34,66,0.08),0 8px 24px rgba(19,34,66,0.06);
 }
 [data-theme=light] .app-hdr{background:rgba(238,243,248,0.92);}
@@ -134,7 +132,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);line-height:1.
 .tnav{padding:0 16px;height:56px;display:flex;align-items:center;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;gap:6px;margin-bottom:-1px;letter-spacing:-0.01em;}
 .tnav:hover{color:var(--text2);}
 .tnav.active{color:var(--accent);border-bottom-color:var(--accent);}
-.tnav-ico{font-size:13px;}
 
 /* ── MONTH TABS ── */
 .month-tabs{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:56px;z-index:47;justify-content:center;}
@@ -194,7 +191,7 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
 .empty{text-align:center;padding:32px;color:var(--text3);font-size:13px;}
 
 /* ── MANUAL GRID ── */
-.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px;}
+.mgrid{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:24px;}
 .mrow{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:10px;transition:border-color 0.15s;}
 .mrow:hover{border-color:var(--border2);}
 .ml{font-size:12px;color:var(--text2);flex:1;line-height:1.35;font-weight:500;}
@@ -312,10 +309,11 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
 #wt-x:hover{color:var(--text);}
 
 
-/* ── GUIDE PANEL ── */
-#shifts-tab{display:flex;gap:24px;align-items:flex-start;}
-.shifts-main{flex:1;min-width:0;}
-.guide-panel{width:240px;flex-shrink:0;position:sticky;top:100px;}
+/* ── 3-COLUMN GRID ── */
+#shifts-tab{display:grid;grid-template-columns:minmax(min-content,1fr) minmax(0,3fr) minmax(min-content,1fr);gap:20px;align-items:start;}
+.shifts-main{min-width:0;}
+.guide-panel{display:flex;flex-direction:column;gap:12px;}
+.profile-panel{display:flex;flex-direction:column;gap:12px;}
 .guide-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;box-shadow:var(--shadow);}
 .guide-title{padding:14px 16px 10px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);}
 .guide-step{display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);align-items:flex-start;}
@@ -325,9 +323,12 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
 .guide-step-t{font-size:12px;font-weight:600;letter-spacing:-0.01em;margin-bottom:2px;}
 .guide-step-d{font-size:11px;color:var(--text2);line-height:1.55;}
 .guide-tip{padding:10px 16px;background:var(--bbg);border-top:1px solid var(--border);font-size:11px;color:var(--blue);line-height:1.55;}
-@media(max-width:800px){
-  #shifts-tab{flex-direction:column;}
-  .guide-panel{width:100%;position:static;}
+@media(max-width:60rem){
+  #shifts-tab{grid-template-columns:1fr;}
+  .shifts-main{order:1;}
+  .profile-panel{order:2;}
+  .guide-panel{order:3;}
+  #back-top-btn{display:block !important;}
 }
 
 @media(max-width:680px){
@@ -393,6 +394,7 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
   </header>
   <div class="month-tabs" id="month-tabs"></div>
   <main class="app-body" id="shifts-tab">
+    <div class="profile-panel" id="profile-panel"></div>
     <div class="shifts-main">
     <div class="upz" id="dropz" onclick="document.getElementById('fin').click()"
          ondragover="event.preventDefault();this.classList.add('drag')"
@@ -432,7 +434,7 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
     <div class="mgrid" id="mgrid"></div>
     <div class="summary" id="summary"></div>
     </div><!-- /shifts-main -->
-    <div class="guide-panel" id="guide-panel"></div>
+    <div class="guide-panel" id="guide-panel-inner"></div>
   </main>
   <div id="verify-tab">
     <div class="vs-picker" id="vs-picker"></div>
@@ -880,23 +882,6 @@ function parsePayrollTxt(text){
   }
   return result;
 }
-function uploadPayroll(file){
-  if(!file)return;
-  const r=new FileReader();
-  r.onload=e=>{
-    const parsed=parsePayrollTxt(e.target.result);
-    if(!Object.keys(parsed.codes).length){toast('No salary lines found','err');return;}
-    // Store payroll in the month it belongs to
-    const y=parsed.year||activeYear,m=parsed.month!==null?parsed.month:activeMonth;
-    getMonthData(y,m).payrollData=parsed;
-    // Switch to that month
-    activeYear=y;activeMonth=m;
-    saveP();render();
-    toast('Loaded '+parsed.label+' payroll','ok');
-  };
-  r.onerror=()=>toast('Could not read file','err');
-  r.readAsText(file,'windows-1252');
-}
 
 // ═══ RENDER ═══
 function render(){
@@ -904,6 +889,7 @@ function render(){
   updateBranding();
   renderTabs();
   renderGuide();
+  renderProfile();
   const data=md();
   const p=profile;
   const shifts=data.shifts;
@@ -1055,10 +1041,48 @@ function updateBranding(){
 }
 
 
+// ═══ PROFILE PANEL ═══
+function renderProfile(){
+  const el=document.getElementById('profile-panel');
+  if(!el||!profile)return;
+  const p=profile;
+  const dept=p.dept==='ops'?'OPS':'PAX';
+  const lt=p.lontrin||1;
+  const yrs=Math.floor((p.totalMonths||0)/12);
+  const mos=(p.totalMonths||0)%12;
+  const senLabel=yrs>0?(yrs+'y '+(mos>0?mos+'mo':'')):mos+'mo';
+  const ctLabel=p.ct==='study'?'Study contract':'Permanent';
+  const quals=(p.quals||[]).map(q=>({
+    tco:'TCO',drift:'Drift Support',servicedesk:'Service Desk',
+    ankomst:'Ankomst',trainer:'Træner',instruktor:'Instruktør'
+  }[q]||q)).filter(Boolean);
+  const rows=[
+    {l:'Department',v:dept,accent:true},
+    {l:'Base salary',v:fmt(p.salary,2)+' kr/mo'},
+    {l:'Contract hours',v:(p.contractHrs||0)+' hrs/mo'},
+    {l:'Seniority',v:senLabel+' → Løntrin '+lt},
+    ...(p.dept!=='ops'?[{l:'Contract type',v:ctLabel}]:[]),
+    ...(quals.length?[{l:'Qualifications',v:quals.join(', ')}]:[]),
+    ...(p.dept!=='ops'&&p.quals.includes('tco')?[{l:'TCO seniority',v:p.tcoSen==='over'?'12mo+':'Under 12mo'}]:[]),
+    {l:'Trækprocent',v:p.traek+'%'},
+    {l:'Fradrag',v:fmt(p.fradrag||0,0)+' kr/mo'},
+  ];
+  el.innerHTML=`<div class="guide-card">
+    <div class="guide-title">Your profile</div>
+    ${rows.map(r=>`<div class="guide-step" style="padding:9px 16px">
+      <div class="guide-step-body">
+        <div class="guide-step-d" style="margin-bottom:1px">${r.l}</div>
+        <div class="guide-step-t" style="${r.accent?'color:var(--accent)':''}">${r.v}</div>
+      </div>
+    </div>`).join('')}
+    <div class="guide-tip" style="cursor:pointer" onclick="restartWiz()">✏️ Edit profile</div>
+  </div>`;
+}
+
 // ═══ GUIDE PANEL ═══
 function renderGuide(){
-  const el=document.getElementById('guide-panel');
-  if(!el||activeTab!=='shifts')return;
+  const el=document.getElementById('guide-panel-inner');
+  if(!el)return;
   const isOPS=profile&&profile.dept==='ops';
   const steps=isOPS?[
     {t:'Upload your shift schedule',d:'Make sure you are on the right month tab, then drag or click the upload zone at the top.'},
@@ -1081,6 +1105,7 @@ function renderGuide(){
       </div>
     </div>`).join('')}
     <div class="guide-tip">💡 Your data never leaves this device — nothing is sent anywhere.</div>
+    <button onclick="window.scrollTo({top:0,behavior:'smooth'})" style="display:none;width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:0 0 var(--rl) var(--rl);font-family:var(--fn);font-size:13px;font-weight:600;cursor:pointer;letter-spacing:-0.01em;" id="back-top-btn">↑ Back to top</button>
   </div>`;
 }
 
@@ -1092,7 +1117,7 @@ function switchTab(tab){
   document.getElementById('shifts-tab').classList.toggle('hidden', tab!=='shifts');
   document.getElementById('verify-tab').classList.toggle('show', tab==='verify');
   document.getElementById('month-tabs').style.display = tab==='shifts'?'':'none';
-  if(tab==='shifts')renderGuide();
+  if(tab==='shifts'){renderGuide();renderProfile();}
   document.getElementById('tnav-shifts').classList.toggle('active', tab==='shifts');
   document.getElementById('tnav-verify').classList.toggle('active', tab==='verify');
   if(tab==='verify')renderVerifyTab();
@@ -1372,6 +1397,14 @@ function getLT(mo){
   if(mo<=6)return 1;if(mo<=18)return 2;if(mo<=30)return 3;if(mo<=42)return 4;
   if(mo<=66)return 5;if(mo<=90)return 6;if(mo<=104)return 7;if(mo<=150)return 8;return 9;
 }
+function getLT_OPS(mo){
+  if(mo<3)return 1;   // <3 mdr
+  if(mo<12)return 2;  // >3 mdr
+  if(mo<24)return 3;  // >12 mdr
+  if(mo<36)return 4;  // >24 mdr
+  return 5;           // >36 mdr
+}
+function getActiveLT(mo){return (wd.dept==='ops'||( profile&&profile.dept==='ops'))?getLT_OPS(mo):getLT(mo);}
 function getSteps(){
   const hasTCO=wd.quals.includes('tco')&&wd.dept!=='ops';
   if(wd.dept==='ops') return hasTCO?[-1,0,1,2,4,5,6]:[-1,0,1,2,4,6];
@@ -1396,7 +1429,7 @@ function onMosInput(el){
 function updLT(){
   const pill=document.getElementById('ltpill');if(!pill)return;
   const t=(parseInt(wd.yrs)||0)*12+(parseInt(wd.mos)||0);
-  pill.innerHTML='<span style="font-size:14px">🏅</span> Løntrin '+getLT(t)+' · '+t+' month'+(t!==1?'s':'');
+  pill.innerHTML='<span style="font-size:14px">🏅</span> Løntrin '+getActiveLT(t)+' · '+t+' month'+(t!==1?'s':'');
   pill.style.display='inline-flex';
 }
 function tglQc(el,id){
@@ -1416,9 +1449,9 @@ function buildStep(s){
   switch(s){
     case -1:return`<div class="wiz-card"><div class="wiz-title">Which department are you in?</div><div class="wiz-sub">This determines your supplement rates and kollektivaftale</div>
       <div class="tc-wrap">
-        <div class="tc ${wd.dept==='pax'?'sel':''}" onclick="wd.dept='pax';this.closest('.tc-wrap').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));this.classList.add('sel');chkNext()">
+        <div class="tc ${wd.dept==='pax'?'sel':''}" onclick="wd.dept='pax';wd.quals=[];wd.ct='';wd.tcoSen='';this.closest('.tc-wrap').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));this.classList.add('sel');chkNext()">
           <div class="tc-ico">🛫</div><div class="tc-t">PAX</div><div class="tc-d">Passenger handling · Gate agent</div></div>
-        <div class="tc ${wd.dept==='ops'?'sel':''}" onclick="wd.dept='ops';this.closest('.tc-wrap').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));this.classList.add('sel');chkNext()">
+        <div class="tc ${wd.dept==='ops'?'sel':''}" onclick="wd.dept='ops';wd.quals=[];wd.ct='permanent';wd.tcoSen='';this.closest('.tc-wrap').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));this.classList.add('sel');chkNext()">
           <div class="tc-ico">🎧</div><div class="tc-t">OPS</div><div class="tc-d">Operations · Trafikafdelingen</div></div>
       </div></div>`;
     case 0:return`<div class="wiz-card"><div class="wiz-title">Your monthly salary</div><div class="wiz-sub">From your employment contract</div>
@@ -1515,7 +1548,7 @@ function wGo(dir){
 }
 function finishWiz(){
   const t=(parseInt(wd.yrs)||0)*12+(parseInt(wd.mos)||0);
-  profile={dept:wd.dept||'pax',salary:parseFloat(wd.sal),contractHrs:parseFloat(wd.hrs)||130,totalMonths:t,lontrin:getLT(t),
+  profile={dept:wd.dept||'pax',salary:parseFloat(wd.sal),contractHrs:parseFloat(wd.hrs)||130,totalMonths:t,lontrin:(wd.dept==='ops'?getLT_OPS(t):getLT(t)),
     ct:wd.dept==='ops'?'permanent':(wd.ct||'permanent'),quals:[...wd.quals],tcoSen:wd.tcoSen,traek:parseFloat(wd.traek)||38,fradrag:parseFloat(wd.fradrag)||8965};
   updateBranding();
   document.getElementById('wizard').classList.add('hidden');
@@ -1568,24 +1601,6 @@ function closeSett(e){if(!e||e.target===document.getElementById('sovl'))document
 function restartWiz(){startWiz();}
 
 // ═══ PDF EXPORT ═══
-function dlPDF(){
-  if(!window.jspdf){toast('PDF library not ready','err');return;}
-  const{jsPDF}=window.jspdf;const doc=new jsPDF();
-  const data=md();const shifts=data.shifts;const calcs=shifts.map(s=>calcShift(s));
-  doc.setFontSize(16);doc.text('PayBuddy — '+MO[activeMonth]+' '+activeYear,14,18);
-  let y=28;const line=(l,r)=>{doc.text(l,14,y);doc.text(r,196,y,{align:'right'});y+=7;};
-  doc.setFontSize(10);
-  shifts.forEach((sh,i)=>{const c=calcs[i];line(sh.d+' '+MOS[activeMonth]+'  '+sh.s+'–'+sh.e+'  '+DS[c.dow],c.supp>0?'+'+fmt(c.supp,2)+' kr':'0.00 kr');});
-  y+=3;
-  const p=profile,baseH=p.salary/151.66,totalHrs=calcs.reduce((a,c)=>a+c.hrs,0);
-  const merHrs=Math.max(0,Math.min(totalHrs,OT_NORM)-(p.contractHrs||0));
-  const otHrs=Math.max(0,totalHrs-OT_NORM);
-  const tcoFix=p.dept!=='ops'&&p.quals.includes('tco')&&p.ct==='permanent'?(p.tcoSen==='over'?R_PAX.tcoF2:R_PAX.tcoF1):0;
-  const gross=p.salary+tcoFix+calcs.reduce((a,c)=>a+c.supp,0)+merHrs*baseH+otHrs*(getOTR()[p.lontrin||1]||getOTR()[1]).o1;
-  const tx=calcTax(gross);
-  doc.setFontSize(11);line('Estimated gross',fmt(gross,2)+' kr');line('Net estimate',fmt(tx.net,2)+' kr');
-  doc.save('paybuddy-'+MO[activeMonth]+'-'+activeYear+'.pdf');
-}
 
 // ═══ TOUR ═══
 const TOUR=[
