@@ -115,7 +115,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);line-height:1.
 .ibtn:hover{background:var(--bg4);color:var(--text);}
 
 /* ── MONTH TABS ── */
-.month-tabs{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:96px;z-index:47;}
+.month-tabs{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:96px;z-index:47;justify-content:center;}
 .month-tabs::-webkit-scrollbar{display:none;}
 .mtab{flex-shrink:0;padding:0 14px;height:40px;display:flex;align-items:center;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;position:relative;white-space:nowrap;}
 .mtab:hover{color:var(--text2);}
@@ -408,7 +408,10 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
     <div class="summary" id="summary"></div>
     <div class="sh">
       <div class="st">Shifts</div>
-      <button class="bsm bacc" onclick="addShift()">+ Add shift</button>
+      <div style="display:flex;gap:8px">
+        <button class="bsm" style="background:var(--rbg);color:var(--red);border:1px solid var(--rborder)" onclick="clearMonth()">✕ Clear month</button>
+        <button class="bsm bacc" onclick="addShift()">+ Add shift</button>
+      </div>
     </div>
     <div class="stw"><table>
       <thead><tr>
@@ -452,6 +455,16 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
   </div>
 </div>
 
+<!-- CONFIRM MODAL -->
+<div class="movl" id="conf-ovl" style="z-index:210">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:340px">
+    <div class="mtitle" id="conf-title"></div>
+    <div class="msub" id="conf-body"></div>
+    <button class="mbtn" id="conf-ok" style="background:var(--red);color:#fff;border:none;width:100%;padding:11px;border-radius:var(--r);font-family:var(--fn);font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px;">Confirm</button>
+    <button class="mbtn sec" onclick="closeConf()">Cancel</button>
+  </div>
+</div>
+
 <!-- SETTINGS -->
 <div class="movl" id="sovl" onclick="closeSett(event)">
   <div class="modal" onclick="event.stopPropagation()">
@@ -466,6 +479,8 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
       <div class="thopt" data-th="dark" onclick="setTheme('dark')"><div class="thico">🌙</div><div class="thlbl">Dark</div></div>
     </div>
     <button class="mbtn pri" onclick="closeSett();restartWiz()">⚙ Run setup wizard again</button>
+    <button class="mbtn" style="background:var(--abg);color:var(--amber);border:1px solid var(--aborder);width:100%;padding:11px;border-radius:var(--r);font-family:var(--fn);font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px;" onclick="clearAllMonths()">🗑 Clear all months</button>
+    <button class="mbtn" style="background:var(--rbg);color:var(--red);border:1px solid var(--rborder);width:100%;padding:11px;border-radius:var(--r);font-family:var(--fn);font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px;" onclick="clearAllData()">⚠ Reset entire app</button>
     <button class="mbtn sec" onclick="closeSett()">Close</button>
   </div>
 </div>
@@ -918,6 +933,49 @@ function render(){
     <div class="trow"><span class="tl">ATP</span><span class="tv neg">− ${fkr(R.atp)}</span></div>
     <div class="trow nrow"><span class="tl" style="color:var(--teal);font-weight:600">Estimated net pay</span><span class="tv teal">${fkr(tx.net)}</span></div>`;
 
+}
+
+
+// ═══ DATA CLEARING ═══
+function showConf(title, body, onOk){
+  document.getElementById('conf-title').textContent=title;
+  document.getElementById('conf-body').textContent=body;
+  document.getElementById('conf-ok').onclick=()=>{closeConf();onOk();};
+  document.getElementById('sovl').classList.remove('open');
+  document.getElementById('conf-ovl').classList.add('open');
+}
+function closeConf(){document.getElementById('conf-ovl').classList.remove('open');}
+
+function clearMonth(){
+  const label=MO[activeMonth]+' '+activeYear;
+  showConf(
+    'Clear '+label+'?',
+    'This removes all shifts, manual adjustments and payroll data for this month.',
+    ()=>{
+      if(months[activeYear])months[activeYear][activeMonth]=null;
+      editId=null;saveP();render();
+      toast(label+' cleared','ok');
+    }
+  );
+}
+
+function clearAllMonths(){
+  showConf(
+    'Clear all months?',
+    'This removes all shifts, manual adjustments and payroll data from every month. Your profile and settings are kept.',
+    ()=>{
+      months={};editId=null;saveP();render();
+      toast('All month data cleared','ok');
+    }
+  );
+}
+
+function clearAllData(){
+  showConf(
+    'Reset everything?',
+    'This deletes all data including your profile and settings. You will be taken back to the setup wizard.',
+    ()=>{localStorage.clear();location.reload();}
+  );
 }
 
 // ═══ TAB SWITCHING ═══
