@@ -1644,7 +1644,7 @@ function positionTour(){
   if(r.bottom+pad+ch+16<vh)ct=r.bottom+pad+8;
   else if(r.top-pad-ch-16>0)ct=r.top-pad-ch-8;
   else ct=Math.max(16,Math.min(vh-ch-16,r.top));
-  cl=Math.max(16,Math.min(r.left-pad,vw-cw-16));
+  cl=Math.max(16,vw/2-cw/2);
   Object.assign(card.style,{top:ct+'px',left:cl+'px',bottom:'',right:'',transform:''});
 }
 function showTourStep(i){
