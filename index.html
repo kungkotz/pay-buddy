@@ -918,9 +918,9 @@ function render(){
       tr.innerHTML=`<td class="mono"><input class="ei eid" type="number" min="1" max="31" value="${sh.d}" id="ed"></td>
         <td class="dim">${dow}</td>
         <td colspan="4"><div class="erow">
-          <input class="ei eit" type="time" id="es" value="${sh.s==='24:00'?'23:59':sh.s}">
+          <input class="ei eit" type="text" id="es" value="${sh.s==='24:00'?'00:00':sh.s}" placeholder="HH:MM" maxlength="5" oninput="fmtTime(this)" inputmode="numeric">
           <span style="color:var(--text3)">→</span>
-          <input class="ei eit" type="time" id="ee" value="${sh.e==='24:00'?'23:59':sh.e}">
+          <input class="ei eit" type="text" id="ee" value="${sh.e}" placeholder="HH:MM" maxlength="5" oninput="fmtTime(this)" inputmode="numeric">
           <input class="ei" style="width:88px" type="text" id="en" value="${sh.note||''}" placeholder="note">
           <button class="esv" onclick="saveEd(${sh.id})">Save</button>
           <button class="edl" onclick="delShift(${sh.id})">Delete</button>
@@ -1348,6 +1348,12 @@ function renderVsContent(){
 
 // ═══ SHIFT EDITING ═══
 function startEd(id){editId=id;render();}
+function fmtTime(el){
+  // Strip non-digits
+  let v=el.value.replace(/\D/g,'');
+  if(v.length>=3)v=v.slice(0,2)+':'+v.slice(2,4);
+  el.value=v;
+}
 function saveEd(id){
   const d=parseInt(document.getElementById('ed').value)||1;
   const s=document.getElementById('es').value||'08:00';
