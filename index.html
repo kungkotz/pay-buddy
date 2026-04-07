@@ -1421,8 +1421,16 @@ function stepPos(){return getSteps().indexOf(wStep);}
 function nextLogicalStep(){const s=getSteps(),i=s.indexOf(wStep);return i<s.length-1?s[i+1]:null;}
 function prevLogicalStep(){const s=getSteps(),i=s.indexOf(wStep);return i>0?s[i-1]:null;}
 function onSalInput(el){
-  const raw=el.value.replace(/\s/g,'').replace(/\D/g,'');wd.sal=raw;
-  el.value=raw?(raw.length<=4?raw:raw.replace(/\B(?=(\d{3})+(?!\d))/g,' ')):'';chkNext();
+  // Allow digits, comma and dot as decimal separator
+  const raw=el.value.replace(/\s/g,'').replace(/[^\d,\.]/g,'');
+  // Store with dot as decimal for parseFloat
+  wd.sal=raw.replace(',','.');
+  // Display with space thousands separator on whole part only
+  const parts=raw.split(/[,\.]/);
+  const whole=parts[0];
+  const dec=parts.length>1?','+parts[1]:'';
+  el.value=raw?(whole.length<=4?raw:(whole.replace(/\B(?=(\d{3})+(?!\d))/g,' ')+dec)):'';
+  chkNext();
 }
 function onYrsInput(el){const raw=el.value.replace(/\D/g,'').slice(0,2);el.value=raw;wd.yrs=raw||'0';updLT();}
 function onMosInput(el){
@@ -1461,7 +1469,7 @@ function buildStep(s){
           <div class="tc-ico">📡</div><div class="tc-t">OPS</div></div>
       </div></div>`;
     case 0:return`<div class="wiz-card"><div class="wiz-title">Your monthly salary</div><div class="wiz-sub">From your employment contract</div>
-      <div style="display:flex;align-items:center;gap:10px"><input class="wii" id="w-sal" type="text" inputmode="numeric" placeholder="" value="${wd.sal?(wd.sal.length<=4?wd.sal:wd.sal.replace(/\B(?=(\d{3})+(?!\d))/g,' ')):''}" oninput="onSalInput(this)">
+      <div style="display:flex;align-items:center;gap:10px"><input class="wii" id="w-sal" type="text" inputmode="decimal" placeholder="" value="${wd.sal?(()=>{const p=String(wd.sal).split('.');const w=p[0];const d=p.length>1?','+p[1]:'';return w.length<=4?wd.sal:(w.replace(/\B(?=(\d{3})+(?!\d))/g,' ')+d);})():''}" oninput="onSalInput(this)">
       <span style="font-family:var(--fm);color:var(--text2);white-space:nowrap;font-size:13px">kr / month</span></div>
       <div class="hbox" style="margin-top:14px">Your base pay — fixed amount before supplements.</div></div>`;
     case 1:return`<div class="wiz-card"><div class="wiz-title">Contract hours</div><div class="wiz-sub">Your guaranteed minimum per month</div>
