@@ -1589,11 +1589,12 @@ function openSett(){
   if(profile){
     const p=profile,lt=p.lontrin||1;
     document.getElementById('profcard').innerHTML=[
-      ['Base salary',fkr(p.salary)],['Contract hours',(p.contractHrs||130)+' hrs/month'],
-      ['Seniority',Math.floor((p.totalMonths||0)/12)+'y '+(p.totalMonths||0)%12+'mo → Løntrin '+lt],
-      ['Contract',p.ct==='study'?'Study contract':'Permanent'],
+      ['Department',p.dept==='ops'?'OPS':'PAX'],
+      ['Base salary',fkr(p.salary)],['Contract hours',(p.contractHrs||130)+' hours'],
+      ['Seniority',Math.floor((p.totalMonths||0)/12)+'y '+(p.totalMonths||0)%12+'mo · Løntrin '+lt],
+      ...(p.dept!=='ops'?[['Contract',p.ct==='study'?'Study contract':'Permanent']]:[] ),
       ['Qualifications',(p.quals||[]).length?p.quals.join(', '):'None'],
-      ['TCO',p.quals.includes('tco')?(p.tcoSen==='over'?'12+ months (1,900 kr)':'<12 months (1,517 kr)'):'—'],
+      ...(p.dept!=='ops'&&p.quals.includes('tco')?[['TCO',p.tcoSen==='over'?'12+ months (1,900 kr)':'<12 months (1,517 kr)']]:[] ),
       ['Trækprocent',p.traek+'%'],['Fradrag',fkr(p.fradrag,0)],
     ].map(([l,v])=>`<div class="prof-row"><span class="prlbl">${l}</span><span class="prval">${v}</span></div>`).join('');
   }
