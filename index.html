@@ -1566,7 +1566,7 @@ function rStep(step,dir){
   }else{vp.appendChild(nel);}
   const pos=stepPos(),tot=totalSteps(),isLast=pos===tot-1,prev=prevLogicalStep();
   document.getElementById('wnav').innerHTML=
-    (prev!==null?`<button class="wbk" onclick="wGo(-1)">← Back</button>`:`<div></div>`)+
+    (prev!==null?`<button class="wbk" onclick="wGo(-1)">← Back</button>`:`<div style="min-width:88px"></div>`)+
     `<span class="sctr">${pos+1} / ${tot}</span>`+
     `<button class="wnx" id="wnx" onclick="wGo(1)" disabled>${isLast?"Let's go →":"Next →"}</button>`;
   chkNext();
