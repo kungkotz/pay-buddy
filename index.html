@@ -1453,9 +1453,9 @@ function buildStep(s){
     case -1:return`<div class="wiz-card"><div class="wiz-title">Which department are you in?</div><div class="wiz-sub">This determines your supplement rates and kollektivaftale</div>
       <div class="tc-wrap">
         <div class="tc ${wd.dept==='pax'?'sel':''}" onclick="wd.dept='pax';wd.quals=[];wd.ct='';wd.tcoSen='';this.closest('.tc-wrap').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));this.classList.add('sel');chkNext()">
-          <div class="tc-ico">🛫</div><div class="tc-t">PAX</div><div class="tc-d">Passenger handling · Gate agent</div></div>
+          <div class="tc-ico">🧳</div><div class="tc-t">PAX</div></div>
         <div class="tc ${wd.dept==='ops'?'sel':''}" onclick="wd.dept='ops';wd.quals=[];wd.ct='permanent';wd.tcoSen='';this.closest('.tc-wrap').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));this.classList.add('sel');chkNext()">
-          <div class="tc-ico">🎧</div><div class="tc-t">OPS</div><div class="tc-d">Operations · Trafikafdelingen</div></div>
+          <div class="tc-ico">📡</div><div class="tc-t">OPS</div></div>
       </div></div>`;
     case 0:return`<div class="wiz-card"><div class="wiz-title">Your monthly salary</div><div class="wiz-sub">From your employment contract</div>
       <div style="display:flex;align-items:center;gap:10px"><input class="wii" id="w-sal" type="text" inputmode="numeric" placeholder="" value="${wd.sal?(wd.sal.length<=4?wd.sal:wd.sal.replace(/\B(?=(\d{3})+(?!\d))/g,' ')):''}" oninput="onSalInput(this)">
