@@ -339,8 +339,6 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
   th:nth-child(6),td:nth-child(6){display:none;}
   .vs-months{grid-template-columns:repeat(3,1fr);}
 }
-#aviator-logo{mix-blend-mode:multiply;}
-[data-theme=dark] #aviator-logo{mix-blend-mode:screen;filter:invert(1);}
 </style>
 </head>
 <body>
@@ -390,7 +388,6 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
       </div>
     </div>
     <div style="display:flex;gap:8px;align-items:center">
-      <a href="https://www.aviator.eu/" target="_blank" rel="noopener" title="Aviator" style="display:flex;align-items:center;padding:0 6px;opacity:0.85;transition:opacity 0.15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'"><img src="aviator_logo.svg" alt="Aviator — For Every Take-Off" style="height:2.2rem;" id="aviator-logo"></a>
       <button class="ibtn" onclick="startTour()" title="Guide">?</button>
       <button class="ibtn" onclick="openSett()" title="Settings">⚙</button>
     </div>
