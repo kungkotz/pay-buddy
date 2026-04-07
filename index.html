@@ -519,16 +519,32 @@ const OTR={
   4:{o1:276.23,o2:371.28},5:{o1:284.39,o2:382.25},6:{o1:291.06,o2:391.21},
   7:{o1:297.27,o2:399.56},8:{o1:302.38,o2:406.42},9:{o1:307.32,o2:413.06},
 };
-// OPS OT rates per anciennitet bracket (1/3 2026), lønklasse 3 (most common)
+// OPS OT rates per lønklasse per anciennitet bracket (1/3 2026)
 const OTR_OPS={
-  1:{o1:290.60,o2:403.60},  // <3 mdr
-  2:{o1:290.60,o2:403.60},  // >3 mdr (same as bracket 1 for lk3)
-  3:{o1:305.14,o2:423.81},  // >12 mdr
-  4:{o1:305.14,o2:423.81},  // >24 mdr
-  5:{o1:305.14,o2:423.81},  // >36 mdr
-  6:{o1:305.14,o2:423.81},7:{o1:305.14,o2:423.81},8:{o1:305.14,o2:423.81},9:{o1:305.14,o2:423.81},
+  1:{ // Lønklasse 1
+    1:{o1:240.65,o2:334.22},2:{o1:290.60,o2:403.60},3:{o1:290.60,o2:403.60},
+    4:{o1:290.60,o2:403.60},5:{o1:290.60,o2:403.60},
+  },
+  3:{ // Lønklasse 3
+    1:{o1:240.65,o2:334.22},2:{o1:290.60,o2:403.60},3:{o1:305.14,o2:423.81},
+    4:{o1:305.14,o2:423.81},5:{o1:305.14,o2:423.81},
+  },
+  4:{ // Lønklasse 4
+    1:{o1:240.65,o2:334.22},2:{o1:290.60,o2:403.60},3:{o1:305.14,o2:423.81},
+    4:{o1:346.85,o2:481.73},5:{o1:346.85,o2:481.73},
+  },
+  5:{ // Lønklasse 5
+    1:{o1:240.65,o2:334.22},2:{o1:290.60,o2:403.60},3:{o1:305.14,o2:423.81},
+    4:{o1:346.85,o2:481.73},5:{o1:373.16,o2:518.29},
+  },
 };
-function getOTR(){return (profile&&profile.dept==='ops')?OTR_OPS:OTR;}
+function getOTR(){
+  if(profile&&profile.dept==='ops'){
+    const lk=profile.lonklasse||3;
+    return OTR_OPS[lk]||OTR_OPS[3];
+  }
+  return OTR;
+}
 const HOLS=new Set([
   '2025-01-01','2025-04-17','2025-04-18','2025-04-20','2025-04-21',
   '2025-05-29','2025-06-05','2025-06-08','2025-06-09',
@@ -1061,6 +1077,7 @@ function renderProfile(){
     {l:'Base salary',v:fmt(p.salary,2)+' kr'},
     {l:'Contract hours',v:(p.contractHrs||0)+' hours'},
     {l:'Seniority',v:senLabel+' Løntrin '+lt},
+    ...(p.dept==='ops'?[{l:'Lønklasse',v:'Lønklasse '+(p.lonklasse||3)}]:[]),
     ...(p.dept!=='ops'?[{l:'Contract type',v:ctLabel}]:[]),
     ...(quals.length?[{l:'Qualifications',v:quals.join(', ')}]:[]),
     ...(p.dept!=='ops'&&p.quals.includes('tco')?[{l:'TCO seniority',v:p.tcoSen==='over'?'12mo+':'Under 12mo'}]:[]),
@@ -1398,7 +1415,7 @@ function acceptPrivacy(){
 
 // ═══ WIZARD ═══
 let wStep=-1,wMosErr=false;
-let wd={dept:'',sal:'',hrs:'',yrs:'0',mos:'0',ct:'',quals:[],tcoSen:'',traek:'38',fradrag:'8965'};
+let wd={dept:'',lonklasse:0,sal:'',hrs:'',yrs:'0',mos:'0',ct:'',quals:[],tcoSen:'',traek:'38',fradrag:'8965'};
 function getLT(mo){
   if(mo<=6)return 1;if(mo<=18)return 2;if(mo<=30)return 3;if(mo<=42)return 4;
   if(mo<=66)return 5;if(mo<=90)return 6;if(mo<=104)return 7;if(mo<=150)return 8;return 9;
@@ -1413,7 +1430,7 @@ function getLT_OPS(mo){
 function getActiveLT(mo){return (wd.dept==='ops'||( profile&&profile.dept==='ops'))?getLT_OPS(mo):getLT(mo);}
 function getSteps(){
   const hasTCO=wd.quals.includes('tco')&&wd.dept!=='ops';
-  if(wd.dept==='ops') return hasTCO?[-1,0,1,2,4,5,6]:[-1,0,1,2,4,6];
+  if(wd.dept==='ops') return [-1,0,1,2,7,4,6];
   return hasTCO?[-1,0,1,2,3,4,5,6]:[-1,0,1,2,3,4,6];
 }
 function totalSteps(){return getSteps().length;}
@@ -1455,7 +1472,7 @@ function tglQc(el,id){
 function selTCO(v){wd.tcoSen=v;document.querySelectorAll('.ro').forEach(el=>el.classList.toggle('sel',el.dataset.tco===v));chkNext();}
 function chkNext(){
   const btn=document.getElementById('wnx');if(!btn)return;
-  const ok={0:parseFloat(wd.sal)>0,1:parseFloat(wd.hrs)>0,2:!wMosErr,3:!!wd.ct,4:true,5:!!wd.tcoSen,6:true};
+  const ok={0:parseFloat(wd.sal)>0,1:parseFloat(wd.hrs)>0,2:!wMosErr,3:!!wd.ct,4:true,5:!!wd.tcoSen,6:true,7:wd.lonklasse>0};
   const stepOk=wStep===-1?!!wd.dept:(ok[wStep]!==undefined?ok[wStep]:true);
   btn.disabled=!stepOk;
 }
@@ -1512,6 +1529,16 @@ function buildStep(s){
         <div class="ro ${wd.tcoSen==='over'?'sel':''}" data-tco="over" onclick="selTCO('over')"><div class="rd"></div>
           <div><div style="font-weight:600">12 months or more as TCO</div><div class="rs">1,900.00 kr/month</div></div></div>
       </div></div>`;
+    case 7:{
+      const lkOpts=[
+        {v:1,l:'Lønklasse 1',d:'Handling privatfly'},
+        {v:3,l:'Lønklasse 3',d:'GC u. vægt/bal.'},
+        {v:4,l:'Lønklasse 4',d:'GC m. vægt/bal.'},
+        {v:5,l:'Lønklasse 5',d:'GC m. special'},
+      ];
+      return`<div class="wiz-card"><div class="wiz-title">Your lønklasse</div><div class="wiz-sub">From your contract — determines your overtime rates</div>
+        <div class="tc-wrap" style="grid-template-columns:1fr 1fr 1fr 1fr">${lkOpts.map(o=>`<div class="tc ${wd.lonklasse===o.v?'sel':''}" onclick="wd.lonklasse=${o.v};this.closest('.tc-wrap').querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));this.classList.add('sel');chkNext()"><div class="tc-t">${o.l}</div><div class="tc-d">${o.d}</div></div>`).join('')}
+        </div></div>`;}
     case 6:return`<div class="wiz-card"><div class="wiz-title">Danish tax settings</div><div class="wiz-sub">From your skattekort at <a href="https://skat.dk" target="_blank">skat.dk → TastSelv</a></div>
       <div style="margin-bottom:16px"><div class="wlbl">Trækprocent (%)</div>
         <div style="display:flex;align-items:center;gap:10px"><input class="wii" type="number" min="0" max="65" step="0.1" value="${wd.traek}" oninput="wd.traek=this.value">
@@ -1562,7 +1589,7 @@ function wGo(dir){
 }
 function finishWiz(){
   const t=(parseInt(wd.yrs)||0)*12+(parseInt(wd.mos)||0);
-  profile={dept:wd.dept||'pax',salary:parseFloat(wd.sal),contractHrs:parseFloat(wd.hrs)||130,totalMonths:t,lontrin:(wd.dept==='ops'?getLT_OPS(t):getLT(t)),
+  profile={dept:wd.dept||'pax',lonklasse:wd.dept==='ops'?(wd.lonklasse||3):null,salary:parseFloat(wd.sal),contractHrs:parseFloat(wd.hrs)||130,totalMonths:t,lontrin:(wd.dept==='ops'?getLT_OPS(t):getLT(t)),
     ct:wd.dept==='ops'?'permanent':(wd.ct||'permanent'),quals:[...wd.quals],tcoSen:wd.tcoSen,traek:parseFloat(wd.traek)||38,fradrag:parseFloat(wd.fradrag)||8965};
   updateBranding();
   document.getElementById('wizard').classList.add('hidden');
@@ -1578,6 +1605,7 @@ function startWiz(){
     const y=Math.floor((profile.totalMonths||0)/12);
     wd={
       dept:profile.dept||'pax',
+      lonklasse:profile.lonklasse||0,
       sal:String(profile.salary||''),
       hrs:String(profile.contractHrs||''),
       yrs:String(y),
@@ -1604,6 +1632,7 @@ function openSett(){
       ['Base salary',fkr(p.salary)],['Contract hours',(p.contractHrs||130)+' hours'],
       ['Seniority',Math.floor((p.totalMonths||0)/12)+'y '+(p.totalMonths||0)%12+'mo · Løntrin '+lt],
       ...(p.dept!=='ops'?[['Contract',p.ct==='study'?'Study contract':'Permanent']]:[] ),
+      ...(p.dept==='ops'?[['Lønklasse','Lønklasse '+(p.lonklasse||3)]]:[] ),
       ['Qualifications',(p.quals||[]).length?p.quals.join(', '):'None'],
       ...(p.dept!=='ops'&&p.quals.includes('tco')?[['TCO',p.tcoSen==='over'?'12+ months (1,900 kr)':'<12 months (1,517 kr)']]:[] ),
       ['Trækprocent',p.traek+'%'],['Fradrag',fkr(p.fradrag,0)],
