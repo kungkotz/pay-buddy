@@ -1076,7 +1076,7 @@ function renderProfile(){
     {l:'Department',v:dept,accent:true},
     {l:'Base salary',v:fmt(p.salary,2)+' kr'},
     {l:'Contract hours',v:(p.contractHrs||0)+' hours'},
-    {l:'Seniority',v:senLabel+' Løntrin '+lt},
+    {l:'Seniority',v:senLabel+(p.dept==='ops'?' '+getOPSAncLabel(p.totalMonths||0):' Løntrin '+lt)},
     ...(p.dept==='ops'?[{l:'Lønklasse',v:'Lønklasse '+(p.lonklasse||3)}]:[]),
     ...(p.dept!=='ops'?[{l:'Contract type',v:ctLabel}]:[]),
     ...(quals.length?[{l:'Qualifications',v:quals.join(', ')}]:[]),
@@ -1421,13 +1421,20 @@ function getLT(mo){
   if(mo<=66)return 5;if(mo<=90)return 6;if(mo<=104)return 7;if(mo<=150)return 8;return 9;
 }
 function getLT_OPS(mo){
-  if(mo<3)return 1;   // <3 mdr
-  if(mo<12)return 2;  // >3 mdr
-  if(mo<24)return 3;  // >12 mdr
-  if(mo<36)return 4;  // >24 mdr
-  return 5;           // >36 mdr
+  if(mo<3)return 1;
+  if(mo<=12)return 2;
+  if(mo<=24)return 3;
+  if(mo<=36)return 4;
+  return 5;
 }
 function getActiveLT(mo){return (wd.dept==='ops'||( profile&&profile.dept==='ops'))?getLT_OPS(mo):getLT(mo);}
+function getOPSAncLabel(mo){
+  if(mo<3)return '< 3 months';
+  if(mo<=12)return '> 3 months';
+  if(mo<=24)return '> 12 months';
+  if(mo<=36)return '> 24 months';
+  return '> 36 months';
+}
 function getSteps(){
   const hasTCO=wd.quals.includes('tco')&&wd.dept!=='ops';
   if(wd.dept==='ops') return [-1,0,1,2,7,4,6];
@@ -1460,7 +1467,8 @@ function onMosInput(el){
 function updLT(){
   const pill=document.getElementById('ltpill');if(!pill)return;
   const t=(parseInt(wd.yrs)||0)*12+(parseInt(wd.mos)||0);
-  pill.innerHTML='<span style="font-size:14px">🏅</span> Løntrin '+getActiveLT(t)+' · '+t+' month'+(t!==1?'s':'');
+  const isOPSwiz=wd.dept==='ops';
+  pill.innerHTML='<span style="font-size:14px">🏅</span> '+(isOPSwiz?getOPSAncLabel(t):'Løntrin '+getActiveLT(t))+' · '+t+' month'+(t!==1?'s':'');
   pill.style.display='inline-flex';
 }
 function tglQc(el,id){
@@ -1630,7 +1638,7 @@ function openSett(){
     document.getElementById('profcard').innerHTML=[
       ['Department',p.dept==='ops'?'OPS':'PAX'],
       ['Base salary',fkr(p.salary)],['Contract hours',(p.contractHrs||130)+' hours'],
-      ['Seniority',Math.floor((p.totalMonths||0)/12)+'y '+(p.totalMonths||0)%12+'mo · Løntrin '+lt],
+      ['Seniority',Math.floor((p.totalMonths||0)/12)+'y '+(p.totalMonths||0)%12+'mo'+(p.dept==='ops'?' '+getOPSAncLabel(p.totalMonths||0):' · Løntrin '+lt)],
       ...(p.dept!=='ops'?[['Contract',p.ct==='study'?'Study contract':'Permanent']]:[] ),
       ...(p.dept==='ops'?[['Lønklasse','Lønklasse '+(p.lonklasse||3)]]:[] ),
       ['Qualifications',(p.quals||[]).length?p.quals.join(', '):'None'],
