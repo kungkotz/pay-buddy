@@ -339,8 +339,8 @@ tbody tr.ed{background:var(--bg3);cursor:default;}
   th:nth-child(6),td:nth-child(6){display:none;}
   .vs-months{grid-template-columns:repeat(3,1fr);}
 }
-#aviator-logo{filter:brightness(0) invert(1);}
-[data-theme=light] #aviator-logo{filter:none;}
+#aviator-logo{mix-blend-mode:multiply;}
+[data-theme=dark] #aviator-logo{mix-blend-mode:screen;filter:invert(1);}
 </style>
 </head>
 <body>
